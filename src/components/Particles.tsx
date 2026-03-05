@@ -3,7 +3,7 @@
  * 500+ glowing points rendered via a single InstancedMesh (1 draw call).
  * Particles subtly drift toward the mouse pointer each frame.
  */
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -12,13 +12,23 @@ const SPREAD = 15;
 const MOUSE_INFLUENCE = 0.3;
 const RETURN_SPEED = 0.02;
 
+const LIGHT_BRAND_COLORS = [
+    new THREE.Color("#DE3B84"),
+    new THREE.Color("#FFC12D"),
+    new THREE.Color("#F7A361"),
+    new THREE.Color("#EE847B"),
+    new THREE.Color("#D6007D"),
+];
+
+const DARK_COLOR = new THREE.Color("#0070f3");
+
 interface ParticleData {
   basePositions: Float32Array;
   currentPositions: Float32Array;
   velocities: Float32Array;
 }
 
-export default function Particles() {
+export default function Particles({ isLight }: { isLight: boolean }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const { pointer } = useThree();
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -44,6 +54,25 @@ export default function Particles() {
 
     return { basePositions: base, currentPositions: current, velocities: vel };
   }, []);
+
+  // Update instance colors whenever theme changes
+  useEffect(() => {
+    const mesh = meshRef.current;
+    if (!mesh) return;
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      if (isLight) {
+        const c = LIGHT_BRAND_COLORS[Math.floor(Math.random() * LIGHT_BRAND_COLORS.length)];
+        mesh.setColorAt(i, c);
+      } else {
+        mesh.setColorAt(i, DARK_COLOR);
+      }
+    }
+
+    if (mesh.instanceColor) {
+      mesh.instanceColor.needsUpdate = true;
+    }
+  }, [isLight]);
 
   useFrame(() => {
     if (!meshRef.current) return;
@@ -88,7 +117,7 @@ export default function Particles() {
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, PARTICLE_COUNT]}>
       <sphereGeometry args={[1, 6, 6]} />
-      <meshBasicMaterial color="#0070f3" transparent opacity={0.6} />
+      <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
     </instancedMesh>
   );
 }
