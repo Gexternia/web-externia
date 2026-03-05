@@ -17,28 +17,63 @@
  *     }
  *   );
  */
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
 import * as THREE from "three";
 import Particles from "./Particles";
 
-/** Placeholder central mesh — replace with your DRACO .glb model */
-function CentralModel() {
-    const ref = useRef<THREE.Mesh>(null);
+const LIGHT_BRAND_COLORS = [
+    new THREE.Color("#DE3B84"),
+    new THREE.Color("#FFC12D"),
+    new THREE.Color("#F7A361"),
+    new THREE.Color("#EE847B"),
+    new THREE.Color("#D6007D"),
+];
+
+function CentralModel({ isLight }: { isLight: boolean }) {
+    const meshRef = useRef<THREE.Mesh>(null);
+    const geoRef = useRef<THREE.IcosahedronGeometry>(null);
+    const matRef = useRef<THREE.MeshStandardMaterial>(null);
+
+    // Imperatively update geometry colors and material when theme changes
+    useEffect(() => {
+        const geo = geoRef.current;
+        const mat = matRef.current;
+        if (!geo || !mat) return;
+
+        if (isLight) {
+            const count = geo.attributes.position.count;
+            const colors = new Float32Array(count * 3);
+            for (let i = 0; i < count; i++) {
+                const c = LIGHT_BRAND_COLORS[Math.floor(Math.random() * LIGHT_BRAND_COLORS.length)];
+                colors[i * 3]     = c.r;
+                colors[i * 3 + 1] = c.g;
+                colors[i * 3 + 2] = c.b;
+            }
+            geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+            mat.vertexColors = true;
+            mat.color.set("#ffffff");
+        } else {
+            if (geo.hasAttribute("color")) geo.deleteAttribute("color");
+            mat.vertexColors = false;
+            mat.color.set("#0070f3");
+        }
+        mat.needsUpdate = true;
+    }, [isLight]);
 
     // Slow auto-rotation (360° in ~20 seconds)
     useFrame((_, delta) => {
-        if (ref.current) {
-            ref.current.rotation.y += delta * 0.3;
+        if (meshRef.current) {
+            meshRef.current.rotation.y += delta * 0.3;
         }
     });
 
     return (
-        <mesh ref={ref} position={[0, 0, 0]}>
-            {/* PLACEHOLDER: Replace this geometry with your loaded DRACO model's scene */}
-            <icosahedronGeometry args={[1.4, 1]} />
+        <mesh ref={meshRef} position={[0, 0, 0]}>
+            <icosahedronGeometry ref={geoRef} args={[1.4, 1]} />
             <meshStandardMaterial
+                ref={matRef}
                 color="#0070f3"
                 metalness={0.9}
                 roughness={0.15}
@@ -49,6 +84,18 @@ function CentralModel() {
 }
 
 export default function Scene3D() {
+    const [isLight, setIsLight] = useState(false);
+
+    useEffect(() => {
+        setIsLight(document.documentElement.classList.contains("light"));
+        const handler = (e: Event) => {
+            const detail = (e as CustomEvent).detail;
+            setIsLight(!detail.isDark);
+        };
+        window.addEventListener("themechange", handler);
+        return () => window.removeEventListener("themechange", handler);
+    }, []);
+
     return (
         <Canvas
             dpr={[1, 2]}
@@ -69,10 +116,10 @@ export default function Scene3D() {
                 <Environment preset="city" />
 
                 {/* Central model with auto-rotation */}
-                <CentralModel />
+                <CentralModel isLight={isLight} />
 
                 {/* 600 InstancedMesh particles as background */}
-                <Particles />
+                <Particles isLight={isLight} />
 
                 {/* Orbit controls: drag to rotate, scroll zoom DISABLED */}
                 <OrbitControls
