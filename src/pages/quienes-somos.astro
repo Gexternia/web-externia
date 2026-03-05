@@ -6,17 +6,17 @@ import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ThemeToggle from "../components/ThemeToggle";
+import QuienesSomos from "../components/QuienesSomos";
 ---
 
-<Layout title="Quiénes Somos — Externia">
+<Layout
+  title="Quiénes Somos — Externia AI for Events"
+  description="Externia es la primera consultora española especializada al 100% en inteligencia artificial aplicada al sector MICE. Conoce nuestra historia, equipo y metodología."
+>
   <Navbar client:load />
   <ThemeToggle client:load />
   <main>
-    <section class="section-container">
-      <div class="max-w-7xl mx-auto px-4 sm:px-8 py-32 min-h-screen flex items-center justify-center">
-        <h2 class="section-title">Quiénes Somos</h2>
-      </div>
-    </section>
+    <QuienesSomos client:load />
   </main>
   <Footer client:load />
 </Layout>

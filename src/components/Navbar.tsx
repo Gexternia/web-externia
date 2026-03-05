@@ -86,8 +86,8 @@ export default function Navbar() {
                                 key={link.href}
                                 href={link.href}
                                 className={`text-sm font-medium tracking-wide transition-colors duration-200 ${isDark
-                                        ? "text-gray-300 hover:text-white"
-                                        : "text-gray-600 hover:text-gray-900"
+                                        ? "text-gray-300 hover:text-azul"
+                                        : "text-gray-600 hover:text-brand-magenta"
                                     }`}
                             >
                                 {link.label}
@@ -126,8 +126,8 @@ export default function Navbar() {
                                     key={link.href}
                                     href={link.href}
                                     className={`block py-3 px-2 text-sm font-medium transition-colors ${isDark
-                                            ? "text-gray-300 hover:text-white"
-                                            : "text-gray-600 hover:text-gray-900"
+                                            ? "text-gray-300 hover:text-azul"
+                                            : "text-gray-600 hover:text-brand-magenta"
                                         }`}
                                 >
                                     {link.label}

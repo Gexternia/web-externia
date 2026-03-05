@@ -1,0 +1,810 @@
+/**
+ * QuienesSomos.tsx — Interactive About Us page for Externia.
+ * Light mode: brand colors. Dark mode: deep navy palette.
+ */
+import { useState, useEffect, useRef, useMemo } from "react";
+import { motion, useInView } from "framer-motion";
+
+// ── Interactive canvas bubbles background ─────────────────────────
+type BubbleData = { x: number; y: number; r: number; vx: number; vy: number; baseVy: number; opacity: number; phase: number };
+
+function BubblesBg({ isLight }: { isLight: boolean }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef = useRef({ x: -9999, y: -9999 });
+  const bubblesRef = useRef<BubbleData[]>([]);
+  const rafRef = useRef(0);
+
+  // Init canvas size + bubble positions (runs once)
+  useEffect(() => {
+    const canvas = canvasRef.current!;
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const W = canvas.width, H = canvas.height, N = 30;
+    bubblesRef.current = Array.from({ length: N }, (_, i) => {
+      const baseVy = -(0.3 + (i * 0.14) % 0.7);
+      return {
+        x: (i * (W / N) + 18) % W,
+        y: (i * 97.3) % H,
+        r: 14 + (i * 18.9) % 54,
+        vx: (i % 2 === 0 ? 1 : -1) * ((i * 0.11) % 0.22),
+        vy: baseVy,
+        baseVy,
+        opacity: 0.48 + (i * 0.021) % 0.32,
+        phase: (i * 0.68) % (Math.PI * 2),
+      };
+    });
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  // Track mouse
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => { mouseRef.current = { x: e.clientX, y: e.clientY }; };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
+  // Animation loop (re-runs when theme changes to swap color)
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d")!;
+    const [cr, cg, cb] = isLight ? [222, 59, 132] : [40, 120, 255];
+
+    const tick = () => {
+      if (!canvas.width || !canvas.height) { rafRef.current = requestAnimationFrame(tick); return; }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const { x: mx, y: my } = mouseRef.current;
+      const t = Date.now() * 0.001;
+
+      for (const b of bubblesRef.current) {
+        // Mouse repulsion
+        const dx = b.x - mx, dy = b.y - my;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const repelR = 150;
+        if (dist < repelR && dist > 1) {
+          const f = ((repelR - dist) / repelR) * 1.4;
+          b.vx += (dx / dist) * f;
+          b.vy += (dy / dist) * f;
+        }
+
+        // Damping — settle back to natural upward drift
+        b.vx *= 0.94;
+        b.vy = b.vy * 0.95 + b.baseVy * 0.05;
+
+        // Horizontal sine wobble + apply velocity
+        b.x += b.vx + Math.sin(t * 0.38 + b.phase) * 0.28;
+        b.y += b.vy;
+
+        // Wrap vertically
+        if (b.y + b.r < 0) {
+          b.y = canvas.height + b.r;
+          b.x = Math.random() * canvas.width;
+          b.vx = (Math.random() - 0.5) * 0.2;
+          b.vy = b.baseVy;
+        }
+        if (b.x < -b.r) b.x = canvas.width + b.r;
+        if (b.x > canvas.width + b.r) b.x = -b.r;
+
+        // Proximity glow factor
+        const proximity = Math.max(0, 1 - dist / repelR);
+        const glow = b.opacity + proximity * 0.45;
+
+        // Inner fill gradient (very subtle, soap-bubble iridescence)
+        const fill = ctx.createRadialGradient(b.x - b.r * 0.28, b.y - b.r * 0.28, 0, b.x, b.y, b.r);
+        fill.addColorStop(0, `rgba(${cr},${cg},${cb},${glow * 0.09})`);
+        fill.addColorStop(0.55, `rgba(${cr},${cg},${cb},${glow * 0.04})`);
+        fill.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fillStyle = fill;
+        ctx.fill();
+
+        // Outer glow halo when mouse is near
+        if (proximity > 0.04) {
+          const halo = ctx.createRadialGradient(b.x, b.y, b.r * 0.85, b.x, b.y, b.r * 1.7);
+          halo.addColorStop(0, `rgba(${cr},${cg},${cb},${proximity * 0.18})`);
+          halo.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.r * 1.7, 0, Math.PI * 2);
+          ctx.fillStyle = halo;
+          ctx.fill();
+        }
+
+        // Border stroke
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${cr},${cg},${cb},${Math.min(0.72, glow * 0.82)})`;
+        ctx.lineWidth = 1.2 + proximity * 1.2;
+        ctx.stroke();
+
+        // Specular highlight — top-left shiny spot (soap bubble look)
+        const hl = ctx.createRadialGradient(
+          b.x - b.r * 0.34, b.y - b.r * 0.34, 0,
+          b.x - b.r * 0.34, b.y - b.r * 0.34, b.r * 0.34
+        );
+        hl.addColorStop(0, `rgba(255,255,255,${0.55 + proximity * 0.3})`);
+        hl.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.beginPath();
+        ctx.arc(b.x - b.r * 0.34, b.y - b.r * 0.34, b.r * 0.34, 0, Math.PI * 2);
+        ctx.fillStyle = hl;
+        ctx.fill();
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [isLight]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "fixed",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 30,
+        pointerEvents: "none",
+      }}
+    />
+  );
+}
+
+// ── Theme hook ────────────────────────────────────────────────────
+function useTheme() {
+  const [isLight, setIsLight] = useState(false);
+  useEffect(() => {
+    setIsLight(document.documentElement.classList.contains("light"));
+    const handler = (e: Event) =>
+      setIsLight(!(e as CustomEvent).detail.isDark);
+    window.addEventListener("themechange", handler);
+    return () => window.removeEventListener("themechange", handler);
+  }, []);
+  return isLight;
+}
+
+// ── Animated counter ──────────────────────────────────────────────
+function Counter({ value, suffix = "+" }: { value: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    const end = Date.now() + 2200;
+    const tick = () => {
+      const t = Math.min(1, 1 - (end - Date.now()) / 2200);
+      setN(Math.round((1 - Math.pow(1 - t, 3)) * value));
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [inView, value]);
+  return <span ref={ref}>{n.toLocaleString("es-ES")}{suffix}</span>;
+}
+
+// ── 3D Tilt card ─────────────────────────────────────────────────
+function TiltCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const el = useRef<HTMLDivElement>(null);
+  const [s, setS] = useState({});
+  const onMove = (e: React.MouseEvent) => {
+    const r = el.current!.getBoundingClientRect();
+    const rx = ((e.clientY - r.top) / r.height - 0.5) * -18;
+    const ry = ((e.clientX - r.left) / r.width - 0.5) * 18;
+    setS({ transform: `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.03,1.03,1.03)`, transition: "transform 0.12s ease" });
+  };
+  const onLeave = () =>
+    setS({ transform: "perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)", transition: "transform 0.5s ease" });
+  return (
+    <div ref={el} onMouseMove={onMove} onMouseLeave={onLeave} style={s} className={className}>
+      {children}
+    </div>
+  );
+}
+
+// ── Scroll-reveal wrapper ─────────────────────────────────────────
+function FadeIn({ children, delay = 0, className = "", from = "bottom" }: {
+  children: React.ReactNode; delay?: number; className?: string;
+  from?: "bottom" | "left" | "right";
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const init = from === "left" ? { opacity: 0, x: -50 } : from === "right" ? { opacity: 0, x: 50 } : { opacity: 0, y: 45 };
+  return (
+    <motion.div ref={ref} initial={init}
+      animate={inView ? { opacity: 1, x: 0, y: 0 } : {}}
+      transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={className}>
+      {children}
+    </motion.div>
+  );
+}
+
+// ── Flip card for services ────────────────────────────────────────
+function FlipCard({ icon, title, desc, gradient, isLight }: {
+  icon: string; title: string; desc: string; gradient: string; isLight: boolean;
+}) {
+  const [flipped, setFlipped] = useState(false);
+  return (
+    <div className="relative h-72 cursor-pointer" style={{ perspective: "1100px" }}
+      onMouseEnter={() => setFlipped(true)} onMouseLeave={() => setFlipped(false)}>
+      <motion.div animate={{ rotateY: flipped ? 180 : 0 }}
+        transition={{ duration: 0.65, ease: [0.4, 0, 0.2, 1] }}
+        style={{ transformStyle: "preserve-3d" }} className="relative w-full h-full">
+        <div style={{ backfaceVisibility: "hidden" }}
+          className={`absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-6 text-center border transition-colors duration-500 ${
+            isLight ? "bg-white/90 border-gray-100 shadow-sm backdrop-blur-sm" : "bg-[#0d1829]/90 border-white/8 backdrop-blur-sm"
+          }`}>
+          <span className="text-5xl">{icon}</span>
+          <h3 className={`text-lg font-bold transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{title}</h3>
+          <span className={`text-xs font-medium transition-colors duration-500 ${isLight ? "text-gray-400" : "text-gray-500"}`}>
+            Hover para saber más
+          </span>
+        </div>
+        <div style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+          className={`absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-6 text-center bg-gradient-to-br ${gradient}`}>
+          <motion.div
+            animate={{ scale: flipped ? 1 : 0.55, opacity: flipped ? 1 : 0 }}
+            transition={{ duration: 0.38, delay: flipped ? 0.28 : 0, ease: [0.34, 1.56, 0.64, 1] }}
+            className="flex flex-col items-center gap-3"
+          >
+            <h3 className="text-xl font-bold text-white">{title}</h3>
+            <p className="text-base text-white/95 leading-relaxed">{desc}</p>
+          </motion.div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+// ── Section label ─────────────────────────────────────────────────
+function SectionLabel({ text, isLight, white = false }: { text: string; isLight: boolean; white?: boolean }) {
+  if (white) return (
+    <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase mb-4 bg-white/20 text-white">
+      {text}
+    </span>
+  );
+  return (
+    <span className={`inline-block px-5 py-2 rounded-full text-base font-bold tracking-widest uppercase mb-4 transition-colors duration-500 ${
+      isLight ? "bg-brand-magenta/10 text-brand-magenta" : "bg-azul/10 text-azul"
+    }`}>{text}</span>
+  );
+}
+
+
+// ── Section background helpers ────────────────────────────────────
+const lightBg = "bg-white/88 backdrop-blur-[2px]";
+const lightAltBg = "bg-gray-50/88 backdrop-blur-[2px]";
+const darkBg = "bg-[#060d1a]/92 backdrop-blur-[2px]";
+const darkAltBg = "bg-[#08111e]/92 backdrop-blur-[2px]";
+
+function sectionBg(isLight: boolean, alt = false) {
+  return isLight ? (alt ? lightAltBg : lightBg) : (alt ? darkAltBg : darkBg);
+}
+
+// ════════════════════════════════════════════════════════
+// SECTION 1 — HERO
+// ════════════════════════════════════════════════════════
+function HeroSection({ isLight }: { isLight: boolean }) {
+  return (
+    <section className={`relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-4 text-center transition-colors duration-500 ${sectionBg(isLight)}`}>
+      {/* Gradient orbs */}
+      <div className={`absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 ${isLight ? "bg-brand-magenta" : "bg-azul"}`} />
+      <div className={`absolute bottom-1/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 ${isLight ? "bg-brand-yellow" : "bg-blue-900"}`} />
+
+      <motion.h1 initial={{ opacity: 0, y: 35 }} animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        className={`relative z-10 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight max-w-5xl transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
+        Camb
+        <span className={isLight
+          ? "bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-brand-orange bg-clip-text text-transparent"
+          : "bg-gradient-to-r from-[#0070f3] via-blue-300 to-[#0070f3] bg-clip-text text-transparent"}>
+          IA
+        </span>{" "}el mundo.
+        <br />
+        Camb
+        <span className={isLight
+          ? "bg-gradient-to-r from-brand-fuchsia via-brand-magenta to-brand-yellow bg-clip-text text-transparent"
+          : "bg-gradient-to-r from-blue-300 via-[#0070f3] to-blue-400 bg-clip-text text-transparent"}>
+          IA
+        </span>{" "}tu evento.
+      </motion.h1>
+
+      <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.35 }}
+        className={`relative z-10 mt-6 text-lg sm:text-xl max-w-2xl leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-300"}`}>
+        La primera consultora española especializada al 100% en inteligencia artificial
+        aplicada al sector MICE. Nacimos en 2024 para transformar la industria de los
+        eventos desde el conocimiento profundo del sector.
+      </motion.p>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+// SECTION 2 — MANIFESTO
+// ════════════════════════════════════════════════════════
+function ManifiestoSection({ isLight }: { isLight: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const phrase1 = ["No", "somos", "una", "empresa", "de", "tecnología", "que", "hace", "eventos."];
+  const phrase2 = ["Somos", "especialistas", "en", "eventos", "que", "dominan", "la", "IA."];
+  const highlight = new Set(["especialistas", "dominan", "IA."]);
+
+  return (
+    <section ref={ref} className={`relative py-28 px-4 overflow-hidden transition-colors duration-500 ${
+      isLight
+        ? "bg-gradient-to-br from-[#f0a0c0] via-[#dc80c8] to-[#f8c090]"
+        : "bg-[#060d1a]/95 backdrop-blur-sm"
+    }`}>
+
+      <div className="max-w-5xl mx-auto text-center relative z-10">
+        <div className={`text-3xl sm:text-4xl md:text-5xl font-black leading-snug tracking-tight ${isLight ? "text-white" : "text-white"}`}>
+          {[...phrase1, ...phrase2].map((word, i) => (
+            <motion.span key={i} initial={{ opacity: 0, y: 25 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.45, delay: i * 0.07, ease: "easeOut" }}
+              className={`inline-block mr-3 mb-2 ${!isLight && highlight.has(word) ? "text-azul" : ""}
+                ${isLight && phrase2.includes(word) ? "opacity-100" : isLight ? "opacity-80" : ""}`}>
+              {word}
+            </motion.span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+// SECTION 3 — HISTORIA
+// ════════════════════════════════════════════════════════
+function HistoriaSection({ isLight }: { isLight: boolean }) {
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+
+  const timeline = [
+    { year: "2022", icon: "🔬", text: "Guillermo descubre el potencial de los modelos generativos mientras investiga IA en oncología en el Hospital La Paz." },
+    { year: "2023", icon: "🌍", text: "Aprende el sector de los eventos desde dentro en Externa Marketing & Events y participa en el Mobile World Congress de Barcelona." },
+    { year: "2024", icon: "🚀", text: "Funda Externia. En menos de 2 meses ya colabora con 5 de las principales agencias de eventos de España y proyectos para clientes del IBEX 35." },
+    { year: "2025", icon: "🏆", text: "Ganador del premio Event Industry Entrepreneur y finalista del Innovation Champion en los MPI Iberian Awards — Valencia." },
+  ];
+
+  return (
+    <section className={`relative py-28 px-4 overflow-hidden transition-colors duration-500 ${sectionBg(isLight)}`}>
+      <div className="max-w-7xl mx-auto relative z-10">
+        <FadeIn className="mb-16">
+          <SectionLabel text="Nuestra Historia" isLight={isLight} />
+          <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black leading-tight transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
+            De la ciencia oncológica
+            <br />
+            <span className={isLight
+              ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia bg-clip-text text-transparent"
+              : "bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent"}>
+              a revolucionar los eventos
+            </span>
+          </h2>
+        </FadeIn>
+
+        <div className="grid lg:grid-cols-2 gap-20 items-start">
+          {/* Interactive Timeline */}
+          <div>
+            {timeline.map((item, i) => (
+              <FadeIn key={i} delay={i * 0.12} from="left">
+                <motion.div
+                  className={`flex gap-5 mb-2 rounded-2xl p-4 cursor-pointer transition-colors duration-300 ${
+                    activeIdx === i ? (isLight ? "bg-brand-magenta/8" : "bg-azul/8") : "bg-transparent"
+                  }`}
+                  onMouseEnter={() => setActiveIdx(i)}
+                  onMouseLeave={() => setActiveIdx(null)}
+                  whileHover={{ x: 6 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}>
+                  <div className="flex flex-col items-center shrink-0">
+                    <motion.div
+                      animate={activeIdx === i
+                        ? { scale: 1.15, boxShadow: isLight ? "0 0 18px #DE3B8470" : "0 0 18px #0070f370" }
+                        : { scale: 1, boxShadow: "0 0 0px transparent" }}
+                      transition={{ duration: 0.25 }}
+                      className={`w-11 h-11 rounded-full flex items-center justify-center text-lg font-bold text-white transition-colors duration-500 ${isLight ? "bg-brand-magenta" : "bg-azul"}`}>
+                      {item.icon}
+                    </motion.div>
+                    {i < timeline.length - 1 && (
+                      <motion.div className={`w-px mt-2 transition-colors duration-500 ${isLight ? "bg-brand-magenta/25" : "bg-azul/25"}`}
+                        animate={{ height: activeIdx === i ? 56 : 48 }} transition={{ duration: 0.2 }} />
+                    )}
+                  </div>
+                  <div className="pb-4 pt-1">
+                    <span className={`text-xs font-extrabold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
+                      {item.year}
+                    </span>
+                    <motion.p animate={{ opacity: activeIdx === i ? 1 : 0.75 }}
+                      className={`mt-1.5 text-base leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-700" : "text-gray-300"}`}>
+                      {item.text}
+                    </motion.p>
+                  </div>
+                </motion.div>
+              </FadeIn>
+            ))}
+          </div>
+
+          {/* Photos column */}
+          <div className="flex flex-col gap-6">
+            <FadeIn delay={0.2} from="right">
+              <div className="relative">
+                <div className={`absolute -inset-3 rounded-3xl blur-2xl opacity-25 pointer-events-none transition-colors duration-500 ${isLight ? "bg-gradient-to-r from-brand-magenta to-brand-yellow" : "bg-azul"}`} />
+                <div className={`relative rounded-2xl overflow-hidden border transition-colors duration-500 ${isLight ? "border-brand-magenta/15" : "border-white/8"}`}>
+                  <img src="/team/guillermo-premio.png" alt="Guillermo Prado — MPI Iberian Awards 2025" className="w-full object-cover block" />
+                  <div className={`absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border transition-colors duration-500 ${isLight ? "bg-white/85 border-brand-magenta/15" : "bg-black/75 border-white/10"}`}>
+                    <p className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
+                      🏆 MPI Iberian Awards 2025
+                    </p>
+                    <p className={`text-sm font-semibold mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
+                      🥇 Ganador · Event Industry Entrepreneur
+                    </p>
+                    <p className={`text-xs mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>
+                      Guillermo Prado Vázquez · Fundador Externia
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.35} from="right">
+              <blockquote className={`p-6 rounded-2xl border italic transition-colors duration-500 ${isLight ? "bg-gradient-to-br from-[#fff5f9] to-[#fff8ee] border-brand-magenta/10" : "bg-[#0d1829]/80 border-white/5 backdrop-blur-sm"}`}>
+                <p className={`text-base leading-relaxed font-medium transition-colors duration-500 ${isLight ? "text-gray-800" : "text-gray-200"}`}>
+                  "La IA nos permite hacer los eventos más humanos, no menos.
+                  Cada activación está diseñada para crear conexión real entre la marca y las personas."
+                </p>
+                <footer className={`mt-3 text-sm font-bold not-italic transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
+                  — Guillermo Prado Vázquez, Fundador de Externia
+                </footer>
+              </blockquote>
+            </FadeIn>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+// SECTION 4 — QUÉ NOS DIFERENCIA
+// ════════════════════════════════════════════════════════
+function DiferenciasSection({ isLight }: { isLight: boolean }) {
+  const features = [
+    { icon: "🎯", title: "Especialización exclusiva MICE", desc: "Entendemos los ritmos, necesidades y lenguaje de los eventos mejor que nadie.", lightGrad: "from-[#DE3B84]/8 to-[#D6007D]/4", hoverLight: "hover:border-[#DE3B84]/50" },
+    { icon: "✨", title: "Tecnología que no se nota", desc: "Activaciones discretas, fluidas, que generan momentos WOW de forma completamente natural.", lightGrad: "from-[#FFC12D]/8 to-[#F7A361]/4", hoverLight: "hover:border-[#FFC12D]/50" },
+    { icon: "❤️", title: "Enfoque en el asistente", desc: "Experiencias hiperpersonalizadas que crean conexión emocional real entre la marca y las personas.", lightGrad: "from-[#EE847B]/8 to-[#DE3B84]/4", hoverLight: "hover:border-[#EE847B]/50" },
+    { icon: "🌱", title: "Compromiso sostenible", desc: "Colaboramos con el Sustainability Hub for Events y trabajamos para soluciones neutras en carbono.", lightGrad: "from-[#D6007D]/8 to-[#EE847B]/4", hoverLight: "hover:border-[#D6007D]/50" },
+    { icon: "⚖️", title: "Cumplimiento regulatorio", desc: "Operamos en plena conformidad con la Ley de IA de la UE y los más altos estándares de protección de datos.", lightGrad: "from-[#F7A361]/8 to-[#FFC12D]/4", hoverLight: "hover:border-[#F7A361]/50" },
+    { icon: "📊", title: "Resultados medibles", desc: "Cada activación genera informes de impacto detallados. La IA no solo impresiona, también demuestra su valor con datos reales.", lightGrad: "from-[#DE3B84]/8 to-[#FFC12D]/4", hoverLight: "hover:border-[#DE3B84]/50" },
+  ];
+
+  return (
+    <section className={`relative py-28 px-4 overflow-hidden transition-colors duration-500 ${sectionBg(isLight, true)}`}>
+      <div className="max-w-7xl mx-auto relative z-10">
+        <FadeIn className="text-center mb-16">
+          <SectionLabel text="Qué nos diferencia" isLight={isLight} />
+          <h2 className={`text-4xl sm:text-5xl font-black transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
+            Experiencias{" "}
+            <span className={isLight
+              ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia bg-clip-text text-transparent"
+              : "bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent"}>
+              MAPI
+            </span>
+          </h2>
+          <p className={`mt-3 text-base tracking-wide transition-colors duration-500 ${isLight ? "text-gray-400" : "text-gray-500"}`}>
+            Medibles · Asequibles · Personalizadas · Innovadoras
+          </p>
+        </FadeIn>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {features.map((f, i) => (
+            <FadeIn key={i} delay={i * 0.09}>
+              <TiltCard className={`group h-full p-7 rounded-2xl border transition-all duration-300 cursor-default ${
+                isLight
+                  ? `bg-gradient-to-br ${f.lightGrad} bg-white/90 border-gray-100 ${f.hoverLight} backdrop-blur-sm`
+                  : "bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/45 hover:bg-[#00c8ff]/6 backdrop-blur-sm"
+              }`}>
+                <div className="text-4xl mb-5">{f.icon}</div>
+                <h3 className={`text-base font-bold mb-2 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{f.title}</h3>
+                <p className={`text-sm leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>{f.desc}</p>
+              </TiltCard>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+// SECTION 5 — LO QUE HACEMOS
+// ════════════════════════════════════════════════════════
+function ServiciosSection({ isLight }: { isLight: boolean }) {
+  const services = [
+    { icon: "🧠", title: "Consultoría de IA para Eventos", desc: "Acompañamos a agencias y empresas en la integración estratégica de la IA. Identificamos oportunidades, diseñamos hojas de ruta y formamos equipos para que la IA sea una ventaja real.", gradient: "from-[#DE3B84] to-[#D6007D]" },
+    { icon: "⚡", title: "Activaciones Hiperpersonalizadas", desc: "Smart Brush (caricaturas IA), transformaciones de avatar, oracle experiences, matchmaking inteligente, tarjetas de visita con IA, photocalls interactivos y mucho más.", gradient: "from-[#FFC12D] to-[#F7A361]" },
+    { icon: "📚", title: "Formación Especializada", desc: "Programas adaptados al sector: desde talleres introductorios hasta certificaciones avanzadas. Preparamos a los profesionales para el presente y el futuro.", gradient: "from-[#EE847B] to-[#DE3B84]" },
+  ];
+
+  return (
+    <section className={`relative py-28 px-4 overflow-hidden transition-colors duration-500 ${sectionBg(isLight)}`}>
+      <div className="max-w-7xl mx-auto relative z-10">
+        <FadeIn className="text-center mb-16">
+          <SectionLabel text="Lo que hacemos" isLight={isLight} />
+          <h2 className={`text-4xl sm:text-5xl font-black transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
+            Tres líneas de{" "}
+            <span className={isLight
+              ? "bg-gradient-to-r from-brand-orange to-brand-magenta bg-clip-text text-transparent"
+              : "bg-gradient-to-r from-blue-300 to-azul bg-clip-text text-transparent"}>
+              impacto real
+            </span>
+          </h2>
+          <p className={`mt-3 text-sm transition-colors duration-500 ${isLight ? "text-gray-400" : "text-gray-500"}`}>
+            Pasa el cursor por cada tarjeta para descubrir más
+          </p>
+        </FadeIn>
+        <div className="grid md:grid-cols-3 gap-6">
+          {services.map((s, i) => (
+            <FadeIn key={i} delay={i * 0.12}>
+              <FlipCard icon={s.icon} title={s.title} desc={s.desc} gradient={s.gradient} isLight={isLight} />
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+// SECTION 6 — METODOLOGÍA
+// ════════════════════════════════════════════════════════
+function MetodologiaSection({ isLight }: { isLight: boolean }) {
+  const steps = [
+    { num: "01", title: "CRE-IA-tividad", desc: "Exploramos el contexto del evento, los objetivos y el perfil de los asistentes para co-crear la solución más adecuada con brainstorming aumentado con IA.", color: isLight ? "#DE3B84" : "#0070f3" },
+    { num: "02", title: "AI-mplementación", desc: "Desarrollamos e integramos la solución de forma ágil y eficiente, asegurando que la tecnología se adapte al espacio, el tiempo y el equipo humano.", color: isLight ? "#FFC12D" : "#3b82f6" },
+    { num: "03", title: "Evolución y Optimización", desc: "Monitorizamos resultados en tiempo real, recogemos feedback y generamos informes de impacto medibles para cada cliente.", color: isLight ? "#F7A361" : "#60a5fa" },
+  ];
+
+  return (
+    <section className={`relative py-28 px-4 overflow-hidden transition-colors duration-500 ${sectionBg(isLight, true)}`}>
+      <div className="max-w-7xl mx-auto relative z-10">
+        <FadeIn className="text-center mb-20">
+          <SectionLabel text="Nuestra Metodología" isLight={isLight} />
+          <h2 className={`text-4xl sm:text-5xl font-black transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
+            Un proceso diseñado para{" "}
+            <span className={isLight
+              ? "bg-gradient-to-r from-brand-magenta to-brand-orange bg-clip-text text-transparent"
+              : "bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent"}>
+              garantizar resultados
+            </span>
+          </h2>
+        </FadeIn>
+
+        <div className="relative">
+          <div className={`hidden lg:block absolute top-10 left-[16.66%] right-[16.66%] h-px transition-colors duration-500 ${isLight ? "bg-gradient-to-r from-brand-magenta via-brand-yellow to-brand-orange" : "bg-gradient-to-r from-azul/40 to-blue-400/40"}`} />
+          <div className="grid lg:grid-cols-3 gap-10">
+            {steps.map((step, i) => (
+              <FadeIn key={i} delay={i * 0.18}>
+                <div className="flex flex-col items-center text-center">
+                  <motion.div whileHover={{ scale: 1.12 }} transition={{ type: "spring", stiffness: 300 }}
+                    className="relative z-10 w-20 h-20 rounded-full flex items-center justify-center text-2xl font-black text-white mb-6 shadow-xl"
+                    style={{ backgroundColor: step.color }}>
+                    {step.num}
+                    <div className="absolute inset-0 rounded-full opacity-40 blur-md" style={{ backgroundColor: step.color }} />
+                  </motion.div>
+                  <h3 className={`text-xl font-black mb-3 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
+                    {step.title.split("-").map((part, pi, arr) =>
+                      part === "IA" ? <span key={pi} style={{ color: step.color }}>IA</span>
+                        : <span key={pi}>{part}{pi < arr.length - 1 && "-"}</span>
+                    )}
+                  </h3>
+                  <p className={`text-sm leading-relaxed max-w-xs transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>{step.desc}</p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+// SECTION 7 — RESULTADOS
+// ════════════════════════════════════════════════════════
+function ResultadosSection({ isLight }: { isLight: boolean }) {
+  const stats = [
+    { value: 2300, suffix: "+", label: "caricaturas generadas por IA en un solo evento", color: "#DE3B84" },
+    { value: 600, suffix: "+", label: "asignaciones de asientos automatizadas", color: "#FFC12D" },
+    { value: 4800, suffix: "+", label: "conexiones inteligentes de matchmaking", color: "#F7A361" },
+    { value: 1200, suffix: "+", label: "registros gestionados con lenguaje natural", color: "#EE847B" },
+    { value: 5, suffix: "", label: "grandes agencias españolas en los primeros 2 meses", color: "#D6007D" },
+  ];
+
+  return (
+    <section className={`relative py-28 px-4 overflow-hidden transition-colors duration-500 ${
+      isLight
+        ? "bg-gradient-to-br from-[#f0a0c0] via-[#dc80c8] to-[#f8c090]"
+        : "bg-[#060d1a]/95 backdrop-blur-sm"
+    }`}>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <FadeIn className="text-center mb-16">
+          <SectionLabel text="Nuestros Resultados" isLight={isLight} white={isLight} />
+          <h2 className="text-4xl sm:text-5xl font-black text-white">Nuestros números hablan</h2>
+        </FadeIn>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {stats.map((s, i) => (
+            <FadeIn key={i} delay={i * 0.1}>
+              <div className={`p-8 rounded-2xl border text-center transition-all duration-300 hover:-translate-y-1 ${
+                isLight
+                  ? "bg-white/15 border-white/20 backdrop-blur-sm"
+                  : "bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 hover:bg-[#00c8ff]/5 backdrop-blur-sm"
+              }`}>
+                <div className={`text-5xl sm:text-6xl font-black mb-2 ${isLight ? "text-white" : ""}`}
+                  style={!isLight ? { color: s.color } : {}}>
+                  <Counter value={s.value} suffix={s.suffix} />
+                </div>
+                <p className={`text-sm leading-snug ${isLight ? "text-white/80" : "text-gray-400"}`}>{s.label}</p>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+// SECTION 8 — EQUIPO
+// ════════════════════════════════════════════════════════
+function EquipoSection({ isLight }: { isLight: boolean }) {
+  return (
+    <section className={`relative py-28 px-4 overflow-hidden transition-colors duration-500 ${sectionBg(isLight, true)}`}>
+      <div className="max-w-7xl mx-auto relative z-10">
+        <FadeIn className="text-center mb-16">
+          <SectionLabel text="Nuestro Equipo" isLight={isLight} />
+          <h2 className={`text-4xl sm:text-5xl font-black transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
+            Personas que hacen posible la{" "}
+            <span className={isLight
+              ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia bg-clip-text text-transparent"
+              : "bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent"}>
+              magia
+            </span>
+          </h2>
+          <p className={`mt-4 text-base max-w-2xl mx-auto leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>
+            Combinamos perfiles de tecnología, diseño de experiencias, producción de eventos y
+            formación, con un denominador común: la convicción de que la IA, bien aplicada,
+            puede hacer los eventos más humanos.
+          </p>
+        </FadeIn>
+
+        <div className="grid lg:grid-cols-5 gap-8 items-start">
+          <FadeIn delay={0.1} from="left" className="lg:col-span-2">
+            <div className={`rounded-2xl overflow-hidden border transition-colors duration-500 ${isLight ? "border-brand-magenta/15 bg-white/90 backdrop-blur-sm" : "border-white/8 bg-[#0d1829]/80 backdrop-blur-sm"}`}>
+              <div className="relative overflow-hidden">
+                <img src="/team/guillermo-ganador.png" alt="Guillermo Prado — Ganador Event Industry Entrepreneur 2025"
+                  className="w-full object-cover transition-transform duration-700 hover:scale-105" />
+              </div>
+              <div className="p-6">
+                <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-3 transition-colors duration-500 ${isLight ? "bg-brand-magenta/10 text-brand-magenta" : "bg-azul/10 text-azul"}`}>
+                  Fundador & CEO
+                </div>
+                <h3 className={`text-xl font-black transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>Guillermo Prado Vázquez</h3>
+                <p className={`mt-2 text-sm leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>
+                  Doctor en Biociencias Moleculares (UAM) · Exinvestigador Hospital La Paz · Especialista en IA aplicada a eventos MICE
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {["🥇 Event Industry Entrepreneur — Ganador", "🏆 Innovation Champion — Finalista"].map((b) => (
+                    <span key={b} className={`text-xs px-3 py-1 rounded-full font-medium transition-colors duration-500 ${isLight ? "bg-brand-magenta/8 text-brand-magenta border border-brand-magenta/20" : "bg-azul/10 text-azul border border-azul/20"}`}>
+                      {b}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={0.25} from="right" className="lg:col-span-3 flex flex-col gap-6">
+            <div className={`relative rounded-2xl overflow-hidden border transition-colors duration-500 ${isLight ? "border-brand-magenta/15" : "border-white/8"}`}>
+              <img src="/team/equipo-mpi.png" alt="Equipo Externia en MPI Iberian Chapter"
+                className="w-full object-cover transition-transform duration-700 hover:scale-105" />
+              <div className={`absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border transition-colors duration-500 ${isLight ? "bg-white/85 border-brand-magenta/15" : "bg-black/75 border-white/10"}`}>
+                <p className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
+                  MPI Iberian Chapter · Valencia 2025
+                </p>
+                <p className={`text-sm mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-700" : "text-gray-300"}`}>
+                  Equipo Externia en el Global Meetings Industry Day
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              {[{ icon: "🔬", label: "Rigor analítico" }, { icon: "💡", label: "Creatividad disruptiva" }, { icon: "🤝", label: "Respeto por las personas" }].map((v) => (
+                <div key={v.label} className={`p-4 rounded-xl text-center border transition-all duration-300 hover:-translate-y-1 ${isLight ? "bg-white/90 border-gray-100 backdrop-blur-sm" : "bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 hover:bg-[#00c8ff]/5 backdrop-blur-sm"}`}>
+                  <div className="text-2xl mb-2">{v.icon}</div>
+                  <p className={`text-xs font-semibold transition-colors duration-500 ${isLight ? "text-gray-700" : "text-gray-300"}`}>{v.label}</p>
+                </div>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+// SECTION 9 — CTA
+// ════════════════════════════════════════════════════════
+function CTASection({ isLight }: { isLight: boolean }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <section className={`relative py-32 px-4 overflow-hidden transition-colors duration-500 ${sectionBg(isLight)}`}>
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-12 pointer-events-none transition-colors duration-500 ${isLight ? "bg-brand-magenta" : "bg-azul"}`} />
+
+      <div className="max-w-3xl mx-auto text-center relative z-10">
+        <FadeIn>
+          <SectionLabel text="¿Listo para el cambio?" isLight={isLight} />
+          <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black leading-tight mb-6 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
+            Transforma tu próximo evento con{" "}
+            <span className={isLight
+              ? "bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-brand-orange bg-clip-text text-transparent"
+              : "bg-gradient-to-r from-azul via-blue-300 to-azul bg-clip-text text-transparent"}>
+              Inteligencia Artificial
+            </span>
+          </h2>
+          <p className={`text-lg mb-10 transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>
+            Descubre cómo Externia puede crear una experiencia MAPI para tu próximo evento.
+          </p>
+
+          <motion.a href="/servicios" whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.97 }}
+            onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+            className={`inline-block px-12 py-5 rounded-full text-lg font-bold text-white transition-shadow duration-300 ${isLight ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia" : "bg-azul"}`}
+            style={hovered ? { boxShadow: isLight ? "0 0 50px #DE3B8490, 0 0 100px #D6007D40" : "0 0 50px #0070f390, 0 0 100px #0070f340" } : {}}>
+            Ver nuestros servicios →
+          </motion.a>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+// ROOT EXPORT
+// ════════════════════════════════════════════════════════
+export default function QuienesSomos() {
+  const isLight = useTheme();
+
+  return (
+    <>
+      {/* Floating bubbles background — brand color (light) / blue (dark) */}
+      <BubblesBg isLight={isLight} />
+
+      {/* All page sections sit above the canvas */}
+      <div className="relative z-10 transition-colors duration-500">
+        <HeroSection isLight={isLight} />
+        <ManifiestoSection isLight={isLight} />
+        <HistoriaSection isLight={isLight} />
+        <DiferenciasSection isLight={isLight} />
+        <ServiciosSection isLight={isLight} />
+        <MetodologiaSection isLight={isLight} />
+        <ResultadosSection isLight={isLight} />
+        <EquipoSection isLight={isLight} />
+        <CTASection isLight={isLight} />
+      </div>
+    </>
+  );
+}
