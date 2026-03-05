@@ -1,0 +1,60 @@
+---
+/**
+ * Services.astro — Three-column grid of glassmorphism service cards.
+ * Each card is a React island (client:visible) for hover animations.
+ */
+import ServiceCard from "./ServiceCard";
+
+interface Service {
+  title: string;
+  description: string;
+  icon: string;
+}
+
+const services: Service[] = [
+  {
+    icon: "🧠",
+    title: "Estrategia de IA",
+    description:
+      "Diseñamos la hoja de ruta de inteligencia artificial personalizada para tu organización. Desde la auditoría de datos hasta la selección de modelos, cada paso está alineado con tus objetivos de negocio.",
+  },
+  {
+    icon: "⚡",
+    title: "Automatización Cognitiva",
+    description:
+      "Desplegamos agentes autónomos que reemplazan procesos manuales repetitivos. NLP, visión artificial y toma de decisiones algorítmica integrados en tu flujo operativo.",
+  },
+  {
+    icon: "📊",
+    title: "Modelos Predictivos",
+    description:
+      "Construimos pipelines de Machine Learning en producción que anticipan tendencias, detectan anomalías y optimizan decisiones antes de que el mercado reaccione.",
+  },
+];
+---
+
+<section id="servicios" class="relative bg-gris py-20 sm:py-28 lg:py-36">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- Section header -->
+    <div class="mb-12 text-center sm:mb-16">
+      <h2 class="text-3xl font-bold tracking-tight text-blanco sm:text-4xl lg:text-5xl">
+        Nuestros <span class="text-azul">Servicios</span>
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-base text-gray-400 sm:text-lg">
+        Soluciones de IA diseñadas para empresas que piensan en grande.
+      </p>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:gap-8">
+      {services.map((service) => (
+        <ServiceCard
+          client:visible
+          title={service.title}
+          description={service.description}
+          icon={service.icon}
+        />
+      ))}
+    </div>
+  </div>
+</section>

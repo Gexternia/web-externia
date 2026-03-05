@@ -1,0 +1,20 @@
+---
+/**
+ * index.astro — Home page.
+ * Only Hero section with 3D animation and logo.
+ */
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero.astro";
+import Footer from "../components/Footer";
+import ThemeToggle from "../components/ThemeToggle";
+---
+
+<Layout>
+  <Navbar client:load />
+  <ThemeToggle client:load />
+  <main>
+    <Hero />
+  </main>
+  <Footer client:load />
+</Layout>

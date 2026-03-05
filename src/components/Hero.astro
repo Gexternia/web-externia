@@ -1,0 +1,23 @@
+---
+/**
+ * Hero.astro — Full-viewport hero with 3D background and animated overlay.
+ * Scene3D renders as a React island with client:load.
+ * HeroContent renders the Framer Motion text overlay.
+ */
+import Scene3D from "./Scene3D";
+import HeroContent from "./HeroContent";
+---
+
+<section id="hero" class="relative w-full h-screen overflow-hidden" style="background-color: var(--bg-base); transition: background-color 0.4s ease;">
+  <!-- 3D Canvas (React island, loaded immediately) -->
+  <div class="absolute inset-0">
+    <Scene3D client:load />
+  </div>
+
+  <!-- Subtle bottom fade -->
+  <div class="absolute bottom-0 left-0 right-0 h-32 pointer-events-none" style="background: linear-gradient(to bottom, transparent, var(--bg-base)); transition: background 0.4s ease;"></div>
+
+  <!-- Animated text overlay -->
+  <HeroContent client:load />
+
+</section>

@@ -1,0 +1,22 @@
+---
+/**
+ * formacion.astro — Formación page.
+ */
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import ThemeToggle from "../components/ThemeToggle";
+---
+
+<Layout title="Formación — Externia">
+  <Navbar client:load />
+  <ThemeToggle client:load />
+  <main>
+    <section class="section-container">
+      <div class="max-w-7xl mx-auto px-4 sm:px-8 py-32 min-h-screen flex items-center justify-center">
+        <h2 class="section-title">Formación</h2>
+      </div>
+    </section>
+  </main>
+  <Footer client:load />
+</Layout>
