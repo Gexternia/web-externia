@@ -307,10 +307,10 @@ function SectionLabel({ text, isLight, white = false }: { text: string; isLight:
 
 
 // ── Section background helpers ────────────────────────────────────
-const lightBg = "bg-white/88 backdrop-blur-[2px]";
-const lightAltBg = "bg-gray-50/88 backdrop-blur-[2px]";
-const darkBg = "bg-[#060d1a]/92 backdrop-blur-[2px]";
-const darkAltBg = "bg-[#08111e]/92 backdrop-blur-[2px]";
+const lightBg = "bg-white/65 backdrop-blur-[2px]";
+const lightAltBg = "bg-gray-50/65 backdrop-blur-[2px]";
+const darkBg = "bg-[#060d1a]/72 backdrop-blur-[2px]";
+const darkAltBg = "bg-[#08111e]/72 backdrop-blur-[2px]";
 
 function sectionBg(isLight: boolean, alt = false) {
   return isLight ? (alt ? lightAltBg : lightBg) : (alt ? darkAltBg : darkBg);
@@ -973,6 +973,7 @@ function NetworkParticlesBg({ isLight }: { isLight: boolean }) {
     }).then(() => setReady(true));
   }, []);
 
+
   if (!ready) return null;
 
   const accent = isLight ? "#DE3B84" : "#0070f3";
@@ -980,7 +981,7 @@ function NetworkParticlesBg({ isLight }: { isLight: boolean }) {
   return (
     <Particles
       id="qs-network"
-      style={{ position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none" }}
+      style={{ position: "fixed", inset: 0, zIndex: 5, pointerEvents: "none" }}
       options={{
         fpsLimit: 40,
         background: { color: { value: "transparent" } },
@@ -992,7 +993,7 @@ function NetworkParticlesBg({ isLight }: { isLight: boolean }) {
           },
           modes: {
             repulse: { distance: 100, duration: 0.4, factor: 3 },
-            push: { quantity: 2 },
+            push: { quantity: 1 },
           },
         },
         particles: {
@@ -1000,9 +1001,9 @@ function NetworkParticlesBg({ isLight }: { isLight: boolean }) {
           links: {
             enable: true,
             color: accent,
-            opacity: isLight ? 0.1 : 0.15,
-            distance: 120,
-            width: 1,
+            opacity: isLight ? 0.58 : 1.0,
+            distance: 130,
+            width: 1.8,
           },
           move: {
             enable: true,
@@ -1012,11 +1013,11 @@ function NetworkParticlesBg({ isLight }: { isLight: boolean }) {
             outModes: { default: "bounce" as const },
           },
           number: {
-            density: { enable: true, area: 1000 },
-            value: 32,
+            density: { enable: true, area: 900 },
+            value: 50,
           },
-          opacity: { value: { min: 0.1, max: isLight ? 0.3 : 0.45 } },
-          size: { value: { min: 1, max: 2 } },
+          opacity: { value: { min: isLight ? 0.49 : 0.65, max: isLight ? 0.75 : 1.0 } },
+          size: { value: { min: 2.5, max: 4 } },
           shape: { type: "circle" },
         },
         detectRetina: false,
