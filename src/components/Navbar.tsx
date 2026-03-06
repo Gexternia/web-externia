@@ -14,6 +14,7 @@ const navLinks = [
     { label: "Formación", href: "/formacion" },
 ];
 
+
 export default function Navbar() {
     const [isDark, setIsDark] = useState(true);
     const [menuOpen, setMenuOpen] = useState(false);

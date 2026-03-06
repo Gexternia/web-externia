@@ -3,7 +3,29 @@
  * Light mode: brand colors. Dark mode: deep navy palette.
  */
 import { useState, useEffect, useRef, useMemo } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
+import Tilt from "react-parallax-tilt";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
+
+// ── Single RAF-batched global mouse tracker (1 listener for ALL magnetic elements)
+let _gMouseX = -9999, _gMouseY = -9999, _gMouseRaf = false, _gMouseInit = false;
+const _gMouseSubs = new Set<(x: number, y: number) => void>();
+function _ensureGlobalMouse() {
+  if (_gMouseInit || typeof window === "undefined") return;
+  _gMouseInit = true;
+  window.addEventListener(
+    "mousemove",
+    (e) => {
+      _gMouseX = e.clientX; _gMouseY = e.clientY;
+      if (!_gMouseRaf) {
+        _gMouseRaf = true;
+        requestAnimationFrame(() => { _gMouseRaf = false; _gMouseSubs.forEach((fn) => fn(_gMouseX, _gMouseY)); });
+      }
+    },
+    { passive: true }
+  );
+}
 
 // ── Interactive canvas bubbles background ─────────────────────────
 type BubbleData = { x: number; y: number; r: number; vx: number; vy: number; baseVy: number; opacity: number; phase: number };
@@ -24,7 +46,7 @@ function BubblesBg({ isLight }: { isLight: boolean }) {
     resize();
     window.addEventListener("resize", resize);
 
-    const W = canvas.width, H = canvas.height, N = 30;
+    const W = canvas.width, H = canvas.height, N = 20;
     bubblesRef.current = Array.from({ length: N }, (_, i) => {
       const baseVy = -(0.3 + (i * 0.14) % 0.7);
       return {
@@ -59,7 +81,7 @@ function BubblesBg({ isLight }: { isLight: boolean }) {
     const ctx = canvas.getContext("2d")!;
     const [cr, cg, cb] = isLight ? [222, 59, 132] : [40, 120, 255];
 
-    const tick = () => {
+    const tick = (now: number) => {
       if (!canvas.width || !canvas.height) { rafRef.current = requestAnimationFrame(tick); return; }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -176,12 +198,13 @@ function useTheme() {
 }
 
 // ── Animated counter ──────────────────────────────────────────────
-function Counter({ value, suffix = "+" }: { value: number; suffix?: string }) {
+function Counter({ value, suffix = "+", replay = 0 }: { value: number; suffix?: string; replay?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const [n, setN] = useState(0);
   useEffect(() => {
     if (!inView) return;
+    setN(0); // reset to 0 before counting up
     const end = Date.now() + 2200;
     const tick = () => {
       const t = Math.min(1, 1 - (end - Date.now()) / 2200);
@@ -189,10 +212,11 @@ function Counter({ value, suffix = "+" }: { value: number; suffix?: string }) {
       if (t < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
-  }, [inView, value]);
+  }, [inView, value, replay]); // replay change re-triggers the animation
   return <span ref={ref}>{n.toLocaleString("es-ES")}{suffix}</span>;
 }
 
+// ── 3D Tilt card ─────────────────────────────────────────────────
 // ── 3D Tilt card ─────────────────────────────────────────────────
 function TiltCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   const el = useRef<HTMLDivElement>(null);
@@ -440,20 +464,28 @@ function HistoriaSection({ isLight }: { isLight: boolean }) {
             <FadeIn delay={0.2} from="right">
               <div className="relative">
                 <div className={`absolute -inset-3 rounded-3xl blur-2xl opacity-25 pointer-events-none transition-colors duration-500 ${isLight ? "bg-gradient-to-r from-brand-magenta to-brand-yellow" : "bg-azul"}`} />
-                <div className={`relative rounded-2xl overflow-hidden border transition-colors duration-500 ${isLight ? "border-brand-magenta/15" : "border-white/8"}`}>
-                  <img src="/team/guillermo-premio.png" alt="Guillermo Prado — MPI Iberian Awards 2025" className="w-full object-cover block" />
-                  <div className={`absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border transition-colors duration-500 ${isLight ? "bg-white/85 border-brand-magenta/15" : "bg-black/75 border-white/10"}`}>
-                    <p className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
-                      🏆 MPI Iberian Awards 2025
-                    </p>
-                    <p className={`text-sm font-semibold mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
-                      🥇 Ganador · Event Industry Entrepreneur
-                    </p>
-                    <p className={`text-xs mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>
-                      Guillermo Prado Vázquez · Fundador Externia
-                    </p>
+                <Tilt
+                  glareEnable glareMaxOpacity={0.18}
+                  glareColor={isLight ? "#DE3B84" : "#0070f3"}
+                  glarePosition="all" glareBorderRadius="16px"
+                  tiltMaxAngleX={7} tiltMaxAngleY={7}
+                  scale={1.02} transitionSpeed={500}
+                  className="block">
+                  <div className={`relative rounded-2xl overflow-hidden border transition-colors duration-500 ${isLight ? "border-brand-magenta/15" : "border-white/8"}`}>
+                    <img src="/team/guillermo-premio.png" alt="Guillermo Prado — MPI Iberian Awards 2025" className="w-full object-cover block" />
+                    <div className={`absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border transition-colors duration-500 ${isLight ? "bg-white/85 border-brand-magenta/15" : "bg-black/75 border-white/10"}`}>
+                      <p className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
+                        🏆 MPI Iberian Awards 2025
+                      </p>
+                      <p className={`text-sm font-semibold mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
+                        🥇 Ganador · Event Industry Entrepreneur
+                      </p>
+                      <p className={`text-xs mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>
+                        Guillermo Prado Vázquez · Fundador Externia
+                      </p>
+                    </div>
                   </div>
-                </div>
+                </Tilt>
               </div>
             </FadeIn>
 
@@ -508,17 +540,21 @@ function DiferenciasSection({ isLight }: { isLight: boolean }) {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {features.map((f, i) => (
-            <FadeIn key={i} delay={i * 0.09}>
-              <TiltCard className={`group h-full p-7 rounded-2xl border transition-all duration-300 cursor-default ${
-                isLight
-                  ? `bg-gradient-to-br ${f.lightGrad} bg-white/90 border-gray-100 ${f.hoverLight} backdrop-blur-sm`
-                  : "bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/45 hover:bg-[#00c8ff]/6 backdrop-blur-sm"
-              }`}>
-                <div className="text-4xl mb-5">{f.icon}</div>
-                <h3 className={`text-base font-bold mb-2 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{f.title}</h3>
-                <p className={`text-sm leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>{f.desc}</p>
-              </TiltCard>
-            </FadeIn>
+            <MagneticRepel key={i} strength={52} radius={185}>
+              <FadeIn delay={i * 0.09}>
+                <TiltCard className={`group h-full p-7 rounded-2xl border transition-all duration-300 cursor-default ${
+                  isLight
+                    ? `bg-gradient-to-br ${f.lightGrad} bg-white/90 border-gray-100 ${f.hoverLight} backdrop-blur-sm`
+                    : "bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/45 hover:bg-[#00c8ff]/6 backdrop-blur-sm"
+                }`}>
+                  <MagneticAttract strength={18} radius={82}>
+                    <div className="text-4xl mb-5">{f.icon}</div>
+                  </MagneticAttract>
+                  <h3 className={`text-base font-bold mb-2 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{f.title}</h3>
+                  <p className={`text-sm leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>{f.desc}</p>
+                </TiltCard>
+              </FadeIn>
+            </MagneticRepel>
           ))}
         </div>
       </div>
@@ -631,6 +667,10 @@ function ResultadosSection({ isLight }: { isLight: boolean }) {
     { value: 5, suffix: "", label: "grandes agencias españolas en los primeros 2 meses", color: "#D6007D" },
   ];
 
+  const [replays, setReplays] = useState<number[]>([0, 0, 0, 0, 0]);
+  const handleClick = (i: number) =>
+    setReplays((prev) => prev.map((v, j) => (j === i ? v + 1 : v)));
+
   return (
     <section className={`relative py-28 px-4 overflow-hidden transition-colors duration-500 ${
       isLight
@@ -642,19 +682,24 @@ function ResultadosSection({ isLight }: { isLight: boolean }) {
         <FadeIn className="text-center mb-16">
           <SectionLabel text="Nuestros Resultados" isLight={isLight} white={isLight} />
           <h2 className="text-4xl sm:text-5xl font-black text-white">Nuestros números hablan</h2>
+          <p className={`mt-2 text-sm ${isLight ? "text-white/60" : "text-gray-500"}`}>
+            Haz clic en cualquier dato para verlo de nuevo
+          </p>
         </FadeIn>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {stats.map((s, i) => (
             <FadeIn key={i} delay={i * 0.1}>
-              <div className={`p-8 rounded-2xl border text-center transition-all duration-300 hover:-translate-y-1 ${
-                isLight
-                  ? "bg-white/15 border-white/20 backdrop-blur-sm"
-                  : "bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 hover:bg-[#00c8ff]/5 backdrop-blur-sm"
-              }`}>
+              <div
+                onClick={() => handleClick(i)}
+                className={`p-8 rounded-2xl border text-center transition-all duration-300 hover:-translate-y-1 cursor-pointer select-none active:scale-95 ${
+                  isLight
+                    ? "bg-white/15 border-white/20 backdrop-blur-sm hover:bg-white/25"
+                    : "bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 hover:bg-[#00c8ff]/5 backdrop-blur-sm"
+                }`}>
                 <div className={`text-5xl sm:text-6xl font-black mb-2 ${isLight ? "text-white" : ""}`}
                   style={!isLight ? { color: s.color } : {}}>
-                  <Counter value={s.value} suffix={s.suffix} />
+                  <Counter value={s.value} suffix={s.suffix} replay={replays[i]} />
                 </div>
                 <p className={`text-sm leading-snug ${isLight ? "text-white/80" : "text-gray-400"}`}>{s.label}</p>
               </div>
@@ -692,6 +737,13 @@ function EquipoSection({ isLight }: { isLight: boolean }) {
 
         <div className="grid lg:grid-cols-5 gap-8 items-start">
           <FadeIn delay={0.1} from="left" className="lg:col-span-2">
+            <Tilt
+              glareEnable glareMaxOpacity={0.15}
+              glareColor={isLight ? "#DE3B84" : "#0070f3"}
+              glarePosition="all" glareBorderRadius="16px"
+              tiltMaxAngleX={8} tiltMaxAngleY={8}
+              scale={1.02} transitionSpeed={500}
+              className="block">
             <div className={`rounded-2xl overflow-hidden border transition-colors duration-500 ${isLight ? "border-brand-magenta/15 bg-white/90 backdrop-blur-sm" : "border-white/8 bg-[#0d1829]/80 backdrop-blur-sm"}`}>
               <div className="relative overflow-hidden">
                 <img src="/team/guillermo-ganador.png" alt="Guillermo Prado — Ganador Event Industry Entrepreneur 2025"
@@ -714,26 +766,37 @@ function EquipoSection({ isLight }: { isLight: boolean }) {
                 </div>
               </div>
             </div>
+            </Tilt>
           </FadeIn>
 
           <FadeIn delay={0.25} from="right" className="lg:col-span-3 flex flex-col gap-6">
-            <div className={`relative rounded-2xl overflow-hidden border transition-colors duration-500 ${isLight ? "border-brand-magenta/15" : "border-white/8"}`}>
-              <img src="/team/equipo-mpi.png" alt="Equipo Externia en MPI Iberian Chapter"
-                className="w-full object-cover transition-transform duration-700 hover:scale-105" />
-              <div className={`absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border transition-colors duration-500 ${isLight ? "bg-white/85 border-brand-magenta/15" : "bg-black/75 border-white/10"}`}>
-                <p className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
-                  MPI Iberian Chapter · Valencia 2025
-                </p>
-                <p className={`text-sm mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-700" : "text-gray-300"}`}>
-                  Equipo Externia en el Global Meetings Industry Day
-                </p>
+            <Tilt
+              glareEnable glareMaxOpacity={0.15}
+              glareColor={isLight ? "#DE3B84" : "#0070f3"}
+              glarePosition="all" glareBorderRadius="16px"
+              tiltMaxAngleX={6} tiltMaxAngleY={6}
+              scale={1.02} transitionSpeed={500}
+              className="block">
+              <div className={`relative rounded-2xl overflow-hidden border transition-colors duration-500 ${isLight ? "border-brand-magenta/15" : "border-white/8"}`}>
+                <img src="/team/equipo-mpi.png" alt="Equipo Externia en MPI Iberian Chapter"
+                  className="w-full object-cover transition-transform duration-700 hover:scale-105" />
+                <div className={`absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border transition-colors duration-500 ${isLight ? "bg-white/85 border-brand-magenta/15" : "bg-black/75 border-white/10"}`}>
+                  <p className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
+                    MPI Iberian Chapter · Valencia 2025
+                  </p>
+                  <p className={`text-sm mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-700" : "text-gray-300"}`}>
+                    Equipo Externia en el Global Meetings Industry Day
+                  </p>
+                </div>
               </div>
-            </div>
+            </Tilt>
 
             <div className="grid grid-cols-3 gap-4">
               {[{ icon: "🔬", label: "Rigor analítico" }, { icon: "💡", label: "Creatividad disruptiva" }, { icon: "🤝", label: "Respeto por las personas" }].map((v) => (
                 <div key={v.label} className={`p-4 rounded-xl text-center border transition-all duration-300 hover:-translate-y-1 ${isLight ? "bg-white/90 border-gray-100 backdrop-blur-sm" : "bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 hover:bg-[#00c8ff]/5 backdrop-blur-sm"}`}>
-                  <div className="text-2xl mb-2">{v.icon}</div>
+                  <MagneticAttract strength={18} radius={65}>
+                    <div className="text-2xl mb-2">{v.icon}</div>
+                  </MagneticAttract>
                   <p className={`text-xs font-semibold transition-colors duration-500 ${isLight ? "text-gray-700" : "text-gray-300"}`}>{v.label}</p>
                 </div>
               ))}
@@ -750,6 +813,37 @@ function EquipoSection({ isLight }: { isLight: boolean }) {
 // ════════════════════════════════════════════════════════
 function CTASection({ isLight }: { isLight: boolean }) {
   const [hovered, setHovered] = useState(false);
+  const primaryRef = useRef<HTMLSpanElement>(null);
+  const cloneRef = useRef<HTMLSpanElement>(null);
+  const TR = "transform 0.44s cubic-bezier(0.76, 0, 0.24, 1)";
+
+  const onBtnEnter = () => {
+    setHovered(true);
+    if (!primaryRef.current || !cloneRef.current) return;
+    // Primary exits to the right
+    primaryRef.current.style.transition = TR;
+    primaryRef.current.style.transform = "translateX(110%)";
+    // Clone: jump to left (no animation), then slide right to center
+    cloneRef.current.style.transition = "none";
+    cloneRef.current.style.transform = "translateX(-110%)";
+    cloneRef.current.getBoundingClientRect(); // force reflow
+    cloneRef.current.style.transition = TR;
+    cloneRef.current.style.transform = "translateX(0%)";
+  };
+
+  const onBtnLeave = () => {
+    setHovered(false);
+    if (!primaryRef.current || !cloneRef.current) return;
+    // Clone exits to the right
+    cloneRef.current.style.transition = TR;
+    cloneRef.current.style.transform = "translateX(110%)";
+    // Primary: jump to left (no animation), then slide right to center
+    primaryRef.current.style.transition = "none";
+    primaryRef.current.style.transform = "translateX(-110%)";
+    primaryRef.current.getBoundingClientRect(); // force reflow
+    primaryRef.current.style.transition = TR;
+    primaryRef.current.style.transform = "translateX(0%)";
+  };
 
   return (
     <section className={`relative py-32 px-4 overflow-hidden transition-colors duration-500 ${sectionBg(isLight)}`}>
@@ -770,15 +864,164 @@ function CTASection({ isLight }: { isLight: boolean }) {
             Descubre cómo Externia puede crear una experiencia MAPI para tu próximo evento.
           </p>
 
-          <motion.a href="/servicios" whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.97 }}
-            onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-            className={`inline-block px-12 py-5 rounded-full text-lg font-bold text-white transition-shadow duration-300 ${isLight ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia" : "bg-azul"}`}
+          <motion.a href="/servicios" whileTap={{ scale: 0.97 }}
+            onMouseEnter={onBtnEnter} onMouseLeave={onBtnLeave}
+            className={`relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-shadow duration-300 ${isLight ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia" : "bg-azul"}`}
             style={hovered ? { boxShadow: isLight ? "0 0 50px #DE3B8490, 0 0 100px #D6007D40" : "0 0 50px #0070f390, 0 0 100px #0070f340" } : {}}>
-            Ver nuestros servicios →
+            {/* Invisible spacer keeps button width stable */}
+            <span className="invisible whitespace-nowrap">Ver nuestros servicios →</span>
+            {/* Primary — starts centered, exits right on hover, returns from left on leave */}
+            <span ref={primaryRef} aria-hidden
+              className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
+              style={{ transform: "translateX(0%)" }}>
+              Ver nuestros servicios →
+            </span>
+            {/* Clone — starts off-screen left, enters from left on hover, exits right on leave */}
+            <span ref={cloneRef} aria-hidden
+              className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
+              style={{ transform: "translateX(-110%)" }}>
+              Ver nuestros servicios →
+            </span>
           </motion.a>
         </FadeIn>
       </div>
     </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════
+// INTERACTIVE PHYSICS HELPERS
+// ════════════════════════════════════════════════════════
+
+/** Wraps children and REPELS them away from the cursor when it gets close */
+function MagneticRepel({
+  children, strength = 32, radius = 170,
+}: { children: React.ReactNode; strength?: number; radius?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 160, damping: 18 });
+  const sy = useSpring(y, { stiffness: 160, damping: 18 });
+
+  useEffect(() => {
+    _ensureGlobalMouse();
+    const cb = (mx: number, my: number) => {
+      if (!ref.current) return;
+      const r = ref.current.getBoundingClientRect();
+      const dx = mx - (r.left + r.width * 0.5);
+      const dy = my - (r.top + r.height * 0.5);
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < radius && dist > 0) {
+        const force = (1 - dist / radius) * strength;
+        x.set((-dx / dist) * force);
+        y.set((-dy / dist) * force);
+      } else {
+        x.set(0); y.set(0);
+      }
+    };
+    _gMouseSubs.add(cb);
+    return () => { _gMouseSubs.delete(cb); };
+  }, [strength, radius]);
+
+  return <motion.div ref={ref} style={{ x: sx, y: sy }}>{children}</motion.div>;
+}
+
+/** Wraps children and ATTRACTS them toward the cursor when it gets close */
+function MagneticAttract({
+  children, strength = 14, radius = 75,
+}: { children: React.ReactNode; strength?: number; radius?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 220, damping: 22 });
+  const sy = useSpring(y, { stiffness: 220, damping: 22 });
+
+  useEffect(() => {
+    _ensureGlobalMouse();
+    const cb = (mx: number, my: number) => {
+      if (!ref.current) return;
+      const r = ref.current.getBoundingClientRect();
+      const dx = mx - (r.left + r.width * 0.5);
+      const dy = my - (r.top + r.height * 0.5);
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < radius && dist > 0) {
+        const force = (1 - dist / radius) * strength;
+        x.set((dx / dist) * force);
+        y.set((dy / dist) * force);
+      } else {
+        x.set(0); y.set(0);
+      }
+    };
+    _gMouseSubs.add(cb);
+    return () => { _gMouseSubs.delete(cb); };
+  }, [strength, radius]);
+
+  return (
+    <motion.div ref={ref} style={{ x: sx, y: sy, display: "inline-block" }}>
+      {children}
+    </motion.div>
+  );
+}
+
+/** tsparticles network background — AI / connection lines theme */
+function NetworkParticlesBg({ isLight }: { isLight: boolean }) {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      await loadSlim(engine);
+    }).then(() => setReady(true));
+  }, []);
+
+  if (!ready) return null;
+
+  const accent = isLight ? "#DE3B84" : "#0070f3";
+
+  return (
+    <Particles
+      id="qs-network"
+      style={{ position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none" }}
+      options={{
+        fpsLimit: 40,
+        background: { color: { value: "transparent" } },
+        interactivity: {
+          detectsOn: "window" as const,
+          events: {
+            onHover: { enable: true, mode: "repulse" },
+            onClick: { enable: true, mode: "push" },
+          },
+          modes: {
+            repulse: { distance: 100, duration: 0.4, factor: 3 },
+            push: { quantity: 2 },
+          },
+        },
+        particles: {
+          color: { value: accent },
+          links: {
+            enable: true,
+            color: accent,
+            opacity: isLight ? 0.1 : 0.15,
+            distance: 120,
+            width: 1,
+          },
+          move: {
+            enable: true,
+            speed: 0.6,
+            random: true,
+            direction: "none" as const,
+            outModes: { default: "bounce" as const },
+          },
+          number: {
+            density: { enable: true, area: 1000 },
+            value: 32,
+          },
+          opacity: { value: { min: 0.1, max: isLight ? 0.3 : 0.45 } },
+          size: { value: { min: 1, max: 2 } },
+          shape: { type: "circle" },
+        },
+        detectRetina: false,
+      }}
+    />
   );
 }
 
@@ -792,6 +1035,9 @@ export default function QuienesSomos() {
     <>
       {/* Floating bubbles background — brand color (light) / blue (dark) */}
       <BubblesBg isLight={isLight} />
+
+      {/* AI / network particles — connection lines, mouse repulsion */}
+      <NetworkParticlesBg isLight={isLight} />
 
       {/* All page sections sit above the canvas */}
       <div className="relative z-10 transition-colors duration-500">
