@@ -1,22 +1,22 @@
 ---
 /**
- * formacion.astro — Formación page.
+ * formacion.astro — Formación page. Mismo diseño que Quiénes Somos (Formacion.tsx).
  */
 import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ThemeToggle from "../components/ThemeToggle";
+import Formacion from "../components/Formacion.tsx";
 ---
 
-<Layout title="Formación — Externia">
+<Layout
+  title="Formación — Externia"
+  description="Formaciones en IA para eventos. Taller introductorio, programa avanzado y formación a medida. Aprende IA aplicada al sector MICE con Externia."
+>
   <Navbar client:load />
   <ThemeToggle client:load />
   <main>
-    <section class="section-container">
-      <div class="max-w-7xl mx-auto px-4 sm:px-8 py-32 min-h-screen flex items-center justify-center">
-        <h2 class="section-title">Formación</h2>
-      </div>
-    </section>
+    <Formacion client:load />
   </main>
   <Footer client:load />
 </Layout>
