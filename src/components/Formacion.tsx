@@ -3,7 +3,7 @@
  * Fondo de burbujas, tema claro/oscuro, secciones con FadeIn y TiltCard.
  */
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 
 // ── Interactive canvas bubbles background (mismo que Quiénes Somos) ──
 type BubbleData = { x: number; y: number; r: number; vx: number; vy: number; baseVy: number; opacity: number; phase: number };
@@ -209,6 +209,10 @@ function HeroSection({ isLight }: { isLight: boolean }) {
         className={`relative z-10 mt-6 text-lg sm:text-xl max-w-2xl leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-300"}`}>
         Aprende IA aplicada al sector que conoces.
       </motion.p>
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.5 }}
+        className={`relative z-10 mt-3 text-sm uppercase tracking-widest font-semibold transition-colors duration-500 ${isLight ? "text-brand-magenta/80" : "text-azul/90"}`}>
+        Presencial · Online · A medida
+      </motion.p>
     </section>
   );
 }
@@ -233,19 +237,45 @@ function PorQueSection({ isLight }: { isLight: boolean }) {
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <p className={`text-base sm:text-lg leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-300"}`}>
-            La inteligencia artificial ya está redefiniendo la industria de los eventos. Sin embargo, la mayoría de la formación en IA disponible es genérica, orientada a desarrolladores o desconectada de la realidad del sector MICE. En Externia lo hacemos diferente: enseñamos IA aplicada exactamente al trabajo de quienes organizan, producen, venden y diseñan eventos.
+          <p className={`text-base sm:text-lg leading-relaxed max-w-3xl transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-300"}`}>
+            La inteligencia artificial ya está redefiniendo la industria de los eventos. Sin embargo, la mayoría de la formación en IA disponible es genérica, orientada a desarrolladores o desconectada de la realidad del sector MICE.
+          </p>
+        </FadeIn>
+        <FadeIn delay={0.15}>
+          <p className={`mt-5 text-base sm:text-lg leading-relaxed max-w-3xl transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-300"}`}>
+            En Externia lo hacemos diferente: enseñamos IA aplicada exactamente al trabajo de quienes organizan, producen, venden y diseñan eventos.
           </p>
         </FadeIn>
         <FadeIn delay={0.2}>
-          <p className={`mt-6 text-base sm:text-lg leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-300"}`}>
+          <p className={`mt-6 text-base sm:text-lg leading-relaxed max-w-3xl transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-300"}`}>
             Nuestros programas están diseñados y liderados por el <strong className={isLight ? "text-gray-900" : "text-white"}>Dr. Guillermo Prado Vázquez</strong> — investigador en IA, especialista en eventos y finalista del Innovation Champion en los MPI Iberian Awards 2025 — con una visión única: la de alguien que domina la tecnología y vive el sector desde dentro.
           </p>
         </FadeIn>
         <FadeIn delay={0.3}>
-          <p className={`mt-8 text-xl font-bold transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
-            No enseñamos herramientas. Enseñamos a pensar con IA.
-          </p>
+          <blockquote className={`relative mt-12 px-6 sm:px-8 py-8 sm:py-10 rounded-2xl overflow-hidden transition-colors duration-500 ${
+            isLight
+              ? "bg-gradient-to-br from-brand-magenta/8 via-white to-brand-fuchsia/6 border border-brand-magenta/15"
+              : "bg-gradient-to-br from-azul/12 via-[#0d1829] to-blue-500/8 border border-azul/20"
+          }`}>
+            {/* Marca de cita sutil */}
+            <span className={`absolute top-5 left-6 text-5xl sm:text-6xl font-serif leading-none select-none transition-colors duration-500 ${
+              isLight ? "text-brand-magenta/15" : "text-azul/20"
+            }`} aria-hidden>"</span>
+            <div className="relative">
+              <p className={`text-base sm:text-lg font-semibold tracking-tight m-0 mb-3 transition-colors duration-500 ${
+                isLight ? "text-gray-600" : "text-gray-400"
+              }`}>
+                No enseñamos herramientas.
+              </p>
+              <p className={`text-xl sm:text-2xl md:text-3xl font-black leading-tight m-0 transition-colors duration-500 ${
+                isLight
+                  ? "bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-brand-orange bg-clip-text text-transparent"
+                  : "bg-gradient-to-r from-azul via-blue-300 to-azul bg-clip-text text-transparent"
+              }`}>
+                Enseñamos a pensar con IA.
+              </p>
+            </div>
+          </blockquote>
         </FadeIn>
       </div>
     </section>
@@ -255,65 +285,78 @@ function PorQueSection({ isLight }: { isLight: boolean }) {
 // ════════════════════════════════════════════════════════
 // NUESTROS PROGRAMAS
 // ════════════════════════════════════════════════════════
+type Programa = {
+  num: string;
+  title: string;
+  intro: string;
+  listTitle: string;
+  items: string[];
+  duracion: string;
+  dirigido: string;
+  modalidad: string;
+  extra?: string;
+};
+
+const PROGRAMAS_DATA: Programa[] = [
+  {
+    num: "01",
+    title: "Taller Introductorio",
+    intro: "Para profesionales que quieren dar sus primeros pasos en la IA de forma práctica, sin tecnicismos y aplicada directamente a su día a día en eventos.",
+    listTitle: "¿Qué aprenderás?",
+    items: [
+      "Qué es la IA y cómo funciona en la práctica: conceptos clave sin jerga técnica, orientados a la toma de decisiones.",
+      "Las herramientas de IA más útiles para eventos: ChatGPT, Claude, Midjourney, Canva AI, Notion AI y otras soluciones aplicadas a la producción y comunicación de eventos.",
+      "Prompting efectivo para eventos: cómo escribir instrucciones precisas para obtener resultados profesionales en briefings, propuestas, copies y creatividades.",
+      "Automatización de tareas repetitivas: correos, informes, resúmenes de reuniones, cronogramas y documentación con IA.",
+      "Casos de uso reales del sector: ejemplos concretos de cómo agencias y organizadores ya están usando la IA en España.",
+    ],
+    duracion: "4 horas (formato intensivo) o 2 sesiones de 2 horas",
+    dirigido: "Equipos de agencias, coordinadores de eventos, técnicos de comunicación",
+    modalidad: "Presencial, online o híbrida",
+  },
+  {
+    num: "02",
+    title: "Programa Avanzado",
+    intro: "Para profesionales que ya conocen las bases de la IA y quieren desarrollar una visión estratégica completa, integrando la inteligencia artificial en sus flujos de trabajo, propuestas y modelo de negocio.",
+    listTitle: "¿Qué aprenderás?",
+    items: [
+      "Estrategia de IA para agencias de eventos: cómo posicionar la IA como ventaja competitiva frente a clientes y en procesos de licitación.",
+      "Diseño de flujos de trabajo con IA: automatización de propuestas, briefings, seguimiento de clientes, gestión de proveedores y reporting.",
+      "IA para la experiencia del asistente: herramientas y metodologías para diseñar activaciones, personalización y engagement con IA.",
+      "Creación de contenido con IA: generación de imágenes, vídeos cortos, copies para RRSS, dossieres y presentaciones de forma ágil y profesional.",
+      "Análisis de datos e informes de impacto: cómo usar IA para interpretar datos de asistentes, medir ROI y generar informes automatizados.",
+      "Marco legal y ético: Ley de IA de la UE, protección de datos (RGPD), uso responsable de IA generativa y derechos de imagen.",
+      "Herramientas avanzadas y agentes de IA: introducción a flujos de trabajo con agentes de IA, Make/Zapier con IA, GPTs personalizados para el sector.",
+    ],
+    duracion: "16 horas (4 sesiones de 4 horas) o formato intensivo de 2 días",
+    dirigido: "Directores de agencias, project managers, responsables de innovación",
+    modalidad: "Presencial, online o híbrida — con acceso a materiales y recursos tras la formación",
+  },
+  {
+    num: "03",
+    title: "Formación a Medida",
+    intro: "Diseñamos programas completamente personalizados para empresas, departamentos o equipos con necesidades específicas. Desde una sesión de sensibilización para directivos hasta un programa de certificación interna para un equipo completo.",
+    listTitle: "¿Cómo funciona?",
+    items: [
+      "Diagnóstico inicial: analizamos el nivel actual del equipo, los objetivos de negocio y las herramientas que ya utilizan.",
+      "Diseño del programa: creamos un itinerario formativo adaptado, con los módulos, la duración y el ritmo que mejor se ajustan al equipo.",
+      "Impartición: presencial en las instalaciones del cliente, online o híbrida, con materiales y ejercicios prácticos del sector.",
+      "Seguimiento: sesión de resolución de dudas post-formación y acceso a recursos complementarios durante 30 días.",
+    ],
+    extra: "Hemos desarrollado programas a medida para agencias de comunicación y eventos, departamentos de marketing de IBEX 35 y equipos de producción que quieren integrar la IA en su operativa real sin interrumpir su flujo de trabajo habitual.",
+    duracion: "Flexible — de 2 horas a varios días según las necesidades del cliente",
+    dirigido: "Empresas, departamentos de eventos, equipos de marketing y comunicación",
+    modalidad: "Adaptada al cliente — presencial, online o híbrida",
+  },
+];
+
 function ProgramasSection({ isLight }: { isLight: boolean }) {
-  const programas = [
-    {
-      num: "01",
-      title: "Taller Introductorio",
-      intro: "Para profesionales que quieren dar sus primeros pasos en la IA de forma práctica, sin tecnicismos y aplicada directamente a su día a día en eventos.",
-      listTitle: "¿Qué aprenderás?",
-      items: [
-        "Qué es la IA y cómo funciona en la práctica: conceptos clave sin jerga técnica, orientados a la toma de decisiones.",
-        "Las herramientas de IA más útiles para eventos: ChatGPT, Claude, Midjourney, Canva AI, Notion AI y otras soluciones aplicadas a la producción y comunicación de eventos.",
-        "Prompting efectivo para eventos: cómo escribir instrucciones precisas para obtener resultados profesionales en briefings, propuestas, copies y creatividades.",
-        "Automatización de tareas repetitivas: correos, informes, resúmenes de reuniones, cronogramas y documentación con IA.",
-        "Casos de uso reales del sector: ejemplos concretos de cómo agencias y organizadores ya están usando la IA en España.",
-      ],
-      duracion: "4 horas (formato intensivo) o 2 sesiones de 2 horas",
-      dirigido: "Equipos de agencias, coordinadores de eventos, técnicos de comunicación",
-      modalidad: "Presencial, online o híbrida",
-    },
-    {
-      num: "02",
-      title: "Programa Avanzado",
-      intro: "Para profesionales que ya conocen las bases de la IA y quieren desarrollar una visión estratégica completa, integrando la inteligencia artificial en sus flujos de trabajo, propuestas y modelo de negocio.",
-      listTitle: "¿Qué aprenderás?",
-      items: [
-        "Estrategia de IA para agencias de eventos: cómo posicionar la IA como ventaja competitiva frente a clientes y en procesos de licitación.",
-        "Diseño de flujos de trabajo con IA: automatización de propuestas, briefings, seguimiento de clientes, gestión de proveedores y reporting.",
-        "IA para la experiencia del asistente: herramientas y metodologías para diseñar activaciones, personalización y engagement con IA.",
-        "Creación de contenido con IA: generación de imágenes, vídeos cortos, copies para RRSS, dossieres y presentaciones de forma ágil y profesional.",
-        "Análisis de datos e informes de impacto: cómo usar IA para interpretar datos de asistentes, medir ROI y generar informes automatizados.",
-        "Marco legal y ético: Ley de IA de la UE, protección de datos (RGPD), uso responsable de IA generativa y derechos de imagen.",
-        "Herramientas avanzadas y agentes de IA: introducción a flujos de trabajo con agentes de IA, Make/Zapier con IA, GPTs personalizados para el sector.",
-      ],
-      duracion: "16 horas (4 sesiones de 4 horas) o formato intensivo de 2 días",
-      dirigido: "Directores de agencias, project managers, responsables de innovación",
-      modalidad: "Presencial, online o híbrida — con acceso a materiales y recursos tras la formación",
-    },
-    {
-      num: "03",
-      title: "Formación a Medida",
-      intro: "Diseñamos programas completamente personalizados para empresas, departamentos o equipos con necesidades específicas. Desde una sesión de sensibilización para directivos hasta un programa de certificación interna para un equipo completo.",
-      listTitle: "¿Cómo funciona?",
-      items: [
-        "Diagnóstico inicial: analizamos el nivel actual del equipo, los objetivos de negocio y las herramientas que ya utilizan.",
-        "Diseño del programa: creamos un itinerario formativo adaptado, con los módulos, la duración y el ritmo que mejor se ajustan al equipo.",
-        "Impartición: presencial en las instalaciones del cliente, online o híbrida, con materiales y ejercicios prácticos del sector.",
-        "Seguimiento: sesión de resolución de dudas post-formación y acceso a recursos complementarios durante 30 días.",
-      ],
-      extra: "Hemos desarrollado programas a medida para agencias de comunicación y eventos, departamentos de marketing de IBEX 35 y equipos de producción que quieren integrar la IA en su operativa real sin interrumpir su flujo de trabajo habitual.",
-      duracion: "Flexible — de 2 horas a varios días según las necesidades del cliente",
-      dirigido: "Empresas, departamentos de eventos, equipos de marketing y comunicación",
-      modalidad: "Adaptada al cliente — presencial, online o híbrida",
-    },
-  ];
+  const [expanded, setExpanded] = useState<number | null>(null);
 
   return (
     <section className={`relative py-28 px-4 overflow-hidden transition-colors duration-500 ${sectionBg(isLight)}`}>
       <div className="max-w-7xl mx-auto relative z-10">
-        <FadeIn className="text-center mb-16">
-          <SectionLabel text="Nuestros programas" isLight={isLight} />
+        <FadeIn className="text-center mb-12">
           <h2 className={`text-4xl sm:text-5xl font-black transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
             Tres niveles, un mismo{" "}
             <span className={isLight
@@ -323,102 +366,122 @@ function ProgramasSection({ isLight }: { isLight: boolean }) {
             </span>
           </h2>
           <p className={`mt-4 text-base max-w-2xl mx-auto transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>
-            Todos los formatos disponibles en modalidad presencial, online o híbrida.
+            Haz clic en un programa para ver el detalle.
           </p>
         </FadeIn>
 
-        <div className="space-y-12">
-          {programas.map((p, i) => (
-            <FadeIn key={i} delay={i * 0.1} from="left">
-              <TiltCard className={`rounded-2xl border p-8 sm:p-10 transition-all duration-300 ${
+        {/* Cartas pequeñas: solo título */}
+        <FadeIn className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          {PROGRAMAS_DATA.map((p, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setExpanded(expanded === i ? null : i)}
+              className={`rounded-2xl border p-5 sm:p-6 text-left transition-colors duration-300 flex items-center gap-4 ${
+                expanded === i
+                  ? isLight
+                    ? "bg-brand-magenta/10 border-brand-magenta/50 shadow-lg ring-2 ring-brand-magenta/20"
+                    : "bg-azul/10 border-azul/50 shadow-lg ring-2 ring-azul/20"
+                  : isLight
+                    ? "bg-white/90 border-gray-100 hover:border-brand-magenta/30"
+                    : "bg-[#0d1829]/90 border-white/8 hover:border-azul/40"
+              }`}
+            >
+              <span className={`shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-lg font-black text-white ${isLight ? "bg-brand-magenta" : "bg-azul"}`}>
+                {p.num}
+              </span>
+              <span className={`font-bold text-base sm:text-lg transition-colors duration-500 truncate ${isLight ? "text-gray-900" : "text-white"}`}>
+                {p.title}
+              </span>
+              <span className={`shrink-0 ml-auto transition-transform duration-300 ${expanded === i ? "rotate-180" : ""}`} aria-hidden>
+                ▼
+              </span>
+            </button>
+          ))}
+        </FadeIn>
+
+        {/* Contenido expandido: la carta se hace grande con todo dentro */}
+        <AnimatePresence mode="wait">
+          {expanded !== null && (
+            <motion.div
+              key={expanded}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden"
+            >
+              <div className={`rounded-2xl border overflow-hidden transition-all duration-300 ${
                 isLight
-                  ? "bg-white/90 border-gray-100 shadow-sm backdrop-blur-sm hover:border-brand-magenta/30"
-                  : "bg-[#0d1829]/90 border-white/8 backdrop-blur-sm hover:border-azul/40"
+                  ? "bg-white/90 border-gray-100 shadow-xl backdrop-blur-sm border-brand-magenta/20"
+                  : "bg-[#0d1829]/90 border-white/8 backdrop-blur-sm border-azul/30"
               }`}>
-                <div className="flex flex-col md:flex-row md:items-start gap-6">
-                  <div className={`shrink-0 w-14 h-14 rounded-full flex items-center justify-center text-xl font-black text-white transition-colors duration-500 ${isLight ? "bg-brand-magenta" : "bg-azul"}`}>
-                    {p.num}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className={`text-2xl font-black mb-3 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{p.title}</h3>
-                    <p className={`text-base leading-relaxed mb-6 transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-300"}`}>{p.intro}</p>
-                    <p className={`text-sm font-bold mb-2 transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>{p.listTitle}</p>
-                    <ul className={`space-y-2 text-sm sm:text-base leading-relaxed list-disc list-inside mb-6 transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-400"}`}>
-                      {p.items.map((item, j) => (
-                        <li key={j}>{item}</li>
-                      ))}
-                    </ul>
-                    {p.extra && (
-                      <p className={`text-sm leading-relaxed mb-6 transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>{p.extra}</p>
-                    )}
-                    <div className={`grid sm:grid-cols-3 gap-4 pt-4 border-t transition-colors duration-500 ${isLight ? "border-gray-200" : "border-white/10"}`}>
-                      <div>
-                        <span className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>Duración</span>
-                        <p className={`text-sm mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-700" : "text-gray-300"}`}>{p.duracion}</p>
+                <div className={`h-1 w-full ${isLight ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia" : "bg-gradient-to-r from-azul to-blue-400"}`} />
+                <div className="p-8 sm:p-10">
+                  <div className="flex flex-col md:flex-row md:items-start gap-8">
+                    <div className="shrink-0">
+                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-white shadow-lg ${isLight ? "bg-brand-magenta" : "bg-azul"}`}>
+                        {PROGRAMAS_DATA[expanded].num}
                       </div>
-                      <div>
-                        <span className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>Dirigido a</span>
-                        <p className={`text-sm mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-700" : "text-gray-300"}`}>{p.dirigido}</p>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className={`text-2xl sm:text-3xl font-black mb-2 ${isLight ? "text-gray-900" : "text-white"}`}>
+                        {PROGRAMAS_DATA[expanded].title}
+                      </h3>
+                      <p className={`text-base sm:text-lg leading-relaxed mb-8 text-balance ${isLight ? "text-gray-600" : "text-gray-300"}`}>
+                        {PROGRAMAS_DATA[expanded].intro}
+                      </p>
+
+                      <div className={`rounded-xl p-5 mb-6 ${isLight ? "bg-gray-50/80" : "bg-white/5"}`}>
+                        <p className={`text-sm font-bold mb-4 flex items-center gap-2 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
+                          <span aria-hidden>✓</span> {PROGRAMAS_DATA[expanded].listTitle}
+                        </p>
+                        <ul className={`space-y-3 text-sm sm:text-base leading-relaxed ${isLight ? "text-gray-600" : "text-gray-400"}`}>
+                          {PROGRAMAS_DATA[expanded].items.map((item, j) => (
+                            <li key={j} className="flex gap-3">
+                              <span className={`shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full ${isLight ? "bg-brand-magenta" : "bg-azul"}`} aria-hidden />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                      <div>
-                        <span className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>Modalidad</span>
-                        <p className={`text-sm mt-0.5 transition-colors duration-500 ${isLight ? "text-gray-700" : "text-gray-300"}`}>{p.modalidad}</p>
+
+                      {PROGRAMAS_DATA[expanded].extra && (
+                        <p className={`text-sm leading-relaxed mb-6 pl-4 border-l-2 ${isLight ? "border-brand-magenta/40 text-gray-500" : "border-azul/40 text-gray-400"}`}>
+                          {PROGRAMAS_DATA[expanded].extra}
+                        </p>
+                      )}
+
+                      <div className={`grid sm:grid-cols-3 gap-6 pt-6 border-t ${isLight ? "border-gray-200" : "border-white/10"}`}>
+                        <div className="flex gap-3">
+                          <span className={`shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-lg ${isLight ? "bg-brand-magenta/10 text-brand-magenta" : "bg-azul/15 text-azul"}`} aria-hidden>⏱</span>
+                          <div>
+                            <span className={`text-xs font-bold tracking-widest uppercase block mb-0.5 ${isLight ? "text-brand-magenta" : "text-azul"}`}>Duración</span>
+                            <p className={`text-sm leading-snug ${isLight ? "text-gray-700" : "text-gray-300"}`}>{PROGRAMAS_DATA[expanded].duracion}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-3">
+                          <span className={`shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-lg ${isLight ? "bg-brand-magenta/10 text-brand-magenta" : "bg-azul/15 text-azul"}`} aria-hidden>👥</span>
+                          <div>
+                            <span className={`text-xs font-bold tracking-widest uppercase block mb-0.5 ${isLight ? "text-brand-magenta" : "text-azul"}`}>Dirigido a</span>
+                            <p className={`text-sm leading-snug ${isLight ? "text-gray-700" : "text-gray-300"}`}>{PROGRAMAS_DATA[expanded].dirigido}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-3">
+                          <span className={`shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-lg ${isLight ? "bg-brand-magenta/10 text-brand-magenta" : "bg-azul/15 text-azul"}`} aria-hidden>📍</span>
+                          <div>
+                            <span className={`text-xs font-bold tracking-widest uppercase block mb-0.5 ${isLight ? "text-brand-magenta" : "text-azul"}`}>Modalidad</span>
+                            <p className={`text-sm leading-snug ${isLight ? "text-gray-700" : "text-gray-300"}`}>{PROGRAMAS_DATA[expanded].modalidad}</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </TiltCard>
-            </FadeIn>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ════════════════════════════════════════════════════════
-// TU FORMADOR
-// ════════════════════════════════════════════════════════
-function FormadorSection({ isLight }: { isLight: boolean }) {
-  const puntos = [
-    "Doctor en Biociencias Moleculares: por la Universidad Autónoma de Madrid, con investigación en IA aplicada a oncología en el Hospital La Paz.",
-    "Especialista en eventos: con experiencia directa en producción y gestión de eventos corporativos y MICE en España.",
-    "Finalista del Innovation Champion: en los MPI Iberian Awards 2025, reconocimiento a la innovación en la industria de los eventos.",
-    "Divulgador y ponente: en conferencias del sector como el Ibiza MICE Summit y otros eventos de referencia de la industria.",
-  ];
-
-  return (
-    <section className={`relative py-28 px-4 overflow-hidden transition-colors duration-500 ${sectionBg(isLight, true)}`}>
-      <div className="max-w-5xl mx-auto relative z-10">
-        <FadeIn className="text-center mb-12">
-          <SectionLabel text="Tu formador" isLight={isLight} />
-          <h2 className={`text-4xl sm:text-5xl font-black transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
-            Guillermo Prado Vázquez
-          </h2>
-        </FadeIn>
-
-        <FadeIn delay={0.1}>
-          <p className={`text-lg leading-relaxed text-center mb-10 transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-300"}`}>
-            Todas las formaciones están lideradas por Guillermo Prado Vázquez, fundador de Externia. Su perfil es genuinamente único en el mercado español:
-          </p>
-        </FadeIn>
-
-        <ul className={`space-y-4 mb-10 transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-300"}`}>
-          {puntos.map((p, i) => (
-            <FadeIn key={i} delay={0.15 + i * 0.05} from="left">
-              <li className="flex gap-3">
-                <span className={`shrink-0 mt-1 w-2 h-2 rounded-full transition-colors duration-500 ${isLight ? "bg-brand-magenta" : "bg-azul"}`} />
-                <span className="text-base leading-relaxed">{p}</span>
-              </li>
-            </FadeIn>
-          ))}
-        </ul>
-
-        <FadeIn delay={0.4}>
-          <p className={`text-base leading-relaxed text-center transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-400"}`}>
-            Guillermo combina el rigor de la investigación científica con el conocimiento práctico del sector. Sus formaciones no son teóricas: son sesiones prácticas, con herramientas reales, casos del sector y resultados inmediatamente aplicables.
-          </p>
-        </FadeIn>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
@@ -450,16 +513,18 @@ function ParaQuienSection({ isLight }: { isLight: boolean }) {
           </h2>
         </FadeIn>
 
-        <div className="space-y-4">
+        <div className="grid sm:grid-cols-2 gap-5">
           {publicos.map((item, i) => (
             <FadeIn key={i} delay={i * 0.08}>
-              <div className={`flex gap-4 p-5 rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 ${
-                isLight ? "bg-white/90 border-gray-100" : "bg-[#0d1829]/80 border-white/5 hover:border-azul/30"
+              <div className={`flex gap-4 p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 h-full ${
+                isLight ? "bg-white/90 border-gray-100 hover:border-brand-magenta/20 hover:shadow-md" : "bg-[#0d1829]/80 border-white/5 hover:border-azul/30"
               }`}>
-                <span className={`shrink-0 text-xl transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>→</span>
-                <div>
-                  <span className={`font-bold transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{item.label}</span>
-                  <span className={`text-sm sm:text-base transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-400"}`}> {item.desc}</span>
+                <span className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-colors duration-500 ${isLight ? "bg-brand-magenta/10 text-brand-magenta" : "bg-azul/15 text-azul"}`} aria-hidden>
+                  👤
+                </span>
+                <div className="min-w-0">
+                  <p className={`font-bold text-base mb-1 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{item.label}</p>
+                  <p className={`text-sm sm:text-base leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-400"}`}>{item.desc}</p>
                 </div>
               </div>
             </FadeIn>
@@ -500,14 +565,19 @@ function DiferenciasFormacionSection({ isLight }: { isLight: boolean }) {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((item, i) => (
             <FadeIn key={i} delay={i * 0.08}>
-              <TiltCard className={`p-6 rounded-2xl border transition-all duration-300 ${
+              <TiltCard className={`rounded-2xl border overflow-hidden transition-all duration-300 h-full flex flex-col ${
                 isLight
                   ? "bg-white/90 border-gray-100 hover:border-brand-magenta/30 backdrop-blur-sm"
                   : "bg-[#0d1829]/80 border-white/5 hover:border-azul/40 backdrop-blur-sm"
               }`}>
-                <div className="text-3xl mb-4">{item.icon}</div>
-                <h3 className={`text-lg font-bold mb-2 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{item.title}</h3>
-                <p className={`text-sm leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-400"}`}>{item.desc}</p>
+                <div className={`w-full h-1 flex-shrink-0 transition-colors duration-500 ${isLight ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia" : "bg-gradient-to-r from-azul to-blue-400"}`} />
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4 transition-colors duration-500 ${isLight ? "bg-brand-magenta/10" : "bg-azul/15"}`}>
+                    {item.icon}
+                  </div>
+                  <h3 className={`text-lg font-bold mb-2 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{item.title}</h3>
+                  <p className={`text-sm leading-relaxed transition-colors duration-500 flex-1 ${isLight ? "text-gray-600" : "text-gray-400"}`}>{item.desc}</p>
+                </div>
               </TiltCard>
             </FadeIn>
           ))}
@@ -538,8 +608,8 @@ function CTASection({ isLight }: { isLight: boolean }) {
               IA aplicada a eventos
             </span>
           </h2>
-          <p className={`text-lg mb-10 transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>
-            Elige el programa que mejor se adapte a tu equipo y contacta con nosotros.
+          <p className={`text-lg mb-10 max-w-xl mx-auto transition-colors duration-500 ${isLight ? "text-gray-500" : "text-gray-400"}`}>
+            Elige el programa que mejor se adapte a tu equipo y contacta con nosotros. Te respondemos sin compromiso.
           </p>
 
           <motion.a href="#contacto" whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.97 }}
@@ -567,7 +637,6 @@ export default function Formacion() {
         <HeroSection isLight={isLight} />
         <PorQueSection isLight={isLight} />
         <ProgramasSection isLight={isLight} />
-        <FormadorSection isLight={isLight} />
         <ParaQuienSection isLight={isLight} />
         <DiferenciasFormacionSection isLight={isLight} />
         <CTASection isLight={isLight} />
