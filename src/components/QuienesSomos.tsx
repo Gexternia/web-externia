@@ -815,18 +815,19 @@ function CTASection({ isLight }: { isLight: boolean }) {
   const [hovered, setHovered] = useState(false);
   const primaryRef = useRef<HTMLSpanElement>(null);
   const cloneRef = useRef<HTMLSpanElement>(null);
-  const TR = "transform 0.44s cubic-bezier(0.76, 0, 0.24, 1)";
+  const TR = "transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)";
 
   const onBtnEnter = () => {
     setHovered(true);
     if (!primaryRef.current || !cloneRef.current) return;
-    // Primary exits to the right
-    primaryRef.current.style.transition = TR;
-    primaryRef.current.style.transform = "translateX(110%)";
-    // Clone: jump to left (no animation), then slide right to center
+    // Snap both to their known idle positions first, then animate
+    primaryRef.current.style.transition = "none";
+    primaryRef.current.style.transform = "translateX(0%)";
     cloneRef.current.style.transition = "none";
     cloneRef.current.style.transform = "translateX(-110%)";
-    cloneRef.current.getBoundingClientRect(); // force reflow
+    primaryRef.current.getBoundingClientRect(); // force reflow
+    primaryRef.current.style.transition = TR;
+    primaryRef.current.style.transform = "translateX(110%)";
     cloneRef.current.style.transition = TR;
     cloneRef.current.style.transform = "translateX(0%)";
   };
@@ -834,13 +835,14 @@ function CTASection({ isLight }: { isLight: boolean }) {
   const onBtnLeave = () => {
     setHovered(false);
     if (!primaryRef.current || !cloneRef.current) return;
-    // Clone exits to the right
-    cloneRef.current.style.transition = TR;
-    cloneRef.current.style.transform = "translateX(110%)";
-    // Primary: jump to left (no animation), then slide right to center
+    // Snap both to their known hover positions first, then animate back
     primaryRef.current.style.transition = "none";
     primaryRef.current.style.transform = "translateX(-110%)";
-    primaryRef.current.getBoundingClientRect(); // force reflow
+    cloneRef.current.style.transition = "none";
+    cloneRef.current.style.transform = "translateX(0%)";
+    cloneRef.current.getBoundingClientRect(); // force reflow
+    cloneRef.current.style.transition = TR;
+    cloneRef.current.style.transform = "translateX(110%)";
     primaryRef.current.style.transition = TR;
     primaryRef.current.style.transform = "translateX(0%)";
   };

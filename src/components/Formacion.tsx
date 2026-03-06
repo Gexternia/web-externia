@@ -3,7 +3,28 @@
  * Fondo de burbujas, tema claro/oscuro, secciones con FadeIn y TiltCard.
  */
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
+
+// ── Single RAF-batched global mouse tracker (1 listener for all magnetic elements)
+let _gMouseX = -9999, _gMouseY = -9999, _gMouseRaf = false, _gMouseInit = false;
+const _gMouseSubs = new Set<(x: number, y: number) => void>();
+function _ensureGlobalMouse() {
+  if (_gMouseInit || typeof window === "undefined") return;
+  _gMouseInit = true;
+  window.addEventListener(
+    "mousemove",
+    (e) => {
+      _gMouseX = e.clientX; _gMouseY = e.clientY;
+      if (!_gMouseRaf) {
+        _gMouseRaf = true;
+        requestAnimationFrame(() => { _gMouseRaf = false; _gMouseSubs.forEach((fn) => fn(_gMouseX, _gMouseY)); });
+      }
+    },
+    { passive: true }
+  );
+}
 
 // ── Interactive canvas bubbles background (mismo que Quiénes Somos) ──
 type BubbleData = { x: number; y: number; r: number; vx: number; vy: number; baseVy: number; opacity: number; phase: number };
@@ -22,7 +43,7 @@ function BubblesBg({ isLight }: { isLight: boolean }) {
     };
     resize();
     window.addEventListener("resize", resize);
-    const W = canvas.width, H = canvas.height, N = 30;
+    const W = canvas.width, H = canvas.height, N = 20;
     bubblesRef.current = Array.from({ length: N }, (_, i) => ({
       x: (i * (W / N) + 18) % W,
       y: (i * 97.3) % H,
@@ -176,12 +197,91 @@ function TiltCard({ children, className = "" }: { children: React.ReactNode; cla
   );
 }
 
-const lightBg = "bg-white/88 backdrop-blur-[2px]";
-const lightAltBg = "bg-gray-50/88 backdrop-blur-[2px]";
-const darkBg = "bg-[#060d1a]/92 backdrop-blur-[2px]";
-const darkAltBg = "bg-[#08111e]/92 backdrop-blur-[2px]";
+const lightBg = "bg-white/65 backdrop-blur-[2px]";
+const lightAltBg = "bg-gray-50/65 backdrop-blur-[2px]";
+const darkBg = "bg-[#060d1a]/72 backdrop-blur-[2px]";
+const darkAltBg = "bg-[#08111e]/72 backdrop-blur-[2px]";
 function sectionBg(isLight: boolean, alt = false) {
   return isLight ? (alt ? lightAltBg : lightBg) : (alt ? darkAltBg : darkBg);
+}
+
+// ── Magnetic Repulsion ────────────────────────────────────────────
+function MagneticRepel({ children, strength = 52, radius = 185 }: { children: React.ReactNode; strength?: number; radius?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0), y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 160, damping: 18 });
+  const sy = useSpring(y, { stiffness: 160, damping: 18 });
+  useEffect(() => {
+    _ensureGlobalMouse();
+    const cb = (mx: number, my: number) => {
+      if (!ref.current) return;
+      const r = ref.current.getBoundingClientRect();
+      const dx = mx - (r.left + r.width * 0.5), dy = my - (r.top + r.height * 0.5);
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < radius && dist > 0) { const f = (1 - dist / radius) * strength; x.set((-dx / dist) * f); y.set((-dy / dist) * f); }
+      else { x.set(0); y.set(0); }
+    };
+    _gMouseSubs.add(cb);
+    return () => { _gMouseSubs.delete(cb); };
+  }, [strength, radius]);
+  return <motion.div ref={ref} style={{ x: sx, y: sy }}>{children}</motion.div>;
+}
+
+// ── Magnetic Attraction ───────────────────────────────────────────
+function MagneticAttract({ children, strength = 18, radius = 82 }: { children: React.ReactNode; strength?: number; radius?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0), y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 220, damping: 22 });
+  const sy = useSpring(y, { stiffness: 220, damping: 22 });
+  useEffect(() => {
+    _ensureGlobalMouse();
+    const cb = (mx: number, my: number) => {
+      if (!ref.current) return;
+      const r = ref.current.getBoundingClientRect();
+      const dx = mx - (r.left + r.width * 0.5), dy = my - (r.top + r.height * 0.5);
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < radius && dist > 0) { const f = (1 - dist / radius) * strength; x.set((dx / dist) * f); y.set((dy / dist) * f); }
+      else { x.set(0); y.set(0); }
+    };
+    _gMouseSubs.add(cb);
+    return () => { _gMouseSubs.delete(cb); };
+  }, [strength, radius]);
+  return <motion.div ref={ref} style={{ x: sx, y: sy, display: "inline-block" }}>{children}</motion.div>;
+}
+
+// ── AI Network Particles Background ──────────────────────────────
+function NetworkParticlesBg({ isLight }: { isLight: boolean }) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    initParticlesEngine(async (engine) => { await loadSlim(engine); }).then(() => setReady(true));
+  }, []);
+  if (!ready) return null;
+  const accent = isLight ? "#DE3B84" : "#0070f3";
+  return (
+    <Particles
+      id="form-network"
+      style={{ position: "fixed", inset: 0, zIndex: 5, pointerEvents: "none" }}
+      options={{
+        fpsLimit: 40,
+        background: { color: { value: "transparent" } },
+        interactivity: {
+          detectsOn: "window" as const,
+          events: { onHover: { enable: true, mode: "repulse" }, onClick: { enable: true, mode: "push" } },
+          modes: { repulse: { distance: 100, duration: 0.4, factor: 3 }, push: { quantity: 1 } },
+        },
+        particles: {
+          color: { value: accent },
+          links: { enable: true, color: accent, opacity: isLight ? 0.58 : 1.0, distance: 130, width: 1.8 },
+          move: { enable: true, speed: 0.6, random: true, direction: "none" as const, outModes: { default: "bounce" as const } },
+          number: { density: { enable: true, area: 900 }, value: 50 },
+          opacity: { value: { min: isLight ? 0.49 : 0.65, max: isLight ? 0.75 : 1.0 } },
+          size: { value: { min: 2.5, max: 4 } },
+          shape: { type: "circle" },
+        },
+        detectRetina: false,
+      }}
+    />
+  );
 }
 
 // ════════════════════════════════════════════════════════
@@ -515,19 +615,23 @@ function ParaQuienSection({ isLight }: { isLight: boolean }) {
 
         <div className="grid sm:grid-cols-2 gap-5">
           {publicos.map((item, i) => (
-            <FadeIn key={i} delay={i * 0.08}>
+            <MagneticRepel key={i} strength={35} radius={150}>
+              <FadeIn delay={i * 0.08}>
               <div className={`flex gap-4 p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 h-full ${
                 isLight ? "bg-white/90 border-gray-100 hover:border-brand-magenta/20 hover:shadow-md" : "bg-[#0d1829]/80 border-white/5 hover:border-azul/30"
               }`}>
+                <MagneticAttract strength={14} radius={60}>
                 <span className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-colors duration-500 ${isLight ? "bg-brand-magenta/10 text-brand-magenta" : "bg-azul/15 text-azul"}`} aria-hidden>
                   👤
                 </span>
+                </MagneticAttract>
                 <div className="min-w-0">
                   <p className={`font-bold text-base mb-1 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{item.label}</p>
                   <p className={`text-sm sm:text-base leading-relaxed transition-colors duration-500 ${isLight ? "text-gray-600" : "text-gray-400"}`}>{item.desc}</p>
                 </div>
               </div>
-            </FadeIn>
+              </FadeIn>
+            </MagneticRepel>
           ))}
         </div>
       </div>
@@ -564,22 +668,26 @@ function DiferenciasFormacionSection({ isLight }: { isLight: boolean }) {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((item, i) => (
-            <FadeIn key={i} delay={i * 0.08}>
-              <TiltCard className={`rounded-2xl border overflow-hidden transition-all duration-300 h-full flex flex-col ${
-                isLight
-                  ? "bg-white/90 border-gray-100 hover:border-brand-magenta/30 backdrop-blur-sm"
-                  : "bg-[#0d1829]/80 border-white/5 hover:border-azul/40 backdrop-blur-sm"
-              }`}>
-                <div className={`w-full h-1 flex-shrink-0 transition-colors duration-500 ${isLight ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia" : "bg-gradient-to-r from-azul to-blue-400"}`} />
-                <div className="p-6 flex-1 flex flex-col">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4 transition-colors duration-500 ${isLight ? "bg-brand-magenta/10" : "bg-azul/15"}`}>
-                    {item.icon}
+            <MagneticRepel key={i}>
+              <FadeIn delay={i * 0.08}>
+                <TiltCard className={`rounded-2xl border overflow-hidden transition-all duration-300 h-full flex flex-col ${
+                  isLight
+                    ? "bg-white/90 border-gray-100 hover:border-brand-magenta/30 backdrop-blur-sm"
+                    : "bg-[#0d1829]/80 border-white/5 hover:border-azul/40 backdrop-blur-sm"
+                }`}>
+                  <div className={`w-full h-1 flex-shrink-0 transition-colors duration-500 ${isLight ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia" : "bg-gradient-to-r from-azul to-blue-400"}`} />
+                  <div className="p-6 flex-1 flex flex-col">
+                    <MagneticAttract>
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4 transition-colors duration-500 ${isLight ? "bg-brand-magenta/10" : "bg-azul/15"}`}>
+                        {item.icon}
+                      </div>
+                    </MagneticAttract>
+                    <h3 className={`text-lg font-bold mb-2 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{item.title}</h3>
+                    <p className={`text-sm leading-relaxed transition-colors duration-500 flex-1 ${isLight ? "text-gray-600" : "text-gray-400"}`}>{item.desc}</p>
                   </div>
-                  <h3 className={`text-lg font-bold mb-2 transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{item.title}</h3>
-                  <p className={`text-sm leading-relaxed transition-colors duration-500 flex-1 ${isLight ? "text-gray-600" : "text-gray-400"}`}>{item.desc}</p>
-                </div>
-              </TiltCard>
-            </FadeIn>
+                </TiltCard>
+              </FadeIn>
+            </MagneticRepel>
           ))}
         </div>
       </div>
@@ -592,6 +700,39 @@ function DiferenciasFormacionSection({ isLight }: { isLight: boolean }) {
 // ════════════════════════════════════════════════════════
 function CTASection({ isLight }: { isLight: boolean }) {
   const [hovered, setHovered] = useState(false);
+  const primaryRef = useRef<HTMLSpanElement>(null);
+  const cloneRef = useRef<HTMLSpanElement>(null);
+  const TR = "transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)";
+
+  const onBtnEnter = () => {
+    setHovered(true);
+    if (!primaryRef.current || !cloneRef.current) return;
+    // Snap both to their known idle positions first, then animate
+    primaryRef.current.style.transition = "none";
+    primaryRef.current.style.transform = "translateX(0%)";
+    cloneRef.current.style.transition = "none";
+    cloneRef.current.style.transform = "translateX(-110%)";
+    primaryRef.current.getBoundingClientRect(); // force reflow
+    primaryRef.current.style.transition = TR;
+    primaryRef.current.style.transform = "translateX(110%)";
+    cloneRef.current.style.transition = TR;
+    cloneRef.current.style.transform = "translateX(0%)";
+  };
+
+  const onBtnLeave = () => {
+    setHovered(false);
+    if (!primaryRef.current || !cloneRef.current) return;
+    // Snap both to their known hover positions first, then animate back
+    primaryRef.current.style.transition = "none";
+    primaryRef.current.style.transform = "translateX(-110%)";
+    cloneRef.current.style.transition = "none";
+    cloneRef.current.style.transform = "translateX(0%)";
+    cloneRef.current.getBoundingClientRect(); // force reflow
+    cloneRef.current.style.transition = TR;
+    cloneRef.current.style.transform = "translateX(110%)";
+    primaryRef.current.style.transition = TR;
+    primaryRef.current.style.transform = "translateX(0%)";
+  };
 
   return (
     <section className={`relative py-32 px-4 overflow-hidden transition-colors duration-500 ${sectionBg(isLight)}`}>
@@ -612,11 +753,21 @@ function CTASection({ isLight }: { isLight: boolean }) {
             Elige el programa que mejor se adapte a tu equipo y contacta con nosotros. Te respondemos sin compromiso.
           </p>
 
-          <motion.a href="#contacto" whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.97 }}
-            onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-            className={`inline-block px-12 py-5 rounded-full text-lg font-bold text-white transition-shadow duration-300 ${isLight ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia" : "bg-azul"}`}
+          <motion.a href="#contacto" whileTap={{ scale: 0.97 }}
+            onMouseEnter={onBtnEnter} onMouseLeave={onBtnLeave}
+            className={`relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-shadow duration-300 ${isLight ? "bg-gradient-to-r from-brand-magenta to-brand-fuchsia" : "bg-azul"}`}
             style={hovered ? { boxShadow: isLight ? "0 0 50px #DE3B8490, 0 0 100px #D6007D40" : "0 0 50px #0070f390, 0 0 100px #0070f340" } : {}}>
-            Contactar →
+            <span className="invisible whitespace-nowrap">Contactar →</span>
+            <span ref={primaryRef} aria-hidden
+              className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
+              style={{ transform: "translateX(0%)" }}>
+              Contactar →
+            </span>
+            <span ref={cloneRef} aria-hidden
+              className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
+              style={{ transform: "translateX(-110%)" }}>
+              Contactar →
+            </span>
           </motion.a>
         </FadeIn>
       </div>
@@ -633,6 +784,7 @@ export default function Formacion() {
   return (
     <>
       <BubblesBg isLight={isLight} />
+      <NetworkParticlesBg isLight={isLight} />
       <div className="relative z-10 transition-colors duration-500">
         <HeroSection isLight={isLight} />
         <PorQueSection isLight={isLight} />
