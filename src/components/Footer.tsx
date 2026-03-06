@@ -21,7 +21,7 @@ function MagneticIcon({ children }: { children: React.ReactNode }) {
       const dx = e.clientX - (r.left + r.width * 0.5);
       const dy = e.clientY - (r.top + r.height * 0.5);
       const dist = Math.sqrt(dx * dx + dy * dy);
-      const radius = 45, strength = 7;
+      const radius = 32, strength = 4;
       if (dist < radius && dist > 0) {
         const force = (1 - dist / radius) * strength;
         x.set((dx / dist) * force);
