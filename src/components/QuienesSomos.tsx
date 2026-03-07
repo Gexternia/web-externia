@@ -472,7 +472,7 @@ function HistoriaSection({ isLight }: { isLight: boolean }) {
                   scale={1.02} transitionSpeed={500}
                   className="block">
                   <div className={`relative rounded-2xl overflow-hidden border transition-colors duration-500 ${isLight ? "border-brand-magenta/15" : "border-white/8"}`}>
-                    <img src="/team/guillermo-premio.png" alt="Guillermo Prado — MPI Iberian Awards 2025" className="w-full object-cover block" />
+                    <img src="/team/guillermo-premio.png" alt="Guillermo Prado — MPI Iberian Awards 2025" className="w-full h-[380px] object-cover object-top block" />
                     <div className={`absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border transition-colors duration-500 ${isLight ? "bg-white/85 border-brand-magenta/15" : "bg-black/75 border-white/10"}`}>
                       <p className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
                         🏆 MPI Iberian Awards 2025
@@ -735,7 +735,7 @@ function EquipoSection({ isLight }: { isLight: boolean }) {
           </p>
         </FadeIn>
 
-        <div className="grid lg:grid-cols-5 gap-8 items-start">
+        <div className="grid lg:grid-cols-5 gap-8 items-stretch">
           <FadeIn delay={0.1} from="left" className="lg:col-span-2">
             <Tilt
               glareEnable glareMaxOpacity={0.15}
@@ -745,9 +745,9 @@ function EquipoSection({ isLight }: { isLight: boolean }) {
               scale={1.02} transitionSpeed={500}
               className="block">
             <div className={`rounded-2xl overflow-hidden border transition-colors duration-500 ${isLight ? "border-brand-magenta/15 bg-white/90 backdrop-blur-sm" : "border-white/8 bg-[#0d1829]/80 backdrop-blur-sm"}`}>
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden h-[280px]">
                 <img src="/team/guillermo-ganador.png" alt="Guillermo Prado — Ganador Event Industry Entrepreneur 2025"
-                  className="w-full object-cover transition-transform duration-700 hover:scale-105" />
+                  className="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-105" />
               </div>
               <div className="p-6">
                 <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-3 transition-colors duration-500 ${isLight ? "bg-brand-magenta/10 text-brand-magenta" : "bg-azul/10 text-azul"}`}>
@@ -769,7 +769,7 @@ function EquipoSection({ isLight }: { isLight: boolean }) {
             </Tilt>
           </FadeIn>
 
-          <FadeIn delay={0.25} from="right" className="lg:col-span-3 flex flex-col gap-6">
+          <FadeIn delay={0.25} from="right" className="lg:col-span-3 flex flex-col justify-between gap-6">
             <Tilt
               glareEnable glareMaxOpacity={0.15}
               glareColor={isLight ? "#DE3B84" : "#0070f3"}
@@ -779,7 +779,7 @@ function EquipoSection({ isLight }: { isLight: boolean }) {
               className="block">
               <div className={`relative rounded-2xl overflow-hidden border transition-colors duration-500 ${isLight ? "border-brand-magenta/15" : "border-white/8"}`}>
                 <img src="/team/equipo-mpi.png" alt="Equipo Externia en MPI Iberian Chapter"
-                  className="w-full object-cover transition-transform duration-700 hover:scale-105" />
+                  className="w-full h-[420px] object-cover object-center transition-transform duration-700 hover:scale-105" />
                 <div className={`absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border transition-colors duration-500 ${isLight ? "bg-white/85 border-brand-magenta/15" : "bg-black/75 border-white/10"}`}>
                   <p className={`text-xs font-bold tracking-widest uppercase transition-colors duration-500 ${isLight ? "text-brand-magenta" : "text-azul"}`}>
                     MPI Iberian Chapter · Valencia 2025
