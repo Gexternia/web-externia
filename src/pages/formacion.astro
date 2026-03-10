@@ -14,9 +14,9 @@ import Formacion from "../components/Formacion.tsx";
   description="Formaciones en IA para eventos. Taller introductorio, programa avanzado y formación a medida. Aprende IA aplicada al sector MICE con Externia."
 >
   <Navbar client:load />
-  <ThemeToggle client:load />
+  <ThemeToggle client:idle />
   <main>
     <Formacion client:load />
   </main>
-  <Footer client:load />
+  <Footer client:idle />
 </Layout>
