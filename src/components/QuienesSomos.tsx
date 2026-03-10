@@ -3,7 +3,7 @@
  * Light mode: brand colors. Dark mode: deep navy palette.
  */
 import { useState, useEffect, useRef, useMemo } from "react";
-import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
+import { motion, useInView, useMotionValue, useSpring, useAnimation } from "framer-motion";
 import Tilt from "react-parallax-tilt";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
@@ -255,38 +255,363 @@ function FadeIn({ children, delay = 0, className = "", from = "bottom" }: {
 }
 
 // ── Flip card for services ────────────────────────────────────────
+
+// ─── Push Robot — side-profile, horizontal arms that clearly extend outside body ──
+function PushRobot({ walking = false }: { walking?: boolean }) {
+  const t = (delay = 0) =>
+    walking
+      ? { duration: 0.42, repeat: Infinity, repeatType: "mirror" as const, ease: [0.4, 0, 0.2, 1], delay }
+      : { duration: 0.15, ease: "easeOut" };
+
+  return (
+    <svg width="62" height="86" viewBox="0 0 62 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rp-body" x1="0" y1="0" x2="0" y2="86" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#9B5CF8"/>
+          <stop offset="100%" stopColor="#3B82F6"/>
+        </linearGradient>
+        <linearGradient id="rp-dark" x1="0" y1="0" x2="0" y2="86" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#6B30C0"/>
+          <stop offset="100%" stopColor="#1E50B0"/>
+        </linearGradient>
+      </defs>
+
+      {/* Antenna */}
+      <rect x="24" y="0" width="4" height="12" rx="2" fill="url(#rp-dark)" opacity="0.85"/>
+      <circle cx="26" cy="2.5" r="4.5" fill="white" opacity="0.9"/>
+      <circle cx="26" cy="2.5" r="2.5" fill="#DDD0FF"/>
+
+      {/* Head — BIG */}
+      <rect x="6" y="10" width="40" height="30" rx="7" fill="url(#rp-body)" stroke="url(#rp-dark)" strokeWidth="1.5"/>
+      <rect x="9" y="13" width="18" height="8" rx="3.5" fill="white" opacity="0.18"/>
+      {/* Eye — side profile, front face */}
+      <circle cx="42" cy="25" r="6" fill="white" opacity="0.9"/>
+      <circle cx="42" cy="25" r="3.3" fill="#D0B8FF" opacity="0.85"/>
+
+      {/* Neck */}
+      <rect x="21" y="40" width="10" height="5" rx="2.5" fill="url(#rp-dark)" opacity="0.8"/>
+
+      {/* Body — smaller than head */}
+      <rect x="13" y="45" width="26" height="20" rx="6" fill="url(#rp-body)" stroke="url(#rp-dark)" strokeWidth="1.5"/>
+      <rect x="16" y="48" width="12" height="6" rx="3" fill="white" opacity="0.13"/>
+      <circle cx="29" cy="55" r="3" fill="white" opacity="0.22"/>
+
+      {/* Back arm — HORIZONTAL, extends LEFT from body (clearly visible) */}
+      <motion.g
+        style={{ transformOrigin: "100% 50%" }}
+        animate={{ rotate: walking ? [-10, 12] : 2 }}
+        transition={t()}
+      >
+        <rect x="1" y="50" width="13" height="7" rx="3.5" fill="url(#rp-body)" stroke="url(#rp-dark)" strokeWidth="1.2"/>
+      </motion.g>
+
+      {/* Front arm — HORIZONTAL, extends RIGHT from body (pushing arm) */}
+      <motion.g
+        style={{ transformOrigin: "0% 50%" }}
+        animate={{ rotate: walking ? [-18, 16] : -8 }}
+        transition={t(0.19)}
+      >
+        <rect x="39" y="50" width="18" height="7" rx="3.5" fill="url(#rp-body)" stroke="url(#rp-dark)" strokeWidth="1.2"/>
+      </motion.g>
+
+      {/* Back leg */}
+      <motion.g
+        style={{ transformOrigin: "50% 0%" }}
+        animate={{ rotate: walking ? [8, -6] : 8 }}
+        transition={t()}
+      >
+        <rect x="15" y="65" width="10" height="18" rx="4" fill="url(#rp-body)" stroke="url(#rp-dark)" strokeWidth="1"/>
+      </motion.g>
+
+      {/* Front leg */}
+      <motion.g
+        style={{ transformOrigin: "50% 0%" }}
+        animate={{ rotate: walking ? [-8, 6] : -8 }}
+        transition={t(0.19)}
+      >
+        <rect x="27" y="65" width="10" height="18" rx="4" fill="url(#rp-body)" stroke="url(#rp-dark)" strokeWidth="1"/>
+      </motion.g>
+    </svg>
+  );
+}
+
+// ─── Pull Robot — front-facing, horizontal arms extending from sides ──
+function PullRobot({ pulling = false }: { pulling?: boolean }) {
+  const t = (delay = 0) =>
+    pulling
+      ? { duration: 0.42, repeat: Infinity, repeatType: "mirror" as const, ease: "easeInOut", delay }
+      : { duration: 0.15, ease: "easeOut" };
+
+  return (
+    <svg width="80" height="96" viewBox="0 0 80 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rpu-body" x1="0" y1="0" x2="0" y2="96" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#9B5CF8"/>
+          <stop offset="100%" stopColor="#3B82F6"/>
+        </linearGradient>
+        <linearGradient id="rpu-dark" x1="0" y1="0" x2="0" y2="96" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#6B30C0"/>
+          <stop offset="100%" stopColor="#1E50B0"/>
+        </linearGradient>
+      </defs>
+
+      {/* Antenna */}
+      <rect x="37" y="0" width="6" height="12" rx="2" fill="url(#rpu-dark)" opacity="0.85"/>
+      <circle cx="40" cy="2.5" r="5" fill="white" opacity="0.9"/>
+      <circle cx="40" cy="2.5" r="2.8" fill="#DDD0FF"/>
+
+      {/* Head — BIG */}
+      <rect x="13" y="10" width="54" height="38" rx="8" fill="url(#rpu-body)" stroke="url(#rpu-dark)" strokeWidth="1.5"/>
+      <rect x="17" y="13" width="24" height="9" rx="3.5" fill="white" opacity="0.16"/>
+      {/* Left eye */}
+      <circle cx="28" cy="32" r="7" fill="white" opacity="0.9"/>
+      <circle cx="28" cy="32" r="4" fill="#D0B8FF" opacity="0.85"/>
+      {/* Right eye */}
+      <circle cx="52" cy="32" r="7" fill="white" opacity="0.9"/>
+      <circle cx="52" cy="32" r="4" fill="#D0B8FF" opacity="0.85"/>
+
+      {/* Neck */}
+      <rect x="36" y="48" width="8" height="6" rx="3" fill="url(#rpu-dark)" opacity="0.8"/>
+
+      {/* Body — smaller than head */}
+      <rect x="21" y="54" width="38" height="26" rx="7" fill="url(#rpu-body)" stroke="url(#rpu-dark)" strokeWidth="1.5"/>
+      <rect x="25" y="57" width="17" height="7" rx="3" fill="white" opacity="0.13"/>
+      <circle cx="32" cy="71" r="3.5" fill="white" opacity="0.22"/>
+      <circle cx="48" cy="71" r="3.5" fill="white" opacity="0.22"/>
+
+      {/* Left leg */}
+      <rect x="27" y="79" width="11" height="17" rx="4" fill="url(#rpu-body)" stroke="url(#rpu-dark)" strokeWidth="1"/>
+      {/* Right leg */}
+      <rect x="42" y="79" width="11" height="17" rx="4" fill="url(#rpu-body)" stroke="url(#rpu-dark)" strokeWidth="1"/>
+    </svg>
+  );
+}
+
+// ─── FlipCard ─────────────────────────────────────────────────────────────────
+// OPEN:  PushRobot enters from left, leans forward + waddling, pushes curtain right.
+// CLOSE: PullRobot rises from below, pulls ropes → two curtain halves close from both sides.
 function FlipCard({ icon, title, desc, gradient, isLight }: {
   icon: string; title: string; desc: string; gradient: string; isLight: boolean;
 }) {
-  const [flipped, setFlipped] = useState(false);
+  const [phase, setPhase] = useState<"idle" | "opening" | "open" | "closing">("idle");
+  const curtainCtrl = useAnimation();   // main front panel (open animation)
+  const leftCtrl    = useAnimation();   // left closing half
+  const rightCtrl   = useAnimation();   // right closing half
+  const pushBotCtrl = useAnimation();   // push robot
+  const pullBotCtrl = useAnimation();   // pull robot
+  const leftArmCtrl  = useAnimation();  // left arm bar
+  const rightArmCtrl = useAnimation();  // right arm bar
+  const busyRef = useRef(false);
+
+  const doOpen = async () => {
+    setPhase("opening");
+
+    // 1. Robot pops in from the left edge
+    await pushBotCtrl.start({
+      x: -15, opacity: 1,
+      transition: { type: "spring", stiffness: 260, damping: 22 },
+    });
+
+    // 2. Robot walks across; curtain follows with spring physics (heavy object being pushed)
+    const p1 = pushBotCtrl.start({
+      x: 370,
+      y: [0, -7, 0, -7, 0, -7, 0, -7, 0, -7, 0],
+      transition: {
+        x: { duration: 2.0, ease: "linear" },
+        y: { duration: 2.0 },
+      },
+    });
+    // Curtain moves in exact sync with the robot (linear, same total time)
+    const p2 = curtainCtrl.start({
+      x: "110%",
+      transition: { duration: 1.92, ease: "linear", delay: 0.08 },
+    });
+    await Promise.all([p1, p2]);
+
+    pushBotCtrl.set({ x: -90, opacity: 0, y: 0 });
+    setPhase("open");
+    busyRef.current = false;
+  };
+
+  const doClose = async () => {
+    setPhase("closing");
+
+    leftCtrl.set({ x: "-101%", opacity: 1 });
+    rightCtrl.set({ x: "101%", opacity: 1 });
+    leftArmCtrl.set({ scaleY: 0, opacity: 0, rotate: -28, x: 0 });
+    rightArmCtrl.set({ scaleY: 0, opacity: 0, rotate:  28, x: 0 });
+
+    // 1. Robot springs up
+    await pullBotCtrl.start({
+      y: 0, opacity: 1,
+      transition: { type: "spring", stiffness: 220, damping: 20 },
+    });
+
+    // 2. Robot tugs + arms grow UP at the curtain edge simultaneously
+    pullBotCtrl.start({
+      y: [0, -12, 3, -9, 2, -6, 0],
+      rotate: [0, -5, 4, -4, 3, -2, 0],
+      transition: { duration: 1.1, ease: "easeInOut" },
+    });
+    await Promise.all([
+      leftArmCtrl.start({ scaleY: 1, opacity: 1, transition: { duration: 0.28 } }),
+      rightArmCtrl.start({ scaleY: 1, opacity: 1, transition: { duration: 0.28 } }),
+    ]);
+
+    // 3. Curtains close + arms retract — 50% slower tween
+    const closeCfg = { type: "tween" as const, duration: 1.5, ease: [0.4, 0, 0.2, 1] as [number,number,number,number] };
+    const p1 = leftCtrl.start({ x: "0%", transition: closeCfg });
+    const p2 = rightCtrl.start({ x: "0%", transition: closeCfg });
+    const p3 = leftArmCtrl.start({ rotate: -4, scaleY: 0, opacity: 0, transition: closeCfg });
+    const p4 = rightArmCtrl.start({ rotate:  4, scaleY: 0, opacity: 0, transition: closeCfg });
+    await Promise.all([p1, p2, p3, p4]);
+
+    // 4. Robot drops back down
+    await pullBotCtrl.start({
+      y: 110, opacity: 0,
+      transition: { duration: 0.32, ease: "easeIn" },
+    });
+
+    curtainCtrl.set({ x: "0%" });
+    leftCtrl.set({ opacity: 0 });
+    rightCtrl.set({ opacity: 0 });
+    pullBotCtrl.set({ y: 110, opacity: 0 });
+    leftArmCtrl.set({ scaleY: 0, opacity: 0, rotate: -28, x: 0 });
+    rightArmCtrl.set({ scaleY: 0, opacity: 0, rotate:  28, x: 0 });
+
+    setPhase("idle");
+    busyRef.current = false;
+  };
+
+  const handleClick = () => {
+    if (busyRef.current) return;
+    busyRef.current = true;
+    if (phase === "idle") doOpen();
+    else if (phase === "open") doClose();
+    else busyRef.current = false;
+  };
+
+  const cardFaceCls = isLight
+    ? "bg-white/90 border-gray-100 shadow-sm backdrop-blur-sm"
+    : "bg-[#0d1829]/90 border-white/8 backdrop-blur-sm";
+
   return (
-    <div className="relative h-72 cursor-pointer" style={{ perspective: "1100px" }}
-      onMouseEnter={() => setFlipped(true)} onMouseLeave={() => setFlipped(false)}>
-      <motion.div animate={{ rotateY: flipped ? 180 : 0 }}
-        transition={{ duration: 0.65, ease: [0.4, 0, 0.2, 1] }}
-        style={{ transformStyle: "preserve-3d" }} className="relative w-full h-full">
-        <div style={{ backfaceVisibility: "hidden" }}
-          className={`absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-6 text-center border transition-colors duration-500 ${
-            isLight ? "bg-white/90 border-gray-100 shadow-sm backdrop-blur-sm" : "bg-[#0d1829]/90 border-white/8 backdrop-blur-sm"
-          }`}>
-          <span className="text-5xl">{icon}</span>
-          <h3 className={`text-lg font-bold transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>{title}</h3>
-          <span className={`text-xs font-medium transition-colors duration-500 ${isLight ? "text-gray-400" : "text-gray-500"}`}>
-            Hover para saber más
-          </span>
-        </div>
-        <div style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-          className={`absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-6 text-center bg-gradient-to-br ${gradient}`}>
+    <div className="relative cursor-pointer overflow-hidden rounded-2xl" onClick={handleClick}>
+
+      {/* ── Card with overflow:hidden (clips curtains & push robot only) ── */}
+      <div className="relative h-72 overflow-hidden rounded-2xl">
+
+        {/* ── Back layer: revealed content ── */}
+        <div className={`absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-6 text-center bg-gradient-to-br ${gradient}`}>
           <motion.div
-            animate={{ scale: flipped ? 1 : 0.55, opacity: flipped ? 1 : 0 }}
-            transition={{ duration: 0.38, delay: flipped ? 0.28 : 0, ease: [0.34, 1.56, 0.64, 1] }}
+            animate={{ scale: phase === "open" ? 1 : 0.7, opacity: phase === "open" ? 1 : 0 }}
+            transition={{ duration: 0.42, delay: phase === "open" ? 0.1 : 0, ease: [0.34, 1.56, 0.64, 1] }}
             className="flex flex-col items-center gap-3"
           >
             <h3 className="text-xl font-bold text-white">{title}</h3>
-            <p className="text-base text-white/95 leading-relaxed">{desc}</p>
+            <p className="text-sm text-white/95 leading-relaxed">{desc}</p>
+            <span className="text-xs text-white/60 mt-1">Click para cerrar</span>
           </motion.div>
         </div>
+
+        {/* ── Main front curtain (opening animation only) ── */}
+        <motion.div
+          animate={curtainCtrl}
+          initial={{ x: "0%" }}
+          className={`absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-6 text-center border transition-colors duration-500 ${cardFaceCls}`}
+          style={{ willChange: "transform", zIndex: 10 }}
+        >
+          <span className="text-5xl">{icon}</span>
+          <h3 className={`text-lg font-bold transition-colors duration-500 ${isLight ? "text-gray-900" : "text-white"}`}>
+            {title}
+          </h3>
+          <span className={`text-xs font-medium transition-colors duration-500 ${isLight ? "text-gray-400" : "text-gray-500"}`}>
+            Click para revelar
+          </span>
+        </motion.div>
+
+        {/* ── Left closing curtain — shows left half of the card face ── */}
+        <motion.div
+          animate={leftCtrl}
+          initial={{ x: "-101%", opacity: 0 }}
+          className="absolute top-0 left-0 h-full w-1/2 overflow-hidden rounded-l-2xl"
+          style={{ zIndex: 20, boxShadow: "3px 0 20px rgba(0,0,0,0.15)" }}
+        >
+          <div className={`absolute inset-0 w-[200%] flex flex-col items-center justify-center gap-4 p-6 text-center border ${cardFaceCls}`}>
+            <span className="text-5xl">{icon}</span>
+            <h3 className={`text-lg font-bold ${isLight ? "text-gray-900" : "text-white"}`}>{title}</h3>
+            <span className={`text-xs font-medium ${isLight ? "text-gray-400" : "text-gray-500"}`}>Click para revelar</span>
+          </div>
+        </motion.div>
+
+        {/* ── Right closing curtain — shows right half of the card face ── */}
+        <motion.div
+          animate={rightCtrl}
+          initial={{ x: "101%", opacity: 0 }}
+          className="absolute top-0 right-0 h-full w-1/2 overflow-hidden rounded-r-2xl"
+          style={{ zIndex: 20, boxShadow: "-3px 0 20px rgba(0,0,0,0.15)" }}
+        >
+          <div className={`absolute top-0 right-0 h-full w-[200%] flex flex-col items-center justify-center gap-4 p-6 text-center border ${cardFaceCls}`}>
+            <span className="text-5xl">{icon}</span>
+            <h3 className={`text-lg font-bold ${isLight ? "text-gray-900" : "text-white"}`}>{title}</h3>
+            <span className={`text-xs font-medium ${isLight ? "text-gray-400" : "text-gray-500"}`}>Click para revelar</span>
+          </div>
+        </motion.div>
+
+        {/* ── Push robot — walks inside card (clipped naturally at edges) ── */}
+        <motion.div
+          animate={pushBotCtrl}
+          initial={{ x: -90, opacity: 0, y: 0 }}
+          className="absolute bottom-0 left-0 z-50 pointer-events-none"
+        >
+          <PushRobot walking={phase === "opening"} />
+        </motion.div>
+
+      </div>{/* end overflow-hidden card */}
+
+      {/* ── Left arm — grows upward, follows curtain inward ── */}
+      <motion.div
+        animate={leftArmCtrl}
+        initial={{ scaleY: 0, opacity: 0, rotate: -28, x: 0 }}
+        className="absolute pointer-events-none"
+        style={{
+          bottom: 36,
+          left: "calc(50% - 34px)",
+          width: 8,
+          height: 230,
+          background: "linear-gradient(to top, #9B5CF8 0%, #3B82F6 100%)",
+          borderRadius: 4,
+          zIndex: 55,
+          transformOrigin: "50% 100%",
+        }}
+      />
+      {/* ── Right arm — grows upward, follows curtain inward ── */}
+      <motion.div
+        animate={rightArmCtrl}
+        initial={{ scaleY: 0, opacity: 0, rotate: 28, x: 0 }}
+        className="absolute pointer-events-none"
+        style={{
+          bottom: 36,
+          left: "calc(50% + 26px)",
+          width: 8,
+          height: 230,
+          background: "linear-gradient(to top, #9B5CF8 0%, #3B82F6 100%)",
+          borderRadius: 4,
+          zIndex: 55,
+          transformOrigin: "50% 100%",
+        }}
+      />
+
+      {/* ── Pull robot — OUTSIDE overflow:hidden so it shows fully ── */}
+      <motion.div
+        animate={pullBotCtrl}
+        initial={{ y: 110, opacity: 0 }}
+        className="absolute z-50 pointer-events-none"
+        style={{ bottom: 0, left: "50%", marginLeft: -40, zIndex: 60 }}
+      >
+        <PullRobot pulling={phase === "closing"} />
       </motion.div>
+
     </div>
   );
 }
@@ -586,7 +911,7 @@ function ServiciosSection({ isLight }: { isLight: boolean }) {
             </span>
           </h2>
           <p className={`mt-3 text-sm transition-colors duration-500 ${isLight ? "text-gray-400" : "text-gray-500"}`}>
-            Pasa el cursor por cada tarjeta para descubrir más
+            Haz click en cada tarjeta para revelar su contenido
           </p>
         </FadeIn>
         <div className="grid md:grid-cols-3 gap-6">
