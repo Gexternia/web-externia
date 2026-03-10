@@ -492,13 +492,18 @@ function WheelCarousel({ cards, isLight }: { cards: FlickCardData[]; isLight: bo
 
       {/* ── Wheel ── */}
       <div
-        className="relative w-full overflow-visible cursor-grab active:cursor-grabbing touch-none"
+        className="relative w-full overflow-visible touch-none"
         style={{ height: CARD_H + 220 }}
-        onPointerDown={onDown}
-        onPointerMove={onMove}
-        onPointerUp={onUp}
-        onPointerCancel={onUp}
       >
+        {/* Full-viewport-width transparent drag layer — lets you grab from side cards too */}
+        <div
+          className="absolute cursor-grab active:cursor-grabbing"
+          style={{ top: 0, bottom: 0, left: "50%", transform: "translateX(-50%)", width: "100vw", zIndex: 60 }}
+          onPointerDown={onDown}
+          onPointerMove={onMove}
+          onPointerUp={onUp}
+          onPointerCancel={onUp}
+        />
         {cards.map((card, i) => {
           // Compute wrapped position so the carousel loops infinitely
           const pos = wrappedPos(i - offset, n);
