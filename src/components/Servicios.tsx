@@ -11,7 +11,6 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import type { PanInfo } from "framer-motion";
-import BubblesBg from "./BubblesBg";
 
 // ── Global mouse tracker (shared RAF-batched singleton) ───────────
 let _svMouseX = -9999, _svMouseY = -9999, _svMouseRaf = false, _svMouseInit = false;
@@ -56,16 +55,13 @@ function NetworkParticlesBg({ isLight }: { isLight: boolean }) {
 
   if (!ready || !ParticlesCmp) return null;
   const accent = isLight ? "#DE3B84" : "#0070f3";
-  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
-  const particleCount = isMobile ? 32 : 45;
-  const fpsLimit = isMobile ? 30 : 40;
 
   return (
     <ParticlesCmp
       id="sv-network"
       style={{ position: "fixed", inset: 0, zIndex: 5, pointerEvents: "none" }}
       options={{
-        fpsLimit,
+        fpsLimit: 40,
         background: { color: { value: "transparent" } },
         interactivity: {
           detectsOn: "window" as const,
@@ -76,7 +72,7 @@ function NetworkParticlesBg({ isLight }: { isLight: boolean }) {
           color: { value: accent },
           links: { enable: true, color: accent, opacity: isLight ? 0.58 : 1.0, distance: 130, width: 1.8 },
           move: { enable: true, speed: 0.6, random: true, direction: "none" as const, outModes: { default: "bounce" as const } },
-          number: { density: { enable: true, area: 1100 }, value: particleCount },
+          number: { density: { enable: true, area: 1100 }, value: 32 },
           opacity: { value: { min: isLight ? 0.49 : 0.65, max: isLight ? 0.75 : 1.0 } },
           size: { value: { min: 2.5, max: 4 } },
           shape: { type: "circle" },
@@ -842,7 +838,6 @@ export default function Servicios() {
 
   return (
     <>
-      <BubblesBg isLight={isLight} />
       <NetworkParticlesBg isLight={isLight} />
       <div className="relative z-10 transition-colors duration-500">
         <HeroSection isLight={isLight} />
