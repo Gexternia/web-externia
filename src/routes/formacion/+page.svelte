@@ -136,11 +136,6 @@
     primaryRef.style.transform = 'translateX(0%)';
   }
 
-  function handleContactClick(e: MouseEvent) {
-    e.preventDefault();
-    const target = document.querySelector('#contacto');
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
 </script>
 
 <svelte:head>
@@ -371,7 +366,7 @@
   </section>
 
   <!-- CTA -->
-  <section id="contacto" class="relative py-32 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="relative py-32 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-12 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
 
     <div class="max-w-3xl mx-auto text-center relative z-10">
@@ -385,8 +380,7 @@
         </p>
 
         <a
-          href="#contacto"
-          onclick={handleContactClick}
+          href="/contacto"
           class="relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-shadow duration-300 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
           style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
           onmouseenter={onBtnEnter}
