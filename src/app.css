@@ -1,0 +1,130 @@
+﻿@import "tailwindcss";
+
+/* Custom Theme (Tailwind v4 CSS-based config) */
+@theme {
+  --color-negro: #000000;
+  --color-gris: #111111;
+  --color-blanco: #FFFFFF;
+  --color-azul: #0070f3;
+
+  /* Light mode brand colors */
+  --color-brand-magenta: #DE3B84;
+  --color-brand-yellow: #FFC12D;
+  --color-brand-orange: #F7A361;
+  --color-brand-rose: #EE847B;
+  --color-brand-fuchsia: #D6007D;
+
+  /* Dark mode colors */
+  --color-dark-bg: #5F6D75;
+  --color-dark-text: #E6EAEC;
+  --color-dark-brand: #B4BDC2;
+  --color-dark-accent: #7D8C95;
+  --color-dark-muted: #9BA7AD;
+  --color-dark-surface: #4A555C;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Glow animation for the CTA button */
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+
+  /* Ring spin speeds */
+  --animate-spin-slow: spin 12s linear infinite;
+  --animate-spin-reverse: spin 8s linear infinite reverse;
+}
+
+/* CSS Variables for theme switching */
+:root {
+  --bg-base: #000000;
+  --text-primary: #E6EAEC;
+  --surface: #4A555C;
+  --accent: #7D8C95;
+  --muted: #9BA7AD;
+  --brand: #B4BDC2;
+}
+
+:root.light {
+  --bg-base: #FFFFFF;
+  --text-primary: #333333;
+  --surface: #F5F5F5;
+  --accent: #DE3B84;
+  --muted: #9BA7AD;
+  --brand: #DE3B84;
+}
+
+/* Custom keyframes */
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px #0070f3, 0 0 30px #0070f380;
+  }
+
+  to {
+    box-shadow: 0 0 20px #0070f3, 0 0 60px #0070f3aa, 0 0 90px #0070f340;
+  }
+}
+
+/* Global resets */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Force gray scrollbar */
+html {
+  scrollbar-color: #888 #1a1a1a;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+.light {
+  scrollbar-color: #aaa #f0f0f0;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #bbb;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Section containers */
+.section-container {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  opacity: 0.15;
+  text-transform: uppercase;
+}
