@@ -11,8 +11,7 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import type { PanInfo } from "framer-motion";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
+import BubblesBg from "./BubblesBg";
 
 // ── Global mouse tracker (shared RAF-batched singleton) ───────────
 let _svMouseX = -9999, _svMouseY = -9999, _svMouseRaf = false, _svMouseInit = false;
@@ -33,95 +32,40 @@ function _ensureGlobalMouse() {
   );
 }
 
-// ── Bubble background (same as QuienesSomos) ─────────────────────
-type BubbleData = { x: number; y: number; r: number; vx: number; vy: number; baseVy: number; opacity: number; phase: number };
-
-function BubblesBg({ isLight }: { isLight: boolean }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: -9999, y: -9999 });
-  const bubblesRef = useRef<BubbleData[]>([]);
-  const rafRef = useRef(0);
-
-  useEffect(() => {
-    const canvas = canvasRef.current!;
-    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-    resize();
-    window.addEventListener("resize", resize);
-    const W = canvas.width, H = canvas.height, N = 20;
-    bubblesRef.current = Array.from({ length: N }, (_, i) => {
-      const baseVy = -(0.3 + (i * 0.14) % 0.7);
-      return { x: (i * (W / N) + 18) % W, y: (i * 97.3) % H, r: 14 + (i * 18.9) % 54, vx: (i % 2 === 0 ? 1 : -1) * ((i * 0.11) % 0.22), vy: baseVy, baseVy, opacity: 0.48 + (i * 0.021) % 0.32, phase: (i * 0.68) % (Math.PI * 2) };
-    });
-    return () => { window.removeEventListener("resize", resize); cancelAnimationFrame(rafRef.current); };
-  }, []);
-
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => { mouseRef.current = { x: e.clientX, y: e.clientY }; };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
-
-  useEffect(() => {
-    const canvas = canvasRef.current; if (!canvas) return;
-    const ctx = canvas.getContext("2d")!;
-    const [cr, cg, cb] = isLight ? [222, 59, 132] : [40, 120, 255];
-    const tick = () => {
-      if (!canvas.width || !canvas.height) { rafRef.current = requestAnimationFrame(tick); return; }
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const { x: mx, y: my } = mouseRef.current;
-      const t = Date.now() * 0.001;
-      for (const b of bubblesRef.current) {
-        const dx = b.x - mx, dy = b.y - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const repelR = 150;
-        if (dist < repelR && dist > 1) { const f = ((repelR - dist) / repelR) * 1.4; b.vx += (dx / dist) * f; b.vy += (dy / dist) * f; }
-        b.vx *= 0.94; b.vy = b.vy * 0.95 + b.baseVy * 0.05;
-        b.x += b.vx + Math.sin(t * 0.38 + b.phase) * 0.28; b.y += b.vy;
-        if (b.y + b.r < 0) { b.y = canvas.height + b.r; b.x = Math.random() * canvas.width; b.vx = (Math.random() - 0.5) * 0.2; b.vy = b.baseVy; }
-        if (b.x < -b.r) b.x = canvas.width + b.r;
-        if (b.x > canvas.width + b.r) b.x = -b.r;
-        const proximity = Math.max(0, 1 - dist / repelR);
-        const glow = b.opacity + proximity * 0.45;
-        const fill = ctx.createRadialGradient(b.x - b.r * 0.28, b.y - b.r * 0.28, 0, b.x, b.y, b.r);
-        fill.addColorStop(0, `rgba(${cr},${cg},${cb},${glow * 0.09})`);
-        fill.addColorStop(0.55, `rgba(${cr},${cg},${cb},${glow * 0.04})`);
-        fill.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
-        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fillStyle = fill; ctx.fill();
-        if (proximity > 0.04) {
-          const halo = ctx.createRadialGradient(b.x, b.y, b.r * 0.85, b.x, b.y, b.r * 1.7);
-          halo.addColorStop(0, `rgba(${cr},${cg},${cb},${proximity * 0.18})`);
-          halo.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
-          ctx.beginPath(); ctx.arc(b.x, b.y, b.r * 1.7, 0, Math.PI * 2); ctx.fillStyle = halo; ctx.fill();
-        }
-        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${cr},${cg},${cb},${Math.min(0.72, glow * 0.82)})`; ctx.lineWidth = 1.2 + proximity * 1.2; ctx.stroke();
-        const hl = ctx.createRadialGradient(b.x - b.r * 0.34, b.y - b.r * 0.34, 0, b.x - b.r * 0.34, b.y - b.r * 0.34, b.r * 0.34);
-        hl.addColorStop(0, `rgba(255,255,255,${0.55 + proximity * 0.3})`); hl.addColorStop(1, "rgba(255,255,255,0)");
-        ctx.beginPath(); ctx.arc(b.x - b.r * 0.34, b.y - b.r * 0.34, b.r * 0.34, 0, Math.PI * 2); ctx.fillStyle = hl; ctx.fill();
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [isLight]);
-
-  return <canvas ref={canvasRef} style={{ position: "fixed", inset: 0, width: "100%", height: "100%", zIndex: 30, pointerEvents: "none" }} />;
-}
-
-// ── NetworkParticlesBg ────────────────────────────────────────────
+// ── NetworkParticlesBg (deferred, reduced on mobile) ────────────────
 function NetworkParticlesBg({ isLight }: { isLight: boolean }) {
   const [ready, setReady] = useState(false);
+  const [ParticlesCmp, setParticlesCmp] = useState<typeof import("@tsparticles/react").Particles | null>(null);
+
   useEffect(() => {
-    initParticlesEngine(async (engine) => { await loadSlim(engine); }).then(() => setReady(true));
+    let cancelled = false;
+    const load = async () => {
+      const [reactMod, { loadSlim }] = await Promise.all([
+        import("@tsparticles/react"),
+        import("@tsparticles/slim"),
+      ]);
+      if (cancelled) return;
+      const { Particles: P, initParticlesEngine } = reactMod;
+      setParticlesCmp(() => P);
+      await initParticlesEngine(async (engine) => { await loadSlim(engine); });
+      if (!cancelled) setReady(true);
+    };
+    const id = window.setTimeout(() => load(), 120);
+    return () => { cancelled = true; clearTimeout(id); };
   }, []);
-  if (!ready) return null;
+
+  if (!ready || !ParticlesCmp) return null;
   const accent = isLight ? "#DE3B84" : "#0070f3";
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+  const particleCount = isMobile ? 32 : 45;
+  const fpsLimit = isMobile ? 30 : 40;
+
   return (
-    <Particles
+    <ParticlesCmp
       id="sv-network"
       style={{ position: "fixed", inset: 0, zIndex: 5, pointerEvents: "none" }}
       options={{
-        fpsLimit: 40,
+        fpsLimit,
         background: { color: { value: "transparent" } },
         interactivity: {
           detectsOn: "window" as const,
@@ -132,7 +76,7 @@ function NetworkParticlesBg({ isLight }: { isLight: boolean }) {
           color: { value: accent },
           links: { enable: true, color: accent, opacity: isLight ? 0.58 : 1.0, distance: 130, width: 1.8 },
           move: { enable: true, speed: 0.6, random: true, direction: "none" as const, outModes: { default: "bounce" as const } },
-          number: { density: { enable: true, area: 900 }, value: 50 },
+          number: { density: { enable: true, area: 1100 }, value: particleCount },
           opacity: { value: { min: isLight ? 0.49 : 0.65, max: isLight ? 0.75 : 1.0 } },
           size: { value: { min: 2.5, max: 4 } },
           shape: { type: "circle" },

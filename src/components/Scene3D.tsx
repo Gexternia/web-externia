@@ -19,7 +19,7 @@
  */
 import { Suspense, useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import Particles from "./Particles";
 
@@ -98,7 +98,7 @@ export default function Scene3D() {
 
     return (
         <Canvas
-            dpr={[1, 2]}
+            dpr={[1, 1.5]}
             camera={{ position: [0, 0, 5], fov: 50 }}
             style={{
                 position: "absolute",
@@ -110,10 +110,8 @@ export default function Scene3D() {
             }}
         >
             <Suspense fallback={null}>
-                {/* Ambient + city HDRI environment for realistic reflections */}
                 <ambientLight intensity={0.2} />
                 <directionalLight position={[5, 5, 5]} intensity={0.8} />
-                <Environment preset="city" />
 
                 {/* Central model with auto-rotation */}
                 <CentralModel isLight={isLight} />
