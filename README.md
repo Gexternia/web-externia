@@ -1,43 +1,51 @@
-# Astro Starter Kit: Minimal
+# Externia — Web
 
-```sh
-npm create astro@latest -- --template minimal
+Sitio web de Externia (Consultoría de IA para Eventos). Migrado a **SvelteKit + Svelte 5** para mejor rendimiento.
+
+## Stack
+
+- **SvelteKit** + **Svelte 5**
+- **Tailwind CSS** v4
+- **Three.js** (escena 3D del Hero)
+- **@tsparticles** (partículas de red para páginas interiores)
+
+## Estructura
+
 ```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
 /
-├── public/
+├── static/          # Assets (logos, imágenes)
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── app.css      # Estilos globales + Tailwind
+│   ├── app.html     # Shell HTML
+│   ├── lib/
+│   │   └── components/   # Componentes Svelte
+│   │       ├── Navbar.svelte
+│   │       ├── Footer.svelte
+│   │       ├── ThemeToggle.svelte
+│   │       ├── Scene3D.svelte   # Three.js + partículas
+│   │       └── HeroContent.svelte
+│   └── routes/
+│       ├── +layout.svelte
+│       ├── +page.svelte         # Home (Hero 3D)
+│       ├── quienes-somos/
+│       ├── servicios/
+│       └── formacion/
+└── build/           # Salida estática
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Comandos
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Comando | Acción |
+|---------|--------|
+| `npm install` | Instalar dependencias |
+| `npm run dev` | Servidor desarrollo (localhost:5173) |
+| `npm run build` | Build estático en `./build` |
+| `npm run preview` | Previsualizar build |
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Estado de migración
 
-## 🧞 Commands
+- ✅ **Home**: Hero con escena 3D, logo animado, tema claro/oscuro
+- ✅ **Navbar, Footer, ThemeToggle**: Completos
+- ⏳ **Quiénes Somos, Servicios, Formación**: Páginas placeholder — contenido en migración
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Los componentes React originales (`QuienesSomos.tsx`, `Formacion.tsx`, `Servicios.tsx`) permanecen en `src/components/` como referencia para completar la migración.
