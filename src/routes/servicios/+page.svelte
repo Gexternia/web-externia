@@ -314,7 +314,7 @@
         </p>
 
         <a
-          href="mailto:g.prado@externia.ai"
+          href="/contacto"
           class="relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-shadow duration-300 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
           style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
           onmouseenter={onBtnEnter}
@@ -326,7 +326,7 @@
         </a>
 
         <p class="mt-6 text-sm transition-colors duration-500 {isLight ? 'text-gray-400' : 'text-gray-500'}">
-          g.prado@externia.ai · +34 648 264 949
+          <a href="/contacto" class="hover:underline">Formulario de contacto</a> · g.prado@externia.ai · +34 648 264 949
         </p>
       </FadeIn>
     </div>
