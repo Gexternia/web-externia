@@ -6,7 +6,6 @@
   import FadeIn from '$lib/components/shared/FadeIn.svelte';
   import SectionLabel from '$lib/components/shared/SectionLabel.svelte';
   import MagneticRepel from '$lib/components/shared/MagneticRepel.svelte';
-  import MagneticAttract from '$lib/components/shared/MagneticAttract.svelte';
 
   let isLight = $state(false);
   let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
@@ -130,7 +129,7 @@
 
     <FadeIn delay={0.2}>
       <h1 class="relative z-10 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight max-w-5xl transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-        Experiencias de <span class={isLight ? 'bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-brand-orange bg-clip-text text-transparent' : 'bg-gradient-to-r from-[#0070f3] via-blue-300 to-[#0070f3] bg-clip-text text-transparent'}>IA</span><br />que impactan
+        Experiencias de <span class="gradient-text-animate">IA</span><br />que impactan
       </h1>
     </FadeIn>
 
@@ -149,7 +148,7 @@
   </section>
 
   <!-- Activaciones -->
-  <section id="activaciones" class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
+  <section id="activaciones" class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-20">
         <SectionLabel text="01 · Activaciones de IA Experiencial" {isLight} />
@@ -167,7 +166,7 @@
 
       <FadeIn delay={0.35} className="mt-24 flex flex-wrap justify-center gap-6">
         {#each categories as cat}
-          <div class="flex items-center gap-3 px-5 py-3 rounded-2xl border transition-colors duration-500 {isLight ? 'bg-white/80 border-gray-100' : 'bg-[#0d1829]/80 border-white/8'}">
+          <div class="flex items-center gap-3 px-5 py-3 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light bg-white/80 border-gray-100' : 'bg-[#0d1829]/80 border-white/8'}">
             <span class="text-xl">{cat.icon}</span>
             <div>
               <p class="text-xs font-bold {isLight ? 'text-gray-900' : 'text-white'}">{cat.label}</p>
@@ -180,7 +179,7 @@
   </section>
 
   <!-- Consultoría -->
-  <section id="consultoria" class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section id="consultoria" class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-20">
         <SectionLabel text="02 · Consultoría Estratégica de IA" {isLight} />
@@ -196,19 +195,17 @@
         <div class="hidden lg:block absolute top-10 left-[16.66%] right-[16.66%] h-px {isLight ? 'bg-gradient-to-r from-brand-magenta via-brand-yellow to-brand-orange' : 'bg-gradient-to-r from-azul/40 to-blue-400/40'}"></div>
         <div class="grid lg:grid-cols-3 gap-10">
           {#each phases as phase, i}
-            <MagneticRepel strength={40} radius={160}>
+            <MagneticRepel strength={12} radius={160}>
               <FadeIn delay={i * 0.15}>
                 <div class="flex flex-col items-center text-center p-8 rounded-2xl border transition-all duration-300 {isLight ? 'bg-white/90 border-gray-100 backdrop-blur-sm' : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 backdrop-blur-sm'}">
                   <div
                     class="relative z-10 w-20 h-20 rounded-full flex items-center justify-center text-2xl font-black text-white mb-6 shadow-xl transition-transform duration-300 hover:scale-110"
                     style="background-color: {isLight ? phase.colorLight : phase.colorDark}"
                   >
-                    <MagneticAttract strength={16} radius={65}>
-                      <span>{phase.num}</span>
-                    </MagneticAttract>
+                    <span>{phase.num}</span>
                     <div class="absolute inset-0 rounded-full opacity-40 blur-md" style="background-color: {isLight ? phase.colorLight : phase.colorDark}"></div>
                   </div>
-                  <div class="text-3xl mb-3">{phase.icon}</div>
+                  <div class="text-3xl mb-3 select-none">{phase.icon}</div>
                   <h3 class="text-xl font-black mb-3 {isLight ? 'text-gray-900' : 'text-white'}">
                     {#each phase.title.split('-') as part, pi}
                       {#if part === 'IA'}
@@ -228,10 +225,8 @@
 
       <FadeIn delay={0.3} className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {#each extras as e}
-          <div class="flex items-center gap-3 p-4 rounded-2xl border transition-colors duration-500 {isLight ? 'bg-white/80 border-gray-100' : 'bg-[#0d1829]/60 border-white/8'}">
-            <MagneticAttract strength={14} radius={55}>
-              <span class="text-2xl">{e.icon}</span>
-            </MagneticAttract>
+          <div class="flex items-center gap-3 p-4 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light bg-white/80 border-gray-100' : 'bg-[#0d1829]/60 border-white/8'}">
+            <span class="text-2xl">{e.icon}</span>
             <span class="text-sm font-semibold {isLight ? 'text-gray-700' : 'text-gray-300'}">{e.label}</span>
           </div>
         {/each}
@@ -240,7 +235,7 @@
   </section>
 
   <!-- Formación -->
-  <section id="formacion" class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
+  <section id="formacion" class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
         <SectionLabel text="03 · Formación Especializada" {isLight} />
@@ -254,12 +249,10 @@
 
       <div class="grid md:grid-cols-3 gap-6">
         {#each programs as p, i}
-          <MagneticRepel strength={45} radius={175}>
+          <MagneticRepel strength={13} radius={175}>
             <FadeIn delay={i * 0.12}>
-              <div class="h-full p-7 rounded-2xl border transition-all duration-300 cursor-default {isLight ? `bg-gradient-to-br ${p.gradient} bg-white/90 border-gray-100 ${p.hoverLight} backdrop-blur-sm` : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/45 hover:bg-[#00c8ff]/6 backdrop-blur-sm'}">
-                <MagneticAttract strength={18} radius={70}>
-                  <div class="text-4xl mb-5">{p.icon}</div>
-                </MagneticAttract>
+              <div class="h-full p-7 rounded-2xl border transition-all duration-300 cursor-default {isLight ? `shadow-card-light shadow-card-light-hover bg-gradient-to-br ${p.gradient} bg-white/90 border-gray-100 ${p.hoverLight} backdrop-blur-sm` : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/45 hover:bg-[#00c8ff]/6 backdrop-blur-sm'}">
+                <div class="text-4xl mb-5">{p.icon}</div>
                 <div class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/10 text-azul'}">{p.level}</div>
                 <h3 class="text-lg font-black mb-3 {isLight ? 'text-gray-900' : 'text-white'}">{p.title}</h3>
                 <p class="text-sm leading-relaxed {isLight ? 'text-gray-500' : 'text-gray-400'}">{p.desc}</p>
@@ -284,11 +277,9 @@
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {#each paraQuienTypes as t, i}
           <FadeIn delay={i * 0.1}>
-            <MagneticRepel strength={38} radius={155}>
+            <MagneticRepel strength={12} radius={155}>
               <div class="p-6 rounded-2xl border text-center transition-all duration-300 hover:-translate-y-1 {isLight ? 'bg-white/15 border-white/25 backdrop-blur-sm hover:bg-white/25' : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 backdrop-blur-sm'}">
-                <MagneticAttract strength={16} radius={60}>
-                  <div class="text-4xl mb-4">{t.icon}</div>
-                </MagneticAttract>
+                <div class="text-4xl mb-4">{t.icon}</div>
                 <h3 class="text-base font-black text-white mb-2">{t.title}</h3>
                 <p class="text-xs leading-relaxed {isLight ? 'text-white/75' : 'text-gray-400'}">{t.desc}</p>
               </div>
@@ -315,7 +306,7 @@
 
         <a
           href="mailto:g.prado@externia.ai"
-          class="relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-shadow duration-300 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
+          class="btn-cta-animated micro-active-press relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-all duration-300 hover:scale-105 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
           style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
           onmouseenter={onBtnEnter}
           onmouseleave={onBtnLeave}

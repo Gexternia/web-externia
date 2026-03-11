@@ -6,7 +6,6 @@
   import SectionLabel from '$lib/components/shared/SectionLabel.svelte';
   import TiltCard from '$lib/components/shared/TiltCard.svelte';
   import MagneticRepel from '$lib/components/shared/MagneticRepel.svelte';
-  import MagneticAttract from '$lib/components/shared/MagneticAttract.svelte';
   import Counter from '$lib/components/shared/Counter.svelte';
 
   let isLight = $state(false);
@@ -138,8 +137,8 @@
 
     <FadeIn delay={0.1}>
       <h1 class="relative z-10 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight max-w-5xl transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-        Camb<span class={isLight ? 'bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-brand-orange bg-clip-text text-transparent' : 'bg-gradient-to-r from-[#0070f3] via-blue-300 to-[#0070f3] bg-clip-text text-transparent'}>IA</span> el mundo.<br />
-        Camb<span class={isLight ? 'bg-gradient-to-r from-brand-fuchsia via-brand-magenta to-brand-yellow bg-clip-text text-transparent' : 'bg-gradient-to-r from-blue-300 via-[#0070f3] to-blue-400 bg-clip-text text-transparent'}>IA</span> tu evento.
+        Camb<span class="gradient-text-animate">IA</span> el mundo.<br />
+        Camb<span class="gradient-text-animate">IA</span> tu evento.
       </h1>
     </FadeIn>
     <FadeIn delay={0.35}>
@@ -152,14 +151,14 @@
   </section>
 
   <!-- Manifiesto -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {isLight ? 'bg-gradient-to-br from-[#f0a0c0] via-[#dc80c8] to-[#f8c090]' : 'bg-[#060d1a]/95 backdrop-blur-sm'}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {isLight ? 'bg-gradient-to-br from-[#f0a0c0] via-[#dc80c8] to-[#f8c090]' : 'bg-[#060d1a]/95 backdrop-blur-sm'}">
     <div class="max-w-5xl mx-auto text-center relative z-10">
       <ManifiestoWords words={manifestWords} highlight={manifestHighlight} {isLight} phrase2Start={9} />
     </div>
   </section>
 
   <!-- Historia -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="mb-16">
         <SectionLabel text="Nuestra Historia" {isLight} />
@@ -208,7 +207,7 @@
             <div class="relative">
               <div class="absolute -inset-3 rounded-3xl blur-2xl opacity-25 pointer-events-none {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-yellow' : 'bg-azul'}"></div>
               <TiltCard className="block">
-                <div class="relative rounded-2xl overflow-hidden border {isLight ? 'border-brand-magenta/15' : 'border-white/8'}">
+                <div class="relative rounded-2xl overflow-hidden border transition-shadow duration-300 {isLight ? 'border-brand-magenta/15 shadow-card-light shadow-card-light-hover' : 'border-white/8'}">
                   <img src="/team/guillermo-premio.png" alt="Guillermo Prado — MPI Iberian Awards 2025" class="w-full h-[380px] object-cover object-top block" />
                   <div class="absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border {isLight ? 'bg-white/85 border-brand-magenta/15' : 'bg-black/75 border-white/10'}">
                     <p class="text-xs font-bold tracking-widest uppercase {isLight ? 'text-brand-magenta' : 'text-azul'}">🏆 MPI Iberian Awards 2025</p>
@@ -221,7 +220,7 @@
           </FadeIn>
 
           <FadeIn delay={0.35} from="right">
-            <blockquote class="p-6 rounded-2xl border italic {isLight ? 'bg-gradient-to-br from-[#fff5f9] to-[#fff8ee] border-brand-magenta/10' : 'bg-[#0d1829]/80 border-white/5 backdrop-blur-sm'}">
+            <blockquote class="p-6 rounded-2xl border italic {isLight ? 'shadow-card-light bg-gradient-to-br from-[#fff5f9] to-[#fff8ee] border-brand-magenta/10' : 'bg-[#0d1829]/80 border-white/5 backdrop-blur-sm'}">
               <p class="text-base leading-relaxed font-medium {isLight ? 'text-gray-800' : 'text-gray-200'}">
                 "La IA nos permite hacer los eventos más humanos, no menos.
                 Cada activación está diseñada para crear conexión real entre la marca y las personas."
@@ -237,7 +236,7 @@
   </section>
 
   <!-- Diferencias -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
         <SectionLabel text="Qué nos diferencia" {isLight} />
@@ -251,12 +250,10 @@
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {#each features as f, i}
-          <MagneticRepel strength={52} radius={185}>
+          <MagneticRepel strength={14} radius={185}>
             <FadeIn delay={i * 0.09}>
-              <TiltCard className="group h-full p-7 rounded-2xl border transition-all duration-300 cursor-default {isLight ? `bg-gradient-to-br ${f.lightGrad} bg-white/90 border-gray-100 ${f.hoverLight} backdrop-blur-sm` : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/45 hover:bg-[#00c8ff]/6 backdrop-blur-sm'}">
-                <MagneticAttract strength={18} radius={82}>
-                  <div class="text-4xl mb-5">{f.icon}</div>
-                </MagneticAttract>
+              <TiltCard className="group h-full p-7 rounded-2xl border transition-all duration-300 cursor-default {isLight ? `shadow-card-light shadow-card-light-hover bg-gradient-to-br ${f.lightGrad} bg-white/90 border-gray-100 ${f.hoverLight} backdrop-blur-sm` : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/45 hover:bg-[#00c8ff]/6 backdrop-blur-sm'}">
+                <div class="text-4xl mb-5">{f.icon}</div>
                 <h3 class="text-base font-bold mb-2 {isLight ? 'text-gray-900' : 'text-white'}">{f.title}</h3>
                 <p class="text-sm leading-relaxed {isLight ? 'text-gray-500' : 'text-gray-400'}">{f.desc}</p>
               </TiltCard>
@@ -268,7 +265,7 @@
   </section>
 
   <!-- Servicios (FlipCards) -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
         <SectionLabel text="Lo que hacemos" {isLight} />
@@ -290,7 +287,7 @@
   </section>
 
   <!-- Metodología -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-20">
         <SectionLabel text="Nuestra Metodología" {isLight} />
@@ -331,7 +328,7 @@
   </section>
 
   <!-- Resultados -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {isLight ? 'bg-gradient-to-br from-[#f0a0c0] via-[#dc80c8] to-[#f8c090]' : 'bg-[#060d1a]/95 backdrop-blur-sm'}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {isLight ? 'bg-gradient-to-br from-[#f0a0c0] via-[#dc80c8] to-[#f8c090]' : 'bg-[#060d1a]/95 backdrop-blur-sm'}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
         <SectionLabel text="Nuestros Resultados" {isLight} white={isLight} />
@@ -362,7 +359,7 @@
   </section>
 
   <!-- Equipo -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
         <SectionLabel text="Nuestro Equipo" {isLight} />
@@ -379,7 +376,7 @@
       <div class="grid lg:grid-cols-5 gap-8 items-stretch">
         <FadeIn delay={0.1} from="left" className="lg:col-span-2">
           <TiltCard className="block">
-            <div class="rounded-2xl overflow-hidden border {isLight ? 'border-brand-magenta/15 bg-white/90 backdrop-blur-sm' : 'border-white/8 bg-[#0d1829]/80 backdrop-blur-sm'}">
+            <div class="rounded-2xl overflow-hidden border transition-shadow duration-300 {isLight ? 'border-brand-magenta/15 shadow-card-light shadow-card-light-hover bg-white/90 backdrop-blur-sm' : 'border-white/8 bg-[#0d1829]/80 backdrop-blur-sm'}">
               <div class="relative overflow-hidden h-[280px]">
                 <img src="/team/guillermo-ganador.png" alt="Guillermo Prado — Ganador Event Industry Entrepreneur 2025" class="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-105" />
               </div>
@@ -412,10 +409,8 @@
 
           <div class="grid grid-cols-3 gap-4">
             {#each valueCards as v}
-              <div class="p-4 rounded-xl text-center border transition-all duration-300 hover:-translate-y-1 {isLight ? 'bg-white/90 border-gray-100 backdrop-blur-sm' : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 hover:bg-[#00c8ff]/5 backdrop-blur-sm'}">
-                <MagneticAttract strength={18} radius={65}>
-                  <div class="text-2xl mb-2">{v.icon}</div>
-                </MagneticAttract>
+              <div class="p-4 rounded-xl text-center border transition-all duration-300 hover:-translate-y-1 {isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 backdrop-blur-sm' : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 hover:bg-[#00c8ff]/5 backdrop-blur-sm'}">
+                <div class="text-2xl mb-2">{v.icon}</div>
                 <p class="text-xs font-semibold {isLight ? 'text-gray-700' : 'text-gray-300'}">{v.label}</p>
               </div>
             {/each}
@@ -426,7 +421,7 @@
   </section>
 
   <!-- CTA -->
-  <section class="relative py-32 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="section-divider relative py-32 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-12 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
 
     <div class="max-w-3xl mx-auto text-center relative z-10">
@@ -441,7 +436,7 @@
 
         <a
           href="/servicios"
-          class="relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-shadow duration-300 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
+          class="btn-cta-animated micro-active-press relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-all duration-300 hover:scale-105 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
           style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
           onmouseenter={onBtnEnter}
           onmouseleave={onBtnLeave}

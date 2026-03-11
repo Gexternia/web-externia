@@ -12,9 +12,9 @@
 
   let el: HTMLDivElement;
   let visible = $state(false);
-  const opacity = spring(0, { stiffness: 0.5, damping: 0.6 });
-  const x = spring(from === 'left' ? -50 : from === 'right' ? 50 : 0, { stiffness: 0.5, damping: 0.6 });
-  const y = spring(from === 'bottom' ? 45 : 0, { stiffness: 0.5, damping: 0.6 });
+  const opacity = spring(0, { stiffness: 0.2, damping: 0.75 });
+  const x = spring(from === 'left' ? -50 : from === 'right' ? 50 : 0, { stiffness: 0.2, damping: 0.75 });
+  const y = spring(from === 'bottom' ? 45 : 0, { stiffness: 0.2, damping: 0.75 });
 
   onMount(() => {
     const obs = new IntersectionObserver(
@@ -28,7 +28,7 @@
           }, delay * 1000);
         }
       },
-      { rootMargin: '-60px', threshold: 0 }
+      { rootMargin: '-40px 0px -40px 0px', threshold: 0.05 }
     );
     obs.observe(el);
     return () => obs.disconnect();

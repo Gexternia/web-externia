@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
 /* Custom Theme (Tailwind v4 CSS-based config) */
 @theme {
@@ -62,6 +62,66 @@
   }
 }
 
+/* Gradiente animado en texto */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gradient-text-animate {
+  background: linear-gradient(
+    90deg,
+    #DE3B84,
+    #FFC12D,
+    #F7A361,
+    #EE847B,
+    #D6007D,
+    #DE3B84
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 6s ease infinite;
+}
+
+:root:not(.light) .gradient-text-animate {
+  background: linear-gradient(
+    90deg,
+    #3b82f6,
+    #60a5fa,
+    #93c5fd,
+    #bfdbfe,
+    #60a5fa,
+    #3b82f6
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 6s ease infinite;
+}
+
+/* Borde animado en botones CTA (resplandor suave) */
+@keyframes btn-border-glow {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(222,59,132,0.3), 0 0 20px rgba(222,59,132,0.15); }
+  50% { box-shadow: 0 0 0 2px rgba(222,59,132,0.5), 0 0 30px rgba(222,59,132,0.25); }
+}
+
+:root:not(.light) .btn-cta-animated {
+  animation: btn-border-glow-dark 4s ease-in-out infinite;
+}
+
+@keyframes btn-border-glow-dark {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(0,112,243,0.4), 0 0 20px rgba(0,112,243,0.2); }
+  50% { box-shadow: 0 0 0 2px rgba(96,165,250,0.5), 0 0 30px rgba(0,112,243,0.3); }
+}
+
+.light .btn-cta-animated {
+  animation: btn-border-glow 4s ease-in-out infinite;
+}
+
 /* Global resets */
 html {
   scroll-behavior: smooth;
@@ -72,7 +132,15 @@ body {
   color: var(--text-primary);
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   overflow-x: hidden;
-  transition: background-color 0.4s ease, color 0.4s ease;
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Transiciones de tema suaves */
+.theme-transition {
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Force gray scrollbar */
@@ -128,3 +196,78 @@ html {
   opacity: 0.15;
   text-transform: uppercase;
 }
+
+/* Light mode: sombras distintivas */
+.light .shadow-card-light {
+  box-shadow: 0 2px 8px -2px rgba(222, 59, 132, 0.08), 0 8px 24px -4px rgba(0, 0, 0, 0.06);
+}
+
+.light .shadow-card-light-hover:hover {
+  box-shadow: 0 8px 32px -4px rgba(222, 59, 132, 0.14), 0 16px 48px -8px rgba(0, 0, 0, 0.08);
+}
+
+/* Líneas de límite de sección (scroll reveal suave) */
+.section-divider {
+  position: relative;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  top: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(222, 59, 132, 0.5) 25%, rgba(255, 193, 45, 0.5) 50%, rgba(247, 163, 97, 0.5) 75%, transparent 100%);
+  background-size: 200% 100%;
+  opacity: 0.7;
+  animation: divider-shimmer 8s ease-in-out infinite;
+}
+
+:root:not(.light) .section-divider::before {
+  background: linear-gradient(90deg, transparent 0%, rgba(0, 112, 243, 0.5) 30%, rgba(96, 165, 250, 0.5) 70%, transparent 100%);
+  background-size: 200% 100%;
+}
+
+@keyframes divider-shimmer {
+  0%, 100% { background-position: 0% 50%; opacity: 0.6; }
+  50% { background-position: 100% 50%; opacity: 0.9; }
+}
+
+/* Suavidad global en transiciones */
+.section-transition {
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Micro-interacciones */
+.micro-hover-lift {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.micro-hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.micro-active-press:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+.micro-link-underline {
+  position: relative;
+}
+.micro-link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.micro-link-underline:hover::after {
+  width: 100%;
+}
+.light .micro-link-underline::after { background: #DE3B84; }
+:root:not(.light) .micro-link-underline::after { background: #60a5fa; }

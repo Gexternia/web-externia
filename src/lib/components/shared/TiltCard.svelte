@@ -7,7 +7,7 @@
 
   let el: HTMLDivElement;
   let transform = $state('perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)');
-  let transition = $state('transform 0.5s ease');
+  let transition = $state('transform 0.65s cubic-bezier(0.4, 0, 0.2, 1)');
 
   function onMove(e: MouseEvent) {
     if (!el) return;
@@ -20,7 +20,7 @@
 
   function onLeave() {
     transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
-    transition = 'transform 0.5s ease';
+    transition = 'transform 0.65s cubic-bezier(0.4, 0, 0.2, 1)';
   }
 </script>
 

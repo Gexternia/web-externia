@@ -49,7 +49,7 @@
   let backOpacity = $state(0);
 
   const cardFaceCls = $derived(isLight
-    ? 'bg-white/90 border-gray-100 shadow-sm backdrop-blur-sm'
+    ? 'bg-white/90 border-gray-100 shadow-card-light shadow-card-light-hover backdrop-blur-sm'
     : 'bg-[#0d1829]/90 border-white/8 backdrop-blur-sm');
 
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));

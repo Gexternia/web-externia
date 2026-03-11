@@ -55,7 +55,7 @@
         {#each navLinks as link}
           <a
             href={link.href}
-            class="text-sm font-medium tracking-wide transition-colors duration-200 {isDark ? 'text-gray-300 hover:text-azul' : 'text-gray-600 hover:text-brand-magenta'}"
+            class="micro-link-underline text-sm font-medium tracking-wide transition-colors duration-300 {isDark ? 'text-gray-300 hover:text-azul' : 'text-gray-600 hover:text-brand-magenta'}"
           >
             {link.label}
           </a>
@@ -64,7 +64,7 @@
 
       <button
         onclick={() => (menuOpen = !menuOpen)}
-        class="md:hidden p-2 rounded-lg transition-colors {isDark ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-black/5'}"
+        class="md:hidden p-2 rounded-lg transition-colors duration-300 micro-active-press {isDark ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-black/5'}"
         aria-label="Toggle menu"
       >
         {#if menuOpen}
@@ -84,7 +84,7 @@
         {#each navLinks as link}
           <a
             href={link.href}
-            class="block py-3 px-2 text-sm font-medium transition-colors {isDark ? 'text-gray-300 hover:text-azul' : 'text-gray-600 hover:text-brand-magenta'}"
+            class="micro-link-underline block py-3 px-2 text-sm font-medium transition-colors duration-300 micro-active-press {isDark ? 'text-gray-300 hover:text-azul' : 'text-gray-600 hover:text-brand-magenta'}"
           >
             {link.label}
           </a>
