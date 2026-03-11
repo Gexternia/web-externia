@@ -317,7 +317,7 @@
         </a>
 
         <p class="mt-6 text-sm transition-colors duration-500 {isLight ? 'text-gray-400' : 'text-gray-500'}">
-          g.prado@externia.ai · +34 648 264 949
+          <a href="/contacto" class="hover:underline">Formulario de contacto</a> · g.prado@externia.ai · +34 648 264 949
         </p>
       </FadeIn>
     </div>

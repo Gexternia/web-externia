@@ -135,11 +135,6 @@
     primaryRef.style.transform = 'translateX(0%)';
   }
 
-  function handleContactClick(e: MouseEvent) {
-    e.preventDefault();
-    const target = document.querySelector('#contacto');
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
 </script>
 
 <svelte:head>
@@ -366,7 +361,7 @@
   </section>
 
   <!-- CTA -->
-  <section id="contacto" class="relative py-32 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="relative py-32 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-12 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
 
     <div class="max-w-3xl mx-auto text-center relative z-10">

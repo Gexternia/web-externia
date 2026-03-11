@@ -24,7 +24,7 @@
 
     <div class="flex items-center gap-6">
       <a
-        href="#contacto"
+        href="/contacto"
         class="text-sm transition-colors duration-200 {isDark ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}"
       >
         Contáctanos

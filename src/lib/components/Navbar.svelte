@@ -5,7 +5,8 @@
   const navLinks = [
     { label: 'Quiénes Somos', href: '/quienes-somos' },
     { label: 'Servicios', href: '/servicios' },
-    { label: 'Formación', href: '/formacion' }
+    { label: 'Formación', href: '/formacion' },
+    { label: 'Contáctanos', href: '/contacto' }
   ];
 
   let isDark = $state(true);
