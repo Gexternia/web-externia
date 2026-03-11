@@ -11,8 +11,8 @@
   let { strength = 18, radius = 82 }: Props = $props();
 
   let el: HTMLDivElement;
-  const x = spring(0, { stiffness: 220, damping: 22 });
-  const y = spring(0, { stiffness: 220, damping: 22 });
+  const x = spring(0, { stiffness: 80, damping: 26 });
+  const y = spring(0, { stiffness: 80, damping: 26 });
 
   onMount(() => {
     const cb = (mx: number, my: number) => {

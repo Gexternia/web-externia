@@ -6,7 +6,6 @@
   import SectionLabel from '$lib/components/shared/SectionLabel.svelte';
   import TiltCard from '$lib/components/shared/TiltCard.svelte';
   import MagneticRepel from '$lib/components/shared/MagneticRepel.svelte';
-  import MagneticAttract from '$lib/components/shared/MagneticAttract.svelte';
 
   let isLight = $state(false);
   let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
@@ -155,7 +154,7 @@
 
     <FadeIn delay={0.1}>
       <h1 class="relative z-10 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight max-w-4xl transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-        Formaciones en <span class={isLight ? 'bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-brand-orange bg-clip-text text-transparent' : 'bg-gradient-to-r from-[#0070f3] via-blue-300 to-[#0070f3] bg-clip-text text-transparent'}>IA</span> para Eventos
+        Formaciones en <span class="gradient-text-animate">IA</span> para Eventos
       </h1>
     </FadeIn>
     <FadeIn delay={0.35}>
@@ -171,7 +170,7 @@
   </section>
 
   <!-- ¿Por qué formarse? -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="max-w-4xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
         <SectionLabel text="¿Por qué formarse con Externia?" {isLight} />
@@ -208,7 +207,7 @@
   </section>
 
   <!-- Programas -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-12">
         <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
@@ -224,7 +223,7 @@
           <button
             type="button"
             onclick={() => (expanded = expanded === i ? null : i)}
-            class="rounded-2xl border p-5 sm:p-6 text-left transition-colors duration-300 flex items-center gap-4 w-full {expanded === i ? (isLight ? 'bg-brand-magenta/10 border-brand-magenta/50 shadow-lg ring-2 ring-brand-magenta/20' : 'bg-azul/10 border-azul/50 shadow-lg ring-2 ring-azul/20') : (isLight ? 'bg-white/90 border-gray-100 hover:border-brand-magenta/30' : 'bg-[#0d1829]/90 border-white/8 hover:border-azul/40')}"
+            class="rounded-2xl border p-5 sm:p-6 text-left transition-colors duration-300 flex items-center gap-4 w-full {expanded === i ? (isLight ? 'bg-brand-magenta/10 border-brand-magenta/50 shadow-card-light shadow-card-light-hover ring-2 ring-brand-magenta/20' : 'bg-azul/10 border-azul/50 shadow-lg ring-2 ring-azul/20') : (isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 hover:border-brand-magenta/30' : 'bg-[#0d1829]/90 border-white/8 hover:border-azul/40')}"
           >
             <span class="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-lg font-black text-white {isLight ? 'bg-brand-magenta' : 'bg-azul'}">{p.num}</span>
             <span class="font-bold text-base sm:text-lg truncate {isLight ? 'text-gray-900' : 'text-white'}">{p.title}</span>
@@ -241,7 +240,7 @@
             class="overflow-hidden"
           >
             {#each PROGRAMAS_DATA.filter((_, idx) => idx === expanded) as p}
-              <div class="rounded-2xl border overflow-hidden {isLight ? 'bg-white/90 border-gray-100 shadow-xl backdrop-blur-sm border-brand-magenta/20' : 'bg-[#0d1829]/90 border-white/8 backdrop-blur-sm border-azul/30'}">
+              <div class="rounded-2xl border overflow-hidden {isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 backdrop-blur-sm border-brand-magenta/20' : 'bg-[#0d1829]/90 border-white/8 backdrop-blur-sm border-azul/30'}">
                 <div class="h-1 w-full {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-gradient-to-r from-azul to-blue-400'}"></div>
                 <div class="p-8 sm:p-10">
                   <div class="flex flex-col md:flex-row md:items-start gap-8">
@@ -305,7 +304,7 @@
   </section>
 
   <!-- ¿Para quién? -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="max-w-4xl mx-auto relative z-10">
       <FadeIn className="text-center mb-12">
         <SectionLabel text="¿Para quién son estas formaciones?" {isLight} />
@@ -316,12 +315,10 @@
 
       <div class="grid sm:grid-cols-2 gap-5">
         {#each publicos as item, i}
-          <MagneticRepel strength={35} radius={150}>
+          <MagneticRepel strength={12} radius={150}>
             <FadeIn delay={i * 0.08}>
-              <div class="flex gap-4 p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 h-full {isLight ? 'bg-white/90 border-gray-100 hover:border-brand-magenta/20 hover:shadow-md' : 'bg-[#0d1829]/80 border-white/5 hover:border-azul/30'}">
-                <MagneticAttract strength={14} radius={60}>
-                  <span class="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-lg {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}" aria-hidden="true">👤</span>
-                </MagneticAttract>
+              <div class="flex gap-4 p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 h-full {isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 hover:border-brand-magenta/20' : 'bg-[#0d1829]/80 border-white/5 hover:border-azul/30'}">
+                <span class="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-lg {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}" aria-hidden="true">👤</span>
                 <div class="min-w-0">
                   <p class="font-bold text-base mb-1 {isLight ? 'text-gray-900' : 'text-white'}">{item.label}</p>
                   <p class="text-sm sm:text-base leading-relaxed {isLight ? 'text-gray-600' : 'text-gray-400'}">{item.desc}</p>
@@ -335,7 +332,7 @@
   </section>
 
   <!-- Diferencias -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
         <SectionLabel text="Lo que hace diferente nuestra formación" {isLight} />
@@ -346,14 +343,12 @@
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {#each diferenciasItems as item, i}
-          <MagneticRepel>
+          <MagneticRepel strength={13} radius={160}>
             <FadeIn delay={i * 0.08}>
-              <TiltCard className="rounded-2xl border overflow-hidden transition-all duration-300 h-full flex flex-col {isLight ? 'bg-white/90 border-gray-100 hover:border-brand-magenta/30 backdrop-blur-sm' : 'bg-[#0d1829]/80 border-white/5 hover:border-azul/40 backdrop-blur-sm'}">
+              <TiltCard className="rounded-2xl border overflow-hidden transition-all duration-300 h-full flex flex-col {isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 hover:border-brand-magenta/30 backdrop-blur-sm' : 'bg-[#0d1829]/80 border-white/5 hover:border-azul/40 backdrop-blur-sm'}">
                 <div class="w-full h-1 flex-shrink-0 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-gradient-to-r from-azul to-blue-400'}"></div>
                 <div class="p-6 flex-1 flex flex-col">
-                  <MagneticAttract>
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4 {isLight ? 'bg-brand-magenta/10' : 'bg-azul/15'}">{item.icon}</div>
-                  </MagneticAttract>
+                  <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4 {isLight ? 'bg-brand-magenta/10' : 'bg-azul/15'}">{item.icon}</div>
                   <h3 class="text-lg font-bold mb-2 {isLight ? 'text-gray-900' : 'text-white'}">{item.title}</h3>
                   <p class="text-sm leading-relaxed flex-1 {isLight ? 'text-gray-600' : 'text-gray-400'}">{item.desc}</p>
                 </div>
@@ -380,8 +375,9 @@
         </p>
 
         <a
-          href="/contacto"
-          class="relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-shadow duration-300 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
+          href="#contacto"
+          onclick={handleContactClick}
+          class="btn-cta-animated micro-active-press relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-all duration-300 hover:scale-105 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
           style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
           onmouseenter={onBtnEnter}
           onmouseleave={onBtnLeave}

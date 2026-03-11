@@ -23,15 +23,13 @@
           colors[i * 3 + 2] = (c & 255) / 255;
         }
         geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        mat.vertexColors = true;
-        mat.color.setHex(0xffffff);
+        mesh.material = matLight;
       } else {
         for (let i = 0; i < PARTICLE_COUNT; i++) {
-          instanced.setColorAt(i, new THREE.Color(0x0070f3));
+          instanced.setColorAt(i, new THREE.Color(0x3b82f6));
         }
         geo.deleteAttribute('color');
-        mat.vertexColors = false;
-        mat.color.setHex(0x0070f3);
+        mesh.material = matDark;
       }
       if (instanced.instanceColor) instanced.instanceColor.needsUpdate = true;
     };
@@ -54,14 +52,21 @@
     scene.add(dirLight);
 
     const LIGHT_COLORS = [0xde3b84, 0xffc12d, 0xf7a361, 0xee847b, 0xd6007d];
-    const geo = new THREE.IcosahedronGeometry(1.4, 1);
-    const mat = new THREE.MeshStandardMaterial({
-      color: 0x0070f3,
-      metalness: 0.9,
-      roughness: 0.15,
-      wireframe: true
+    const geo = new THREE.OctahedronGeometry(1.5, 2);
+    const matLight = new THREE.MeshBasicMaterial({
+      wireframe: true,
+      vertexColors: true
     });
-    const mesh = new THREE.Mesh(geo, mat);
+    const matDark = new THREE.MeshStandardMaterial({
+      color: 0x2563eb,
+      metalness: 0.7,
+      roughness: 0.3,
+      wireframe: true,
+      emissive: 0x1d4ed8,
+      emissiveIntensity: 0.35
+    });
+    const mesh = new THREE.Mesh(geo, matDark);
+    mesh.scale.set(0.9, 1.2, 0.9);
     scene.add(mesh);
 
     const PARTICLE_COUNT = 100;
@@ -89,9 +94,10 @@
     }
     scene.add(instanced);
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      instanced.setColorAt(i, new THREE.Color(isLight ? LIGHT_COLORS[Math.floor(Math.random() * 5)] : 0x0070f3));
+      instanced.setColorAt(i, new THREE.Color(isLight ? LIGHT_COLORS[Math.floor(Math.random() * 5)] : 0x3b82f6));
     }
     instanced.instanceColor!.needsUpdate = true;
+    handler();
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableZoom = false;

@@ -38,17 +38,16 @@
       background: { color: { value: 'transparent' } },
       interactivity: {
         detectsOn: 'window' as const,
-        events: { onHover: { enable: true, mode: 'repulse' }, onClick: { enable: true, mode: 'push' } },
-        modes: { repulse: { distance: 100, duration: 0.4, factor: 3 }, push: { quantity: 1 } },
+        events: { onHover: { enable: false }, onClick: { enable: false } },
       },
       particles: {
         color: { value: accent },
         links: {
           enable: true,
           color: accent,
-          opacity: isLight ? 0.58 : 1.0,
+          opacity: 1.0,
           distance: 130,
-          width: 1.8,
+          width: 2.6,
         },
         move: {
           enable: true,
@@ -58,8 +57,8 @@
           outModes: { default: 'bounce' as const },
         },
         number: { density: { enable: true, area: 1100 }, value: 32 },
-        opacity: { value: { min: isLight ? 0.49 : 0.65, max: isLight ? 0.75 : 1.0 } },
-        size: { value: { min: 2.5, max: 4 } },
+        opacity: { value: { min: 0.9, max: 1.0 } },
+        size: { value: { min: 4, max: 6 } },
         shape: { type: 'circle' },
       },
       detectRetina: false,

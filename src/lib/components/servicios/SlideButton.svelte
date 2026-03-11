@@ -48,7 +48,7 @@
   onclick={handleClick}
   onmouseenter={onEnter}
   onmouseleave={onLeave}
-  class="relative inline-block overflow-hidden px-6 py-2.5 rounded-full text-sm font-semibold border transition-all duration-300 {isLight
+  class="micro-active-press relative inline-block overflow-hidden px-6 py-2.5 rounded-full text-sm font-semibold border transition-all duration-300 {isLight
     ? 'border-brand-magenta/30 text-brand-magenta bg-brand-magenta/5 hover:bg-brand-magenta/12 hover:border-brand-magenta/60'
     : 'border-azul/30 text-azul bg-azul/5 hover:bg-azul/12 hover:border-azul/60'}"
   style={hovered ? (isLight ? 'box-shadow: 0 0 20px #DE3B8430' : 'box-shadow: 0 0 20px #0070f330') : ''}
