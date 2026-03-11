@@ -42,25 +42,6 @@
     { emoji: '🤖', category: 'Identidad y Estilo', title: 'Avatar Motion', desc: 'Transformamos a cada asistente en un avatar digital personalizado que captura su esencia.', ideal: 'Eventos tecnológicos, lanzamientos de producto, mundos de marca inmersivos', gradientLight: 'from-[#DE3B84] via-[#D6007D] to-[#FFC12D]', gradientDark: 'from-[#0070f3] via-[#0068e0] to-[#3088ff]' },
   ];
 
-  const phases = [
-    { num: '01', title: 'CRE-IA-tividad', icon: '💡', desc: 'Exploración del contexto del evento, los objetivos de la marca y el perfil de los asistentes. Co-creación mediante brainstorming aumentado con IA.', colorLight: '#DE3B84', colorDark: '#0070f3' },
-    { num: '02', title: 'AI-mplementación', icon: '⚙️', desc: 'Desarrollo e integración ágil de la solución elegida. La tecnología se adapta al espacio, el tiempo y el equipo humano del evento.', colorLight: '#FFC12D', colorDark: '#3b82f6' },
-    { num: '03', title: 'Evolución y Optimización', icon: '📊', desc: 'Monitorización en tiempo real, feedback e informes de impacto medibles. Auditorías de IA y asesoramiento en la Ley de IA de la UE.', colorLight: '#F7A361', colorDark: '#60a5fa' },
-  ];
-
-  const extras = [
-    { icon: '🔍', label: 'Auditorías de IA' },
-    { icon: '🗺️', label: 'Hojas de ruta tecnológicas' },
-    { icon: '⚖️', label: 'Cumplimiento Ley IA UE' },
-    { icon: '🌱', label: 'Soluciones neutras en carbono' },
-  ];
-
-  const programs = [
-    { icon: '🌱', title: 'Taller Introductorio', level: 'Nivel básico', desc: 'Para equipos que quieren empezar a usar la IA de forma práctica y rápida. Resultados visibles desde la primera sesión.', gradient: 'from-[#DE3B84]/8 to-[#FFC12D]/4', hoverLight: 'hover:border-[#DE3B84]/50' },
-    { icon: '🚀', title: 'Programa Avanzado', level: 'Nivel estratégico', desc: 'Para profesionales que buscan una visión completa: herramientas, flujos de trabajo, casos de uso y aplicación al negocio de eventos.', gradient: 'from-[#FFC12D]/8 to-[#F7A361]/4', hoverLight: 'hover:border-[#FFC12D]/50' },
-    { icon: '🎯', title: 'Formación a Medida', level: 'Personalizado', desc: 'Programas específicos para agencias o departamentos, incluyendo formatos presenciales, online e híbridos.', gradient: 'from-[#F7A361]/8 to-[#EE847B]/4', hoverLight: 'hover:border-[#F7A361]/50' },
-  ];
-
   const paraQuienTypes = [
     { icon: '🏷️', title: 'Activaciones de marca', desc: 'Donde el objetivo es generar efecto WOW y conexión emocional entre los asistentes y la marca.' },
     { icon: '🏢', title: 'Eventos corporativos', desc: 'Para enriquecer momentos de networking, entretener en cenas de gala y crear oportunidades de patrocinio únicas.' },
@@ -109,8 +90,8 @@
 </script>
 
 <svelte:head>
-  <title>Servicios — Externia AI for Events</title>
-  <meta name="description" content="Servicios de IA para eventos. Activaciones, consultoría y formación." />
+  <title>Activaciones — Externia AI for Events</title>
+  <meta name="description" content="Activaciones de IA para eventos. Experiencias interactivas, consultoría y formación." />
 </svelte:head>
 
 {#if NetworkParticlesCmp}
@@ -124,7 +105,7 @@
     <div class="absolute bottom-1/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
 
     <FadeIn delay={0.1} className="relative z-10 mb-6">
-      <SectionLabel text="Nuestros Servicios" {isLight} />
+      <SectionLabel text="Nuestras Activaciones" {isLight} />
     </FadeIn>
 
     <FadeIn delay={0.2}>
@@ -142,8 +123,8 @@
 
     <FadeIn delay={0.6} className="relative z-10 mt-10 flex flex-wrap justify-center gap-4">
       <SlideButton href="#activaciones" label="Activaciones" icon="🎯" {isLight} />
-      <SlideButton href="#consultoria" label="Consultoría" icon="🧠" {isLight} />
-      <SlideButton href="#formacion" label="Formación" icon="📚" {isLight} />
+      <SlideButton href="/consultoria" label="Consultoría" icon="🧠" {isLight} />
+      <SlideButton href="/formacion" label="Formación" icon="📚" {isLight} />
     </FadeIn>
   </section>
 
@@ -153,7 +134,7 @@
       <FadeIn className="text-center mb-20">
         <SectionLabel text="01 · Activaciones de IA Experiencial" {isLight} />
         <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Instalaciones que <span class={isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent'}>sorprenden</span>
+          Experiencias que <span class="gradient-text-animate">Sorprenden</span>
         </h2>
         <p class="mt-2 text-base max-w-xl mx-auto transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
           8 activaciones interactivas agrupadas en 3 líneas temáticas. Arrastra las tarjetas para explorarlas.
@@ -178,99 +159,13 @@
     </div>
   </section>
 
-  <!-- Consultoría -->
-  <section id="consultoria" class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
-    <div class="max-w-7xl mx-auto relative z-10">
-      <FadeIn className="text-center mb-20">
-        <SectionLabel text="02 · Consultoría Estratégica de IA" {isLight} />
-        <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Integración real, <span class={isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-orange bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent'}>no genérica</span>
-        </h2>
-        <p class="mt-4 text-base max-w-xl mx-auto transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
-          Diseñada específicamente para el sector de los eventos, con el conocimiento de quienes lo conocen desde dentro.
-        </p>
-      </FadeIn>
-
-      <div class="relative">
-        <div class="hidden lg:block absolute top-10 left-[16.66%] right-[16.66%] h-px {isLight ? 'bg-gradient-to-r from-brand-magenta via-brand-yellow to-brand-orange' : 'bg-gradient-to-r from-azul/40 to-blue-400/40'}"></div>
-        <div class="grid lg:grid-cols-3 gap-10">
-          {#each phases as phase, i}
-            <MagneticRepel strength={12} radius={160}>
-              <FadeIn delay={i * 0.15}>
-                <div class="flex flex-col items-center text-center p-8 rounded-2xl border transition-all duration-300 {isLight ? 'bg-white/90 border-gray-100 backdrop-blur-sm' : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 backdrop-blur-sm'}">
-                  <div
-                    class="relative z-10 w-20 h-20 rounded-full flex items-center justify-center text-2xl font-black text-white mb-6 shadow-xl transition-transform duration-300 hover:scale-110"
-                    style="background-color: {isLight ? phase.colorLight : phase.colorDark}"
-                  >
-                    <span>{phase.num}</span>
-                    <div class="absolute inset-0 rounded-full opacity-40 blur-md" style="background-color: {isLight ? phase.colorLight : phase.colorDark}"></div>
-                  </div>
-                  <div class="text-3xl mb-3 select-none">{phase.icon}</div>
-                  <h3 class="text-xl font-black mb-3 {isLight ? 'text-gray-900' : 'text-white'}">
-                    {#each phase.title.split('-') as part, pi}
-                      {#if part === 'IA'}
-                        <span style="color: {isLight ? phase.colorLight : phase.colorDark}">IA</span>
-                      {:else}
-                        {part}{pi < phase.title.split('-').length - 1 ? '-' : ''}
-                      {/if}
-                    {/each}
-                  </h3>
-                  <p class="text-sm leading-relaxed {isLight ? 'text-gray-500' : 'text-gray-400'}">{phase.desc}</p>
-                </div>
-              </FadeIn>
-            </MagneticRepel>
-          {/each}
-        </div>
-      </div>
-
-      <FadeIn delay={0.3} className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {#each extras as e}
-          <div class="flex items-center gap-3 p-4 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light bg-white/80 border-gray-100' : 'bg-[#0d1829]/60 border-white/8'}">
-            <span class="text-2xl">{e.icon}</span>
-            <span class="text-sm font-semibold {isLight ? 'text-gray-700' : 'text-gray-300'}">{e.label}</span>
-          </div>
-        {/each}
-      </FadeIn>
-    </div>
-  </section>
-
-  <!-- Formación -->
-  <section id="formacion" class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
-    <div class="max-w-7xl mx-auto relative z-10">
-      <FadeIn className="text-center mb-16">
-        <SectionLabel text="03 · Formación Especializada" {isLight} />
-        <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          IA aplicada al <span class={isLight ? 'bg-gradient-to-r from-brand-fuchsia to-brand-magenta bg-clip-text text-transparent' : 'bg-gradient-to-r from-blue-300 to-azul bg-clip-text text-transparent'}>sector MICE</span>
-        </h2>
-        <p class="mt-4 text-base max-w-xl mx-auto transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
-          No enseñamos IA genérica. Enseñamos IA aplicada a las necesidades de quienes organizan, producen y venden eventos.
-        </p>
-      </FadeIn>
-
-      <div class="grid md:grid-cols-3 gap-6">
-        {#each programs as p, i}
-          <MagneticRepel strength={13} radius={175}>
-            <FadeIn delay={i * 0.12}>
-              <div class="h-full p-7 rounded-2xl border transition-all duration-300 cursor-default {isLight ? `shadow-card-light shadow-card-light-hover bg-gradient-to-br ${p.gradient} bg-white/90 border-gray-100 ${p.hoverLight} backdrop-blur-sm` : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/45 hover:bg-[#00c8ff]/6 backdrop-blur-sm'}">
-                <div class="text-4xl mb-5">{p.icon}</div>
-                <div class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/10 text-azul'}">{p.level}</div>
-                <h3 class="text-lg font-black mb-3 {isLight ? 'text-gray-900' : 'text-white'}">{p.title}</h3>
-                <p class="text-sm leading-relaxed {isLight ? 'text-gray-500' : 'text-gray-400'}">{p.desc}</p>
-              </div>
-            </FadeIn>
-          </MagneticRepel>
-        {/each}
-      </div>
-    </div>
-  </section>
-
   <!-- Para quién -->
   <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {isLight ? 'bg-gradient-to-br from-[#f0a0c0] via-[#dc80c8] to-[#f8c090]' : 'bg-[#060d1a]/95 backdrop-blur-sm'}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
         <SectionLabel text="¿Para qué eventos?" {isLight} white={isLight} />
         <h2 class="text-4xl sm:text-5xl font-black text-white">
-          Diseñados para el <span class={isLight ? 'text-white' : 'bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent'}>impacto real</span>
+          Diseñados para el <span class="gradient-text-animate">impacto real</span>
         </h2>
       </FadeIn>
 
@@ -298,14 +193,14 @@
       <FadeIn>
         <SectionLabel text="Diseñemos juntos" {isLight} />
         <h2 class="text-4xl sm:text-5xl md:text-6xl font-black leading-tight mb-6 transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Tu próxima experiencia <span class={isLight ? 'bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-brand-orange bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul via-blue-300 to-azul bg-clip-text text-transparent'}>inolvidable</span>
+          Tu próxima experiencia <span class="gradient-text-animate">inolvidable</span>
         </h2>
         <p class="text-lg mb-10 transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
           Cuéntanos tu evento y te proponemos la solución MAPI perfecta para él.
         </p>
 
         <a
-          href="mailto:g.prado@externia.ai"
+          href="/contacto"
           class="btn-cta-animated micro-active-press relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-all duration-300 hover:scale-105 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
           style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
           onmouseenter={onBtnEnter}

@@ -5,7 +5,6 @@
   import FadeIn from '$lib/components/shared/FadeIn.svelte';
   import SectionLabel from '$lib/components/shared/SectionLabel.svelte';
   import TiltCard from '$lib/components/shared/TiltCard.svelte';
-  import MagneticRepel from '$lib/components/shared/MagneticRepel.svelte';
   import Counter from '$lib/components/shared/Counter.svelte';
 
   let isLight = $state(false);
@@ -33,9 +32,9 @@
   }
 
   const phrase1 = ['No', 'somos', 'una', 'empresa', 'de', 'tecnología', 'que', 'hace', 'eventos.'];
-  const phrase2 = ['Somos', 'especialistas', 'en', 'eventos', 'que', 'dominan', 'la', 'IA.'];
+  const phrase2 = ['Somos', 'especialistas', 'en', 'eventos', 'que', 'dominan', 'la', 'Inteligencia', 'Artificial.'];
   const manifestWords = [...phrase1, ...phrase2];
-  const manifestHighlight = new Set(['especialistas', 'dominan', 'IA.']);
+  const manifestHighlight = new Set(['especialistas', 'dominan', 'Inteligencia', 'Artificial.']);
 
   const timeline = [
     { year: '2022', icon: '🔬', text: 'Guillermo descubre el potencial de los modelos generativos mientras investiga IA en oncología en el Hospital La Paz.' },
@@ -46,25 +45,10 @@
 
   let activeTimelineIdx = $state<number | null>(null);
 
-  const features = [
-    { icon: '🎯', title: 'Especialización exclusiva MICE', desc: 'Entendemos los ritmos, necesidades y lenguaje de los eventos mejor que nadie.', lightGrad: 'from-[#DE3B84]/8 to-[#D6007D]/4', hoverLight: 'hover:border-[#DE3B84]/50' },
-    { icon: '✨', title: 'Tecnología que no se nota', desc: 'Activaciones discretas, fluidas, que generan momentos WOW de forma completamente natural.', lightGrad: 'from-[#FFC12D]/8 to-[#F7A361]/4', hoverLight: 'hover:border-[#FFC12D]/50' },
-    { icon: '❤️', title: 'Enfoque en el asistente', desc: 'Experiencias hiperpersonalizadas que crean conexión emocional real entre la marca y las personas.', lightGrad: 'from-[#EE847B]/8 to-[#DE3B84]/4', hoverLight: 'hover:border-[#EE847B]/50' },
-    { icon: '🌱', title: 'Compromiso sostenible', desc: 'Colaboramos con el Sustainability Hub for Events y trabajamos para soluciones neutras en carbono.', lightGrad: 'from-[#D6007D]/8 to-[#EE847B]/4', hoverLight: 'hover:border-[#D6007D]/50' },
-    { icon: '⚖️', title: 'Cumplimiento regulatorio', desc: 'Operamos en plena conformidad con la Ley de IA de la UE y los más altos estándares de protección de datos.', lightGrad: 'from-[#F7A361]/8 to-[#FFC12D]/4', hoverLight: 'hover:border-[#F7A361]/50' },
-    { icon: '📊', title: 'Resultados medibles', desc: 'Cada activación genera informes de impacto detallados. La IA no solo impresiona, también demuestra su valor con datos reales.', lightGrad: 'from-[#DE3B84]/8 to-[#FFC12D]/4', hoverLight: 'hover:border-[#DE3B84]/50' },
-  ];
-
   const services = [
     { icon: '🧠', title: 'Consultoría de IA para Eventos', desc: 'Acompañamos a agencias y empresas en la integración estratégica de la IA. Identificamos oportunidades, diseñamos hojas de ruta y formamos equipos para que la IA sea una ventaja real.', gradient: 'from-[#DE3B84] to-[#D6007D]' },
     { icon: '⚡', title: 'Activaciones Hiperpersonalizadas', desc: 'Smart Brush (caricaturas IA), transformaciones de avatar, oracle experiences, matchmaking inteligente, tarjetas de visita con IA, photocalls interactivos y mucho más.', gradient: 'from-[#FFC12D] to-[#F7A361]' },
     { icon: '📚', title: 'Formación Especializada', desc: 'Programas adaptados al sector: desde talleres introductorios hasta certificaciones avanzadas. Preparamos a los profesionales para el presente y el futuro.', gradient: 'from-[#EE847B] to-[#DE3B84]' },
-  ];
-
-  const metodologiaSteps = [
-    { num: '01', title: 'CRE-IA-tividad', desc: 'Exploramos el contexto del evento, los objetivos y el perfil de los asistentes para co-crear la solución más adecuada con brainstorming aumentado con IA.', colorLight: '#DE3B84', colorDark: '#0070f3' },
-    { num: '02', title: 'AI-mplementación', desc: 'Desarrollamos e integramos la solución de forma ágil y eficiente, asegurando que la tecnología se adapte al espacio, el tiempo y el equipo humano.', colorLight: '#FFC12D', colorDark: '#3b82f6' },
-    { num: '03', title: 'Evolución y Optimización', desc: 'Monitorizamos resultados en tiempo real, recogemos feedback y generamos informes de impacto medibles para cada cliente.', colorLight: '#F7A361', colorDark: '#60a5fa' },
   ];
 
   const stats = [
@@ -164,7 +148,7 @@
         <SectionLabel text="Nuestra Historia" {isLight} />
         <h2 class="text-4xl sm:text-5xl md:text-6xl font-black leading-tight transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
           De la ciencia oncológica<br />
-          <span class={isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent'}>a revolucionar los eventos</span>
+          <span class="gradient-text-animate">a revolucionar los eventos</span>
         </h2>
       </FadeIn>
 
@@ -235,42 +219,13 @@
     </div>
   </section>
 
-  <!-- Diferencias -->
-  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
-    <div class="max-w-7xl mx-auto relative z-10">
-      <FadeIn className="text-center mb-16">
-        <SectionLabel text="Qué nos diferencia" {isLight} />
-        <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Experiencias <span class={isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent'}>MAPI</span>
-        </h2>
-        <p class="mt-3 text-base tracking-wide transition-colors duration-500 {isLight ? 'text-gray-400' : 'text-gray-500'}">
-          Medibles · Asequibles · Personalizadas · Innovadoras
-        </p>
-      </FadeIn>
-
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {#each features as f, i}
-          <MagneticRepel strength={14} radius={185}>
-            <FadeIn delay={i * 0.09}>
-              <TiltCard className="group h-full p-7 rounded-2xl border transition-all duration-300 cursor-default {isLight ? `shadow-card-light shadow-card-light-hover bg-gradient-to-br ${f.lightGrad} bg-white/90 border-gray-100 ${f.hoverLight} backdrop-blur-sm` : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/45 hover:bg-[#00c8ff]/6 backdrop-blur-sm'}">
-                <div class="text-4xl mb-5">{f.icon}</div>
-                <h3 class="text-base font-bold mb-2 {isLight ? 'text-gray-900' : 'text-white'}">{f.title}</h3>
-                <p class="text-sm leading-relaxed {isLight ? 'text-gray-500' : 'text-gray-400'}">{f.desc}</p>
-              </TiltCard>
-            </FadeIn>
-          </MagneticRepel>
-        {/each}
-      </div>
-    </div>
-  </section>
-
   <!-- Servicios (FlipCards) -->
   <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
         <SectionLabel text="Lo que hacemos" {isLight} />
         <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Tres líneas de <span class={isLight ? 'bg-gradient-to-r from-brand-orange to-brand-magenta bg-clip-text text-transparent' : 'bg-gradient-to-r from-blue-300 to-azul bg-clip-text text-transparent'}>impacto real</span>
+          Tres líneas de <span class="gradient-text-animate">impacto real</span>
         </h2>
         <p class="mt-3 text-sm transition-colors duration-500 {isLight ? 'text-gray-400' : 'text-gray-500'}">
           Haz click en cada tarjeta para revelar su contenido
@@ -282,47 +237,6 @@
             <FlipCard icon={s.icon} title={s.title} desc={s.desc} gradient={s.gradient} {isLight} />
           </FadeIn>
         {/each}
-      </div>
-    </div>
-  </section>
-
-  <!-- Metodología -->
-  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
-    <div class="max-w-7xl mx-auto relative z-10">
-      <FadeIn className="text-center mb-20">
-        <SectionLabel text="Nuestra Metodología" {isLight} />
-        <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Un proceso diseñado para <span class={isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-orange bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent'}>garantizar resultados</span>
-        </h2>
-      </FadeIn>
-
-      <div class="relative">
-        <div class="hidden lg:block absolute top-10 left-[16.66%] right-[16.66%] h-px {isLight ? 'bg-gradient-to-r from-brand-magenta via-brand-yellow to-brand-orange' : 'bg-gradient-to-r from-azul/40 to-blue-400/40'}"></div>
-        <div class="grid lg:grid-cols-3 gap-10">
-          {#each metodologiaSteps as step, i}
-            <FadeIn delay={i * 0.18}>
-              <div class="flex flex-col items-center text-center">
-                <div
-                  class="relative z-10 w-20 h-20 rounded-full flex items-center justify-center text-2xl font-black text-white mb-6 shadow-xl transition-transform duration-300 hover:scale-110"
-                  style="background-color: {isLight ? step.colorLight : step.colorDark}"
-                >
-                  {step.num}
-                  <div class="absolute inset-0 rounded-full opacity-40 blur-md" style="background-color: {isLight ? step.colorLight : step.colorDark}"></div>
-                </div>
-                <h3 class="text-xl font-black mb-3 {isLight ? 'text-gray-900' : 'text-white'}">
-                  {#each step.title.split('-') as part, pi}
-                    {#if part === 'IA'}
-                      <span style="color: {isLight ? step.colorLight : step.colorDark}">IA</span>
-                    {:else}
-                      {part}{pi < step.title.split('-').length - 1 ? '-' : ''}
-                    {/if}
-                  {/each}
-                </h3>
-                <p class="text-sm leading-relaxed max-w-xs {isLight ? 'text-gray-500' : 'text-gray-400'}">{step.desc}</p>
-              </div>
-            </FadeIn>
-          {/each}
-        </div>
       </div>
     </div>
   </section>
@@ -364,7 +278,7 @@
       <FadeIn className="text-center mb-16">
         <SectionLabel text="Nuestro Equipo" {isLight} />
         <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Personas que hacen posible la <span class={isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent'}>magia</span>
+          Personas que hacen posible la <span class="gradient-text-animate">magia</span>
         </h2>
         <p class="mt-4 text-base max-w-2xl mx-auto leading-relaxed {isLight ? 'text-gray-500' : 'text-gray-400'}">
           Combinamos perfiles de tecnología, diseño de experiencias, producción de eventos y
@@ -428,7 +342,7 @@
       <FadeIn>
         <SectionLabel text="¿Listo para el cambio?" {isLight} />
         <h2 class="text-4xl sm:text-5xl md:text-6xl font-black leading-tight mb-6 transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Transforma tu próximo evento con <span class={isLight ? 'bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-brand-orange bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul via-blue-300 to-azul bg-clip-text text-transparent'}>Inteligencia Artificial</span>
+          Transforma tu próximo evento con <span class="gradient-text-animate">Inteligencia Artificial</span>
         </h2>
         <p class="text-lg mb-10 transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
           Descubre cómo Externia puede crear una experiencia MAPI para tu próximo evento.
@@ -441,12 +355,12 @@
           onmouseenter={onBtnEnter}
           onmouseleave={onBtnLeave}
         >
-          <span class="invisible whitespace-nowrap">Ver nuestros servicios →</span>
+          <span class="invisible whitespace-nowrap">Ver activaciones →</span>
           <span bind:this={primaryRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(0%)">
-            Ver nuestros servicios →
+            Ver activaciones →
           </span>
           <span bind:this={cloneRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(-110%)">
-            Ver nuestros servicios →
+            Ver activaciones →
           </span>
         </a>
 

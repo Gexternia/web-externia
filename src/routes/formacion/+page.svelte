@@ -87,6 +87,12 @@
     },
   ];
 
+  const programasResumen = [
+    { icon: '🌱', title: 'Taller Introductorio', level: 'Nivel básico', desc: 'Para equipos que quieren empezar a usar la IA de forma práctica y rápida. Resultados visibles desde la primera sesión.', gradient: 'from-[#DE3B84]/8 to-[#FFC12D]/4', hoverLight: 'hover:border-[#DE3B84]/50' },
+    { icon: '🚀', title: 'Programa Avanzado', level: 'Nivel estratégico', desc: 'Para profesionales que buscan una visión completa: herramientas, flujos de trabajo, casos de uso y aplicación al negocio de eventos.', gradient: 'from-[#FFC12D]/8 to-[#F7A361]/4', hoverLight: 'hover:border-[#FFC12D]/50' },
+    { icon: '🎯', title: 'Formación a Medida', level: 'Personalizado', desc: 'Programas específicos para agencias o departamentos, incluyendo formatos presenciales, online e híbridos.', gradient: 'from-[#F7A361]/8 to-[#EE847B]/4', hoverLight: 'hover:border-[#F7A361]/50' },
+  ];
+
   const publicos = [
     { label: 'Agencias de eventos y comunicación', desc: 'que quieren incorporar la IA en sus propuestas, operativa y diferenciación frente a la competencia.' },
     { label: 'Departamentos de marketing y eventos de empresa', desc: 'que organizan eventos internos, lanzamientos de producto o convenciones y quieren hacerlo con más eficiencia e impacto.' },
@@ -169,13 +175,43 @@
     </FadeIn>
   </section>
 
-  <!-- ¿Por qué formarse? -->
+  <!-- Formación Especializada -->
   <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
+    <div class="max-w-7xl mx-auto relative z-10">
+      <FadeIn className="text-center mb-16">
+        <SectionLabel text="Formación Especializada" {isLight} />
+        <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
+          IA aplicada al <span class="gradient-text-animate">sector MICE</span>
+        </h2>
+        <p class="mt-4 text-base max-w-xl mx-auto transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
+          No enseñamos IA genérica. Enseñamos IA aplicada a las necesidades de quienes organizan, producen y venden eventos.
+        </p>
+      </FadeIn>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        {#each programasResumen as p, i}
+          <MagneticRepel strength={13} radius={175}>
+            <FadeIn delay={i * 0.12}>
+              <div class="h-full p-7 rounded-2xl border transition-all duration-300 cursor-default {isLight ? `shadow-card-light shadow-card-light-hover bg-gradient-to-br ${p.gradient} bg-white/90 border-gray-100 ${p.hoverLight} backdrop-blur-sm` : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/45 hover:bg-[#00c8ff]/6 backdrop-blur-sm'}">
+                <div class="text-4xl mb-5">{p.icon}</div>
+                <div class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/10 text-azul'}">{p.level}</div>
+                <h3 class="text-lg font-black mb-3 {isLight ? 'text-gray-900' : 'text-white'}">{p.title}</h3>
+                <p class="text-sm leading-relaxed {isLight ? 'text-gray-500' : 'text-gray-400'}">{p.desc}</p>
+              </div>
+            </FadeIn>
+          </MagneticRepel>
+        {/each}
+      </div>
+    </div>
+  </section>
+
+  <!-- ¿Por qué formarse? -->
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="max-w-4xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
         <SectionLabel text="¿Por qué formarse con Externia?" {isLight} />
         <h2 class="text-3xl sm:text-4xl md:text-5xl font-black leading-tight transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          IA que entiende tu <span class={isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent'}>sector</span>
+          IA que entiende tu <span class="gradient-text-animate">sector</span>
         </h2>
       </FadeIn>
 
@@ -199,7 +235,7 @@
           <span class="absolute top-5 left-6 text-5xl sm:text-6xl font-serif leading-none select-none {isLight ? 'text-brand-magenta/15' : 'text-azul/20'}" aria-hidden="true">"</span>
           <div class="relative">
             <p class="text-base sm:text-lg font-semibold tracking-tight m-0 mb-3 {isLight ? 'text-gray-600' : 'text-gray-400'}">No enseñamos herramientas.</p>
-            <p class="text-xl sm:text-2xl md:text-3xl font-black leading-tight m-0 {isLight ? 'bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-brand-orange bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul via-blue-300 to-azul bg-clip-text text-transparent'}">Enseñamos a pensar con IA.</p>
+            <p class="text-xl sm:text-2xl md:text-3xl font-black leading-tight m-0 gradient-text-animate">Enseñamos a pensar con IA.</p>
           </div>
         </blockquote>
       </FadeIn>
@@ -211,7 +247,7 @@
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-12">
         <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Tres niveles, un mismo <span class={isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-orange bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent'}>objetivo</span>
+          Tres niveles, un mismo <span class="gradient-text-animate">objetivo</span>
         </h2>
         <p class="mt-4 text-base max-w-2xl mx-auto transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
           Haz clic en un programa para ver el detalle.
@@ -309,7 +345,7 @@
       <FadeIn className="text-center mb-12">
         <SectionLabel text="¿Para quién son estas formaciones?" {isLight} />
         <h2 class="text-3xl sm:text-4xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Dirigido a quienes quieren <span class={isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent'}>liderar con IA</span>
+          Dirigido a quienes quieren <span class="gradient-text-animate">liderar con IA</span>
         </h2>
       </FadeIn>
 
@@ -337,7 +373,7 @@
       <FadeIn className="text-center mb-16">
         <SectionLabel text="Lo que hace diferente nuestra formación" {isLight} />
         <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Cinco razones para elegir <span class={isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul to-blue-300 bg-clip-text text-transparent'}>Externia</span>
+          Cinco razones para elegir <span class="gradient-text-animate">Externia</span>
         </h2>
       </FadeIn>
 
@@ -368,15 +404,14 @@
       <FadeIn>
         <SectionLabel text="¿Listo para formarte?" {isLight} />
         <h2 class="text-4xl sm:text-5xl md:text-6xl font-black leading-tight mb-6 transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Da el siguiente paso con <span class={isLight ? 'bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-brand-orange bg-clip-text text-transparent' : 'bg-gradient-to-r from-azul via-blue-300 to-azul bg-clip-text text-transparent'}>IA aplicada a eventos</span>
+          Da el siguiente paso con <span class="gradient-text-animate">IA aplicada a eventos</span>
         </h2>
         <p class="text-lg mb-10 max-w-xl mx-auto transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
           Elige el programa que mejor se adapte a tu equipo y contacta con nosotros. Te respondemos sin compromiso.
         </p>
 
         <a
-          href="#contacto"
-          onclick={handleContactClick}
+          href="/contacto"
           class="btn-cta-animated micro-active-press relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-all duration-300 hover:scale-105 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
           style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
           onmouseenter={onBtnEnter}

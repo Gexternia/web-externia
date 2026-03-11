@@ -103,7 +103,7 @@
     controls.enableZoom = false;
     controls.enablePan = false;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.4;
+    controls.autoRotateSpeed = 0.2;
 
     const pointer = { x: 0, y: 0 };
     container.addEventListener('pointermove', (e) => {
@@ -125,7 +125,7 @@
     const animate = () => {
       raf = requestAnimationFrame(animate);
       const dt = 0.016;
-      mesh.rotation.y += dt * 0.3;
+      mesh.rotation.y += dt * 0.15;
 
       for (let i = 0; i < PARTICLE_COUNT; i++) {
         const i3 = i * 3;
