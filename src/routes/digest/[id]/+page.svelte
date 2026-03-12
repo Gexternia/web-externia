@@ -1,13 +1,56 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import FadeIn from '$lib/components/shared/FadeIn.svelte';
+  import FlipCard from '$lib/components/quienes-somos/FlipCard.svelte';
   import NetworkParticlesBg from '$lib/components/quienes-somos/NetworkParticlesBg.svelte';
   import type { PageData } from './$types';
+  import type { NoticiaItem } from '../+page.server';
 
   let { data: pageData }: { data: PageData } = $props();
 
   let isLight = $state(false);
   let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
+  let ctaHovered = $state(false);
+  let primaryRef: HTMLSpanElement;
+  let cloneRef: HTMLSpanElement;
+  const TR = 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
+
+  function onBtnEnter() {
+    ctaHovered = true;
+    if (!primaryRef || !cloneRef) return;
+    primaryRef.style.transition = 'none';
+    primaryRef.style.transform = 'translateX(0%)';
+    cloneRef.style.transition = 'none';
+    cloneRef.style.transform = 'translateX(-110%)';
+    primaryRef.getBoundingClientRect();
+    primaryRef.style.transition = TR;
+    primaryRef.style.transform = 'translateX(110%)';
+    cloneRef.style.transition = TR;
+    cloneRef.style.transform = 'translateX(0%)';
+  }
+
+  function onBtnLeave() {
+    ctaHovered = false;
+    if (!primaryRef || !cloneRef) return;
+    primaryRef.style.transition = 'none';
+    primaryRef.style.transform = 'translateX(-110%)';
+    cloneRef.style.transition = 'none';
+    cloneRef.style.transform = 'translateX(0%)';
+    cloneRef.getBoundingClientRect();
+    cloneRef.style.transition = TR;
+    cloneRef.style.transform = 'translateX(110%)';
+    primaryRef.style.transition = TR;
+    primaryRef.style.transform = 'translateX(0%)';
+  }
+
+  function buildComoUsarDesc(n: NoticiaItem): string {
+    const parts: string[] = [];
+    if (n.relevancia_eventos?.trim()) parts.push(`Relevancia para eventos: ${n.relevancia_eventos}`);
+    if (n.formato_actividad?.trim()) parts.push(`Formato de actividad: ${n.formato_actividad}`);
+    if (n.tipo_speaker?.trim()) parts.push(`Tipo de speaker: ${n.tipo_speaker}`);
+    if (n.audiencia?.trim()) parts.push(`Audiencia: ${n.audiencia}`);
+    return parts.join('. ') || 'Aplica esta novedad adaptándola a las necesidades concretas de tu evento.';
+  }
 
   const lightBg = 'bg-white/65 backdrop-blur-[2px]';
   const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
@@ -31,7 +74,7 @@
 </script>
 
 <svelte:head>
-  <title>{pageData.noticia?.titulo ?? 'Noticia'} — AI Digest | Externia</title>
+  <title>{pageData.noticia?.titulo ?? 'Noticia'} — Noticias IA | Externia</title>
   <meta name="description" content={pageData.noticia?.resumen ?? 'Detalle de noticia del AI Insight Digest.'} />
 </svelte:head>
 
@@ -41,7 +84,7 @@
 
 <div class="relative min-h-screen z-10 transition-colors duration-500">
   {#if pageData.error || !pageData.noticia}
-    <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center transition-colors duration-500 {sectionBg(isLight)}">
+    <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
       <FadeIn delay={0.1}>
         <h1 class="text-2xl font-bold transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">Noticia no encontrada</h1>
         <a
@@ -56,8 +99,8 @@
     </section>
   {:else}
     {@const n = pageData.noticia}
-    <section class="section-divider relative py-20 px-4 transition-colors duration-500 {sectionBg(isLight)}">
-      <div class="max-w-3xl mx-auto">
+    <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+      <div class="max-w-3xl mx-auto relative z-10">
         <FadeIn delay={0.1}>
           <a
             href="/digest"
@@ -79,38 +122,15 @@
           </p>
         </FadeIn>
 
-        <FadeIn delay={0.25}>
-          <div class="mt-10 rounded-2xl border p-6 transition-colors duration-500 {isLight ? 'border-gray-200 bg-gray-50/80' : 'border-white/10 bg-white/5'}">
-            <h2 class="text-lg font-bold transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-              ¿Cómo usar esta novedad en tu evento?
-            </h2>
-            <dl class="mt-4 space-y-3">
-              {#if n.relevancia_eventos}
-                <div>
-                  <dt class="text-xs font-semibold uppercase tracking-wider transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">Relevancia para eventos</dt>
-                  <dd class="mt-1 transition-colors duration-500 {isLight ? 'text-gray-700' : 'text-gray-300'}">{n.relevancia_eventos}</dd>
-                </div>
-              {/if}
-              {#if n.formato_actividad}
-                <div>
-                  <dt class="text-xs font-semibold uppercase tracking-wider transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">Formato de actividad</dt>
-                  <dd class="mt-1 transition-colors duration-500 {isLight ? 'text-gray-700' : 'text-gray-300'}">{n.formato_actividad}</dd>
-                </div>
-              {/if}
-              {#if n.tipo_speaker}
-                <div>
-                  <dt class="text-xs font-semibold uppercase tracking-wider transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">Tipo de speaker</dt>
-                  <dd class="mt-1 transition-colors duration-500 {isLight ? 'text-gray-700' : 'text-gray-300'}">{n.tipo_speaker}</dd>
-                </div>
-              {/if}
-              {#if n.audiencia}
-                <div>
-                  <dt class="text-xs font-semibold uppercase tracking-wider transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">Audiencia</dt>
-                  <dd class="mt-1 transition-colors duration-500 {isLight ? 'text-gray-700' : 'text-gray-300'}">{n.audiencia}</dd>
-                </div>
-              {/if}
-            </dl>
-          </div>
+        <FadeIn delay={0.25} className="mt-10">
+          <FlipCard
+            icon="💡"
+            title="¿Cómo usar esta novedad en tu evento?"
+            desc={buildComoUsarDesc(n)}
+            gradient="from-[#EE847B] to-[#DE3B84]"
+            variant="large"
+            {isLight}
+          />
         </FadeIn>
 
         {#if n.url?.trim()}
@@ -119,12 +139,16 @@
               href={n.url}
               target="_blank"
               rel="noopener noreferrer"
-              class="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 {isLight
-                ? 'bg-brand-magenta text-white hover:bg-brand-fuchsia'
-                : 'bg-azul text-white hover:bg-blue-600'}"
+              class="btn-cta-animated micro-active-press relative inline-block overflow-hidden mt-8 px-10 py-4 rounded-full text-base font-bold text-white transition-all duration-300 hover:scale-105 {isLight
+                ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia'
+                : 'bg-azul'}"
+              style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
+              onmouseenter={onBtnEnter}
+              onmouseleave={onBtnLeave}
             >
-              Leer noticia original
-              <span aria-hidden="true">→</span>
+              <span class="invisible whitespace-nowrap">Leer noticia original →</span>
+              <span bind:this={primaryRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(0%)">Leer noticia original →</span>
+              <span bind:this={cloneRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(-110%)">Leer noticia original →</span>
             </a>
           </FadeIn>
         {/if}

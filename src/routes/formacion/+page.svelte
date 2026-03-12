@@ -158,17 +158,20 @@
     <div class="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
     <div class="absolute bottom-1/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
 
-    <FadeIn delay={0.1}>
+    <FadeIn delay={0.1} className="relative z-10 mb-6">
+      <SectionLabel text="Formación" {isLight} />
+    </FadeIn>
+    <FadeIn delay={0.2}>
       <h1 class="relative z-10 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight max-w-4xl transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
         Formaciones en <span class="gradient-text-animate">IA</span> para Eventos
       </h1>
     </FadeIn>
-    <FadeIn delay={0.35}>
+    <FadeIn delay={0.4}>
       <p class="relative z-10 mt-6 text-lg sm:text-xl max-w-2xl leading-relaxed transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-300'}">
         Aprende IA aplicada al sector que conoces.
       </p>
     </FadeIn>
-    <FadeIn delay={0.5}>
+    <FadeIn delay={0.55}>
       <p class="relative z-10 mt-3 text-sm uppercase tracking-widest font-semibold transition-colors duration-500 {isLight ? 'text-brand-magenta/80' : 'text-azul/90'}">
         Presencial · Online · A medida
       </p>
