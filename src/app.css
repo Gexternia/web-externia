@@ -22,7 +22,7 @@
   --color-dark-muted: #9BA7AD;
   --color-dark-surface: #4A555C;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
 
   /* Glow animation for the CTA button */
   --animate-glow: glow 2s ease-in-out infinite alternate;
@@ -84,6 +84,10 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradient-shift 6s ease infinite;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Suavizado adicional para texto con gradiente */
+  text-shadow: 0 0 0.5px rgba(222,59,132,0.3), 0 0 1px rgba(222,59,132,0.2);
 }
 
 :root:not(.light) .gradient-text-animate {
@@ -101,6 +105,9 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradient-shift 6s ease infinite;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: 0 0 0.5px rgba(59,130,246,0.35), 0 0 1px rgba(59,130,246,0.25);
 }
 
 /* Borde animado en botones CTA (resplandor suave) */
@@ -125,15 +132,29 @@
 /* Global resets */
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-smooth: always;
 }
 
 body {
   background-color: var(--bg-base);
   color: var(--text-primary);
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Montserrat", ui-sans-serif, system-ui, sans-serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* Sombra sutil para suavizar bordes del texto */
+  text-shadow: 0 0 0.5px currentColor, 0 0 1px currentColor;
   transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
     color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light mode: sombra más suave para texto oscuro */
+:root.light body {
+  text-shadow: 0 0 0.5px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.08);
 }
 
 /* Transiciones de tema suaves */

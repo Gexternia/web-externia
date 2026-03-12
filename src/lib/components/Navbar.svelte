@@ -1,23 +1,25 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { spring } from 'svelte/motion';
+  import { page } from '$app/stores';
+
+  const isHome = $derived(($page.url.pathname === '/' || $page.url.pathname === '') ?? false);
 
   const navLinks = [
     { label: 'Quiénes Somos', href: '/quienes-somos' },
-    { label: 'Servicios', href: '/servicios' },
+    { label: 'Activaciones', href: '/servicios' },
+    { label: 'Consultoría', href: '/consultoria' },
     { label: 'Formación', href: '/formacion' },
     { label: 'Contáctanos', href: '/contacto' }
   ];
 
   let isDark = $state(true);
   let menuOpen = $state(false);
-  let isHome = $state(true);
   let scrolled = $state(false);
   const navY = spring(-100, { stiffness: 0.2, damping: 0.7 });
 
   onMount(() => {
     navY.set(0);
-    isHome = window.location.pathname === '/' || window.location.pathname === '';
     isDark = !document.documentElement.classList.contains('light');
 
     const themeHandler = () => {
@@ -40,7 +42,7 @@
 >
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16 sm:h-20">
-      <div class="flex-shrink-0">
+      <div class="flex-shrink-0 -ml-[1cm]">
         {#if !isHome}
           <a href="/">
             <img
@@ -52,7 +54,7 @@
         {/if}
       </div>
 
-      <div class="hidden md:flex items-center space-x-8">
+      <div class="hidden md:flex items-center gap-8 fixed right-[calc(2cm+4.5rem)] top-0 h-16 sm:h-20">
         {#each navLinks as link}
           <a
             href={link.href}

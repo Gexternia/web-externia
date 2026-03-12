@@ -30,10 +30,16 @@
 </script>
 
 <div class="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 text-center pointer-events-none">
-  <img
-    src={isDark ? '/logo-externia-clean.png' : '/logo-externia-light-fixed.png'}
-    alt="Externia"
-    class="w-[360px] sm:w-[500px] md:w-[650px] lg:w-[800px] mx-auto object-contain drop-shadow-lg transition-opacity duration-100"
-    style="opacity: {opacity * $initialOpacity}; transform: scale({scale}) translateY({$initialY * Math.max(0, 1 - scrollY/300) + y * Math.min(1, scrollY/300)}px)"
-  />
+  <a
+    href="/quienes-somos"
+    class="micro-active-press block pointer-events-auto cursor-pointer transition-transform duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 {isDark ? 'focus:ring-azul' : 'focus:ring-brand-magenta'}"
+    aria-label="Ir a Quiénes Somos"
+  >
+    <img
+      src={isDark ? '/logo-externia-clean.png' : '/logo-externia-light-fixed.png'}
+      alt="Externia"
+      class="w-[360px] sm:w-[500px] md:w-[650px] lg:w-[800px] mx-auto object-contain drop-shadow-lg transition-all duration-300"
+      style="opacity: {opacity * $initialOpacity}; transform: scale({scale}) translate(-1cm, {$initialY * Math.max(0, 1 - scrollY/300) + y * Math.min(1, scrollY/300)}px)"
+    />
+  </a>
 </div>

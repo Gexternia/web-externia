@@ -16,11 +16,6 @@
     return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
   }
 
-  let gradientHeroClass = $derived(
-    isLight
-      ? 'bg-gradient-to-r from-[#b82d6b] via-brand-fuchsia to-[#c45a2e] bg-clip-text text-transparent'
-      : 'bg-gradient-to-r from-blue-300 via-blue-200 to-azul bg-clip-text text-transparent'
-  );
   let pillClass = $derived(
     isLight ? 'bg-brand-magenta/15 text-[#a82a5f]' : 'bg-white/15 text-blue-200'
   );
@@ -49,7 +44,7 @@
 
 <div class="relative min-h-screen z-10">
   <!-- Hero — mismo fondo que Servicios (partículas + secciones, claro/oscuro) -->
-  <section class="relative flex flex-col items-center justify-center py-28 px-4 text-center transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center transition-colors duration-500 {sectionBg(isLight)}">
     <div class="absolute top-1/4 -left-48 w-[400px] h-[400px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
     <div class="absolute bottom-1/4 -right-48 w-[400px] h-[400px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
 
@@ -58,7 +53,7 @@
         Contáctanos
       </span>
       <h1 class="text-4xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight max-w-3xl transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-        Hablemos de tu <span class={gradientHeroClass}>próximo evento</span>
+        Hablemos de tu <span class="gradient-text-animate">próximo evento</span>
       </h1>
       <p class="mt-6 text-lg sm:text-xl max-w-xl mx-auto transition-colors duration-500 {isLight ? 'text-gray-600' : 'text-gray-200'}">
         Rellena el formulario y te respondemos sin compromiso.

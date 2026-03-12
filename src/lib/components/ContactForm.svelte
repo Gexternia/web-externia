@@ -22,11 +22,39 @@
   let submitted = $state(false);
   let errorMessage = $state<string | null>(null);
 
-  let gradientProyectoClass = $derived(
-    effectiveLight
-      ? 'bg-gradient-to-r from-[#b82d6b] to-brand-fuchsia bg-clip-text text-transparent'
-      : 'bg-gradient-to-r from-blue-300 to-blue-200 bg-clip-text text-transparent'
-  );
+  let ctaHovered = $state(false);
+  let primaryRef: HTMLSpanElement;
+  let cloneRef: HTMLSpanElement;
+  const TR = 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
+
+  function onBtnEnter() {
+    if (sending) return;
+    ctaHovered = true;
+    if (!primaryRef || !cloneRef) return;
+    primaryRef.style.transition = 'none';
+    primaryRef.style.transform = 'translateX(0%)';
+    cloneRef.style.transition = 'none';
+    cloneRef.style.transform = 'translateX(-110%)';
+    primaryRef.getBoundingClientRect();
+    primaryRef.style.transition = TR;
+    primaryRef.style.transform = 'translateX(110%)';
+    cloneRef.style.transition = TR;
+    cloneRef.style.transform = 'translateX(0%)';
+  }
+
+  function onBtnLeave() {
+    ctaHovered = false;
+    if (!primaryRef || !cloneRef) return;
+    primaryRef.style.transition = 'none';
+    primaryRef.style.transform = 'translateX(-110%)';
+    cloneRef.style.transition = 'none';
+    cloneRef.style.transform = 'translateX(0%)';
+    cloneRef.getBoundingClientRect();
+    cloneRef.style.transition = TR;
+    cloneRef.style.transform = 'translateX(110%)';
+    primaryRef.style.transition = TR;
+    primaryRef.style.transform = 'translateX(0%)';
+  }
 
   onMount(() => {
     isLight = document.documentElement.classList.contains('light');
@@ -71,7 +99,7 @@
 
 <section
   id="formulario-contacto"
-  class="relative py-24 sm:py-32 px-4 overflow-hidden transition-colors duration-500 {effectiveLight ? 'bg-gray-50/65' : 'bg-[#08111e]/72'} backdrop-blur-[2px]"
+  class="section-divider relative py-24 sm:py-32 px-4 overflow-hidden transition-colors duration-500 {effectiveLight ? 'bg-gray-50/65' : 'bg-[#08111e]/72'} backdrop-blur-[2px]"
 >
   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-3xl opacity-10 pointer-events-none transition-colors duration-500 {effectiveLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
 
@@ -83,7 +111,7 @@
         Contáctanos
       </span>
       <h2 class="text-3xl sm:text-4xl md:text-5xl font-black leading-tight mb-4 transition-colors duration-500 {effectiveLight ? 'text-gray-900' : 'text-white'}">
-        Cuéntanos tu <span class={gradientProyectoClass}>proyecto</span>
+        Cuéntanos tu <span class="gradient-text-animate">proyecto</span>
       </h2>
       <p class="text-base sm:text-lg transition-colors duration-500 {effectiveLight ? 'text-gray-600' : 'text-gray-200'}">
         Rellena el formulario y te respondemos lo antes posible.
@@ -93,7 +121,7 @@
     <FadeIn delay={0.1}>
       {#if submitted}
         <div
-          class="rounded-2xl border p-8 text-center transition-colors duration-500 {effectiveLight ? 'bg-white/90 border-brand-magenta/20 text-gray-800' : 'bg-[#0d1829]/90 border-azul/30 text-gray-200'}"
+          class="rounded-2xl border p-8 text-center transition-colors duration-500 {effectiveLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-brand-magenta/20 text-gray-800' : 'bg-[#0d1829]/90 border-azul/30 text-gray-200'}"
         >
           <p class="text-lg font-semibold mb-2">Mensaje enviado</p>
           <p class="text-sm opacity-90">Gracias por contactar. Te responderemos pronto.</p>
@@ -108,7 +136,7 @@
       {:else}
         <form
           onsubmit={handleSubmit}
-          class="rounded-2xl border p-6 sm:p-8 transition-colors duration-500 {effectiveLight ? 'bg-white/90 border-gray-200' : 'bg-[#0d1829]/90 border-white/10'}"
+          class="rounded-2xl border p-6 sm:p-8 transition-colors duration-500 {effectiveLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-200' : 'bg-[#0d1829]/90 border-white/10'}"
         >
           <div class="grid sm:grid-cols-2 gap-5 mb-5">
             <div>
@@ -167,9 +195,14 @@
           <button
             type="submit"
             disabled={sending}
-            class="w-full sm:w-auto px-10 py-4 rounded-full text-base font-bold text-white transition-all duration-300 disabled:opacity-60 {effectiveLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia hover:shadow-lg hover:shadow-brand-magenta/25' : 'bg-azul hover:shadow-lg hover:shadow-azul/30'}"
+            class="btn-cta-animated micro-active-press relative inline-block overflow-hidden w-full sm:w-auto px-10 py-4 rounded-full text-base font-bold text-white transition-all duration-300 disabled:opacity-60 hover:scale-105 {effectiveLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
+            style={ctaHovered && !sending ? (effectiveLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
+            onmouseenter={onBtnEnter}
+            onmouseleave={onBtnLeave}
           >
-            {sending ? 'Enviando...' : 'Enviar mensaje'}
+            <span class="invisible whitespace-nowrap">{sending ? 'Enviando...' : 'Enviar mensaje'}</span>
+            <span bind:this={primaryRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(0%)">{sending ? 'Enviando...' : 'Enviar mensaje'}</span>
+            <span bind:this={cloneRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(-110%)">{sending ? 'Enviando...' : 'Enviar mensaje'}</span>
           </button>
         </form>
       {/if}
