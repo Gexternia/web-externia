@@ -1,4 +1,4 @@
-const API_URL = 'https://newsletters-8ko7.onrender.com/api/noticias';
+import { NOTICIAS_API_URL } from '$env/static/private';
 
 export interface NoticiaItem {
   titulo: string;
@@ -17,7 +17,7 @@ export interface DigestData {
 
 export async function load() {
   try {
-    const res = await fetch(API_URL, { signal: AbortSignal.timeout(10000) });
+    const res = await fetch(NOTICIAS_API_URL, { signal: AbortSignal.timeout(10000) });
     if (!res.ok) throw new Error('API error');
     const data = (await res.json()) as DigestData;
     if (!data?.noticias || !Array.isArray(data.noticias)) {
