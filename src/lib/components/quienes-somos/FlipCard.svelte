@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { spring, tweened } from 'svelte/motion';
   import PushRobot from './PushRobot.svelte';
   import PullRobot from './PullRobot.svelte';
@@ -9,9 +10,34 @@
     desc: string;
     gradient: string;
     isLight: boolean;
+    variant?: 'default' | 'large';
   }
 
-  let { icon, title, desc, gradient, isLight }: Props = $props();
+  let { icon, title, desc, gradient, isLight, variant = 'default' }: Props = $props();
+
+  let stageRef: HTMLDivElement;
+  let cardWidth = $state(400);
+  let cardHeight = $state(288);
+
+  onMount(() => {
+    const el = stageRef;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      for (const e of entries) {
+        const { width, height } = e.contentRect;
+        if (width > 0 && height > 0) {
+          cardWidth = width;
+          cardHeight = height;
+        }
+      }
+    });
+    ro.observe(el);
+    cardWidth = el.offsetWidth;
+    cardHeight = el.offsetHeight;
+    return () => ro.disconnect();
+  });
+
+  const walkEndX = $derived(Math.max(350, cardWidth - 80));
 
   type Phase = 'idle' | 'opening' | 'open' | 'closing';
   let phase = $state<Phase>('idle');
@@ -83,7 +109,7 @@
     function walkFrame(t: number) {
       if (t >= 1) return;
       const progress = t;
-      pushX = -15 + progress * (370 - -15);
+      pushX = -15 + progress * (walkEndX - -15);
       const yi = Math.min(Math.floor(progress * waddleY.length), waddleY.length - 1);
       pushY = waddleY[yi] ?? 0;
       requestAnimationFrame(() => walkFrame((performance.now() - start) / walkDuration));
@@ -210,7 +236,7 @@
   onclick={handleClick}
   onkeydown={(e) => e.key === 'Enter' && handleClick()}
 >
-  <div class="relative h-72 overflow-hidden rounded-2xl">
+  <div bind:this={stageRef} class="relative overflow-hidden rounded-2xl {variant === 'large' ? 'h-96' : 'h-72'}">
     <!-- Back layer: revealed content -->
     <div
       class="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-6 text-center bg-gradient-to-br {gradient}"
@@ -219,9 +245,9 @@
         class="flex flex-col items-center gap-3 transition-all duration-[420ms]"
         style="transform: scale({backScale}); opacity: {backOpacity}; transition-delay: {phase === 'open' ? '100ms' : '0ms'}"
       >
-        <h3 class="text-xl font-bold text-white">{title}</h3>
-        <p class="text-sm text-white/95 leading-relaxed">{desc}</p>
-        <span class="text-xs text-white/60 mt-1">Click para cerrar</span>
+        <h3 class="{variant === 'large' ? 'text-3xl' : 'text-xl'} font-bold text-white">{title}</h3>
+        <p class="{variant === 'large' ? 'text-lg' : 'text-sm'} text-white/95 leading-relaxed">{desc}</p>
+        <span class="{variant === 'large' ? 'text-sm' : 'text-xs'} text-white/60 mt-1">Click para cerrar</span>
       </div>
     </div>
 
@@ -230,11 +256,11 @@
       class="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-6 text-center border transition-colors duration-500 {cardFaceCls}"
       style="transform: translateX({$curtainX}%); will-change: transform; z-index: 10"
     >
-      <span class="text-5xl">{icon}</span>
-      <h3 class="text-lg font-bold transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
+      <span class="{variant === 'large' ? 'text-6xl' : 'text-5xl'}">{icon}</span>
+      <h3 class="{variant === 'large' ? 'text-xl' : 'text-lg'} font-bold transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
         {title}
       </h3>
-      <span class="text-xs font-medium transition-colors duration-500 {isLight ? 'text-gray-400' : 'text-gray-500'}">
+      <span class="{variant === 'large' ? 'text-sm' : 'text-xs'} font-medium transition-colors duration-500 {isLight ? 'text-gray-400' : 'text-gray-500'}">
         Click para revelar
       </span>
     </div>
@@ -245,9 +271,9 @@
       style="transform: translateX({$leftX}%); opacity: {leftOpacity}; z-index: 20; box-shadow: 3px 0 20px rgba(0,0,0,0.15)"
     >
       <div class="absolute inset-0 w-[200%] flex flex-col items-center justify-center gap-4 p-6 text-center border {cardFaceCls}">
-        <span class="text-5xl">{icon}</span>
-        <h3 class="text-lg font-bold {isLight ? 'text-gray-900' : 'text-white'}">{title}</h3>
-        <span class="text-xs font-medium {isLight ? 'text-gray-400' : 'text-gray-500'}">Click para revelar</span>
+        <span class="{variant === 'large' ? 'text-6xl' : 'text-5xl'}">{icon}</span>
+        <h3 class="{variant === 'large' ? 'text-xl' : 'text-lg'} font-bold {isLight ? 'text-gray-900' : 'text-white'}">{title}</h3>
+        <span class="{variant === 'large' ? 'text-sm' : 'text-xs'} font-medium {isLight ? 'text-gray-400' : 'text-gray-500'}">Click para revelar</span>
       </div>
     </div>
 
@@ -257,9 +283,9 @@
       style="transform: translateX({$rightX}%); opacity: {rightOpacity}; z-index: 20; box-shadow: -3px 0 20px rgba(0,0,0,0.15)"
     >
       <div class="absolute top-0 right-0 h-full w-[200%] flex flex-col items-center justify-center gap-4 p-6 text-center border {cardFaceCls}">
-        <span class="text-5xl">{icon}</span>
-        <h3 class="text-lg font-bold {isLight ? 'text-gray-900' : 'text-white'}">{title}</h3>
-        <span class="text-xs font-medium {isLight ? 'text-gray-400' : 'text-gray-500'}">Click para revelar</span>
+        <span class="{variant === 'large' ? 'text-6xl' : 'text-5xl'}">{icon}</span>
+        <h3 class="{variant === 'large' ? 'text-xl' : 'text-lg'} font-bold {isLight ? 'text-gray-900' : 'text-white'}">{title}</h3>
+        <span class="{variant === 'large' ? 'text-sm' : 'text-xs'} font-medium {isLight ? 'text-gray-400' : 'text-gray-500'}">Click para revelar</span>
       </div>
     </div>
 
@@ -272,16 +298,15 @@
     </div>
   </div>
 
-  <!-- Left arm bar -->
+  <!-- Left arm bar (8px at shoulder, 16px at hand) -->
   <div
-    class="absolute pointer-events-none"
+    class="absolute pointer-events-none arm-with-hand"
     style="
-      bottom: 36px;
-      left: calc(50% - 34px);
-      width: 8px;
+      bottom: 48px;
+      left: calc(50% - 42px);
+      width: 16px;
       height: 230px;
       background: linear-gradient(to top, #9B5CF8 0%, #3B82F6 100%);
-      border-radius: 4px;
       z-index: 55;
       transform-origin: 50% 100%;
       transform: scaleY({$leftArmScaleY}) rotate({$leftArmRotate}deg);
@@ -289,16 +314,15 @@
     "
   ></div>
 
-  <!-- Right arm bar -->
+  <!-- Right arm bar (8px at shoulder, 16px at hand) -->
   <div
-    class="absolute pointer-events-none"
+    class="absolute pointer-events-none arm-with-hand"
     style="
-      bottom: 36px;
-      left: calc(50% + 26px);
-      width: 8px;
+      bottom: 48px;
+      left: calc(50% + 22px);
+      width: 16px;
       height: 230px;
       background: linear-gradient(to top, #9B5CF8 0%, #3B82F6 100%);
-      border-radius: 4px;
       z-index: 55;
       transform-origin: 50% 100%;
       transform: scaleY({$rightArmScaleY}) rotate({$rightArmRotate}deg);
@@ -314,3 +338,10 @@
     <PullRobot pulling={phase === 'closing'} />
   </div>
 </div>
+
+<style>
+  .arm-with-hand {
+    clip-path: polygon(4px 100%, 12px 100%, 16px 0, 0 0);
+    border-radius: 4px;
+  }
+</style>
