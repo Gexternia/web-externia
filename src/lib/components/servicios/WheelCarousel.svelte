@@ -7,6 +7,8 @@
     ideal: string;
     gradientLight: string;
     gradientDark: string;
+    image?: string;
+    link?: string;
   }
 
   let { cards, isLight }: { cards: FlickCardData[]; isLight: boolean } = $props();
@@ -126,6 +128,39 @@
 
   const centeredIdx = $derived((((Math.round(offset) % n) + n) % n));
   const current = $derived(cards[centeredIdx]);
+
+  let demoHovered = $state(false);
+  let demoPrimaryRef: HTMLSpanElement;
+  let demoCloneRef: HTMLSpanElement;
+  const TR = 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
+
+  function onDemoEnter() {
+    demoHovered = true;
+    if (!demoPrimaryRef || !demoCloneRef) return;
+    demoPrimaryRef.style.transition = 'none';
+    demoPrimaryRef.style.transform = 'translateX(0%)';
+    demoCloneRef.style.transition = 'none';
+    demoCloneRef.style.transform = 'translateX(-110%)';
+    demoPrimaryRef.getBoundingClientRect();
+    demoPrimaryRef.style.transition = TR;
+    demoPrimaryRef.style.transform = 'translateX(110%)';
+    demoCloneRef.style.transition = TR;
+    demoCloneRef.style.transform = 'translateX(0%)';
+  }
+
+  function onDemoLeave() {
+    demoHovered = false;
+    if (!demoPrimaryRef || !demoCloneRef) return;
+    demoPrimaryRef.style.transition = 'none';
+    demoPrimaryRef.style.transform = 'translateX(-110%)';
+    demoCloneRef.style.transition = 'none';
+    demoCloneRef.style.transform = 'translateX(0%)';
+    demoCloneRef.getBoundingClientRect();
+    demoCloneRef.style.transition = TR;
+    demoCloneRef.style.transform = 'translateX(110%)';
+    demoPrimaryRef.style.transition = TR;
+    demoPrimaryRef.style.transform = 'translateX(0%)';
+  }
 </script>
 
 <div class="flex flex-col items-center gap-6 select-none w-full">
@@ -135,7 +170,7 @@
       <button
         type="button"
         onclick={() => jumpTo(i)}
-        class="px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 {i === centeredIdx ? (isLight ? 'bg-brand-magenta text-white border-brand-magenta' : 'bg-azul text-white border-azul') : (isLight ? 'bg-white/60 text-gray-600 border-gray-200 hover:opacity-80' : 'bg-white/5 text-gray-400 border-white/10 hover:opacity-80')}"
+        class="px-4 py-2 rounded-full text-base font-semibold border transition-all duration-200 {i === centeredIdx ? (isLight ? 'bg-brand-magenta text-white border-brand-magenta' : 'bg-azul text-white border-azul') : (isLight ? 'bg-white/60 text-gray-600 border-gray-200 hover:opacity-80' : 'bg-white/5 text-gray-400 border-white/10 hover:opacity-80')}"
         style="opacity: {i === centeredIdx ? 1 : 0.4}; transform: scale({i === centeredIdx ? 1 : 0.93})"
       >
         {card.emoji} {card.title}
@@ -143,11 +178,28 @@
     {/each}
   </div>
 
-  <!-- Category label -->
+  <!-- Category label + Ver demo link -->
   {#key current.title}
-    <p class="text-xs font-bold tracking-widest uppercase {isLight ? 'text-brand-magenta' : 'text-azul'}">
-      {current.category}
-    </p>
+    <div class="flex flex-col items-center gap-2">
+      <p class="text-sm font-bold tracking-widest uppercase {isLight ? 'text-brand-magenta' : 'text-azul'}">
+        {current.category}
+      </p>
+      {#if current.link}
+        <a
+          href={current.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-cta-animated micro-active-press relative inline-block overflow-hidden px-8 py-3.5 rounded-full text-base font-bold text-white transition-all duration-300 hover:scale-105 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
+          style={demoHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
+          onmouseenter={onDemoEnter}
+          onmouseleave={onDemoLeave}
+        >
+          <span class="invisible whitespace-nowrap">Ver demo →</span>
+          <span bind:this={demoPrimaryRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(0%)">Ver demo →</span>
+          <span bind:this={demoCloneRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(-110%)">Ver demo →</span>
+        </a>
+      {/if}
+    </div>
   {/key}
 
   <!-- Wheel -->
@@ -165,7 +217,7 @@
       {@const pos = wrappedPos(i - offset, n)}
       {@const abs = Math.abs(pos)}
       <div
-        class="rounded-[24px] overflow-hidden pointer-events-none"
+        class="rounded-[24px] overflow-hidden pointer-events-none block"
         style="
           width: {CARD_W}px;
           height: {CARD_H}px;
@@ -178,21 +230,49 @@
           will-change: transform, opacity;
         "
       >
-        <div class="h-full flex flex-col justify-between p-8 bg-gradient-to-br {isLight ? card.gradientLight : card.gradientDark}">
-          <div>
-            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-5 bg-white/20 text-white">
-              {card.category}
-            </span>
-            <div class="text-7xl mb-5">{card.emoji}</div>
-            <h3 class="text-2xl font-black text-white mb-3">{card.title}</h3>
-            <p class="text-white/90 text-sm leading-relaxed">{card.desc}</p>
-          </div>
-          <div>
-            <div class="h-px bg-white/20 mb-4"></div>
-            <p class="text-white/80 text-xs leading-relaxed">
-              <span class="font-bold text-white">Ideal para:</span> {card.ideal}
-            </p>
-          </div>
+        <div class="h-full flex flex-col rounded-[24px]">
+          {#if card.image}
+            <div class="h-1/2 shrink-0 rounded-t-[24px] overflow-hidden flex items-center justify-center bg-gray-900/30">
+              <img
+                src={card.image}
+                alt={card.title}
+                class="w-full h-full object-contain"
+              />
+            </div>
+            <div class="h-1/2 flex flex-col justify-between p-6 bg-gradient-to-br {isLight ? card.gradientLight : card.gradientDark} rounded-b-[24px]">
+              <div>
+                <span class="inline-block px-3 py-1 rounded-full text-sm font-bold tracking-wide uppercase mb-4 bg-white/25 text-white">
+                  {card.category}
+                </span>
+                <h3 class="text-3xl font-black text-white mb-3">{card.title}</h3>
+                <p class="text-white/95 text-base leading-relaxed">{card.desc}</p>
+              </div>
+              <div>
+                <div class="h-px bg-white/30 mb-3"></div>
+                <p class="text-white/90 text-sm leading-relaxed">
+                  <span class="font-bold text-white">Ideal para:</span> {card.ideal}
+                </p>
+              </div>
+            </div>
+          {:else}
+            <div class="absolute inset-0 bg-gradient-to-br {isLight ? card.gradientLight : card.gradientDark} rounded-[24px]"></div>
+            <div class="relative z-10 flex flex-col justify-between h-full p-8">
+              <div>
+                <span class="inline-block px-3 py-1 rounded-full text-sm font-bold tracking-wide uppercase mb-5 bg-white/25 text-white">
+                  {card.category}
+                </span>
+                <div class="text-7xl mb-5">{card.emoji}</div>
+                <h3 class="text-3xl font-black text-white mb-4">{card.title}</h3>
+                <p class="text-white/95 text-base leading-relaxed">{card.desc}</p>
+              </div>
+              <div>
+                <div class="h-px bg-white/30 mb-4"></div>
+                <p class="text-white/90 text-sm leading-relaxed">
+                  <span class="font-bold text-white">Ideal para:</span> {card.ideal}
+                </p>
+              </div>
+            </div>
+          {/if}
         </div>
       </div>
     {/each}

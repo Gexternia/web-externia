@@ -74,7 +74,7 @@
 </script>
 
 <svelte:head>
-  <title>{pageData.noticia?.titulo ?? 'Noticia'} — Noticias IA | Externia</title>
+  <title>{pageData.noticia?.titulo ?? 'Noticia'} — Blog IA | Externia</title>
   <meta name="description" content={pageData.noticia?.resumen ?? 'Detalle de noticia del AI Insight Digest.'} />
 </svelte:head>
 
@@ -93,7 +93,7 @@
             ? 'bg-brand-magenta text-white hover:bg-brand-fuchsia'
             : 'bg-azul text-white hover:bg-blue-600'}"
         >
-          Volver al digest
+          Volver al Blog
         </a>
       </FadeIn>
     </section>
@@ -106,7 +106,7 @@
             href="/digest"
             class="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-azul hover:text-blue-300'}"
           >
-            ← Volver al digest
+            ← Volver al Blog
           </a>
         </FadeIn>
 

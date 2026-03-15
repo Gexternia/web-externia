@@ -32,7 +32,7 @@
 </script>
 
 <svelte:head>
-  <title>Noticias Semanales sobre IA — Externia AI for Events</title>
+  <title>Blog de Inteligencia Artificial — Externia AI for Events</title>
   <meta name="description" content="Novedades de IA para el sector eventos. Resumen semanal." />
 </svelte:head>
 
@@ -50,7 +50,7 @@
     </FadeIn>
     <FadeIn delay={0.2}>
       <h1 class="relative z-10 text-4xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight max-w-4xl transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-        Noticias Semanales sobre <span class="gradient-text-animate">IA</span>
+        Blog de Inteligencia <span class="gradient-text-animate">Artificial</span>
       </h1>
     </FadeIn>
     <FadeIn delay={0.3}>
