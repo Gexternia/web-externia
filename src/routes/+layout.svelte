@@ -7,7 +7,7 @@
 
 <Navbar />
 <ThemeToggle />
-<main class="theme-transition">
+<main class="theme-transition w-full min-w-0 overflow-x-hidden">
   <slot />
 </main>
 <Footer />

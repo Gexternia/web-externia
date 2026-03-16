@@ -94,7 +94,7 @@
                 </p>
                 {#if noticia.formato_actividad}
                   <span
-                    class="mt-4 inline-block px-3 py-1 rounded-full text-xs font-semibold transition-colors duration-500 {isLight
+                    class="mt-4 inline-block px-3 py-2 sm:py-1 rounded-full text-xs font-semibold transition-colors duration-500 min-h-[36px] flex items-center {isLight
                       ? 'bg-brand-magenta/15 text-brand-fuchsia'
                       : 'bg-azul/15 text-blue-300'}"
                   >
