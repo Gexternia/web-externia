@@ -1,19 +1,24 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { PUBLIC_NOTICIAS_API_URL } from '$env/static/public';
   import FadeIn from '$lib/components/shared/FadeIn.svelte';
   import FlipCard from '$lib/components/quienes-somos/FlipCard.svelte';
   import NetworkParticlesBg from '$lib/components/quienes-somos/NetworkParticlesBg.svelte';
-  import type { PageData } from './$types';
-  import type { NoticiaItem } from '../+page.server';
-
-  let { data: pageData }: { data: PageData } = $props();
+  import type { NoticiaItem } from '$lib/types/noticias';
 
   let isLight = $state(false);
   let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
+  let noticia = $state<NoticiaItem | null>(null);
+  let error = $state(false);
+  let loading = $state(true);
   let ctaHovered = $state(false);
   let primaryRef: HTMLSpanElement;
   let cloneRef: HTMLSpanElement;
   const TR = 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
+
+  const id = $derived($page.params.id);
+  const idNum = $derived(parseInt(id, 10));
 
   function onBtnEnter() {
     ctaHovered = true;
@@ -60,6 +65,38 @@
     return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
   }
 
+  async function fetchNoticia() {
+    if (Number.isNaN(idNum) || idNum < 0) {
+      error = true;
+      loading = false;
+      noticia = null;
+      return;
+    }
+    loading = true;
+    error = false;
+    noticia = null;
+    try {
+      const res = await fetch(PUBLIC_NOTICIAS_API_URL, { signal: AbortSignal.timeout(10000) });
+      if (!res.ok) {
+        error = true;
+        return;
+      }
+      const json = await res.json();
+      const noticias: NoticiaItem[] = json?.noticias ?? [];
+      noticia = noticias[idNum] ?? null;
+      if (!noticia) error = true;
+    } catch {
+      error = true;
+    } finally {
+      loading = false;
+    }
+  }
+
+  $effect(() => {
+    id;
+    fetchNoticia();
+  });
+
   onMount(() => {
     isLight = document.documentElement.classList.contains('light');
     const handler = () => {
@@ -74,8 +111,8 @@
 </script>
 
 <svelte:head>
-  <title>{pageData.noticia?.titulo ?? 'Noticia'} — Blog IA | Externia</title>
-  <meta name="description" content={pageData.noticia?.resumen ?? 'Detalle de noticia del AI Insight Digest.'} />
+  <title>{noticia?.titulo ?? 'Noticia'} — Blog IA | Externia</title>
+  <meta name="description" content={noticia?.resumen ?? 'Detalle de noticia del AI Insight Digest.'} />
 </svelte:head>
 
 {#if NetworkParticlesCmp}
@@ -83,12 +120,18 @@
 {/if}
 
 <div class="relative min-h-screen z-10 transition-colors duration-500">
-  {#if pageData.error || !pageData.noticia}
+  {#if loading}
+    <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+      <FadeIn delay={0.1}>
+        <p class="text-lg font-medium transition-colors duration-500 {isLight ? 'text-gray-600' : 'text-gray-300'}">Cargando…</p>
+      </FadeIn>
+    </section>
+  {:else if error || !noticia}
     <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
       <FadeIn delay={0.1}>
         <h1 class="text-2xl font-bold transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">Noticia no encontrada</h1>
         <a
-          href="/digest"
+          href="/blog"
           class="mt-6 inline-block px-6 py-3 rounded-xl font-semibold transition-all duration-300 {isLight
             ? 'bg-brand-magenta text-white hover:bg-brand-fuchsia'
             : 'bg-azul text-white hover:bg-blue-600'}"
@@ -98,12 +141,12 @@
       </FadeIn>
     </section>
   {:else}
-    {@const n = pageData.noticia}
+    {@const n = noticia}
     <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
       <div class="max-w-3xl mx-auto relative z-10">
         <FadeIn delay={0.1}>
           <a
-            href="/digest"
+            href="/blog"
             class="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-azul hover:text-blue-300'}"
           >
             ← Volver al Blog

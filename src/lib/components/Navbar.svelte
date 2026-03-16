@@ -10,7 +10,7 @@
     { label: 'Activaciones', href: '/servicios' },
     { label: 'Consultoría', href: '/consultoria' },
     { label: 'Formación', href: '/formacion' },
-    { label: 'Blog', href: '/digest' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Contáctanos', href: '/contacto' }
   ];
 

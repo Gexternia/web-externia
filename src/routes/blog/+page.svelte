@@ -1,14 +1,16 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { PUBLIC_NOTICIAS_API_URL } from '$env/static/public';
   import FadeIn from '$lib/components/shared/FadeIn.svelte';
   import SectionLabel from '$lib/components/shared/SectionLabel.svelte';
   import NetworkParticlesBg from '$lib/components/quienes-somos/NetworkParticlesBg.svelte';
-  import type { PageData } from './$types';
-
-  let { data: pageData }: { data: PageData } = $props();
+  import type { DigestData } from '$lib/types/noticias';
 
   let isLight = $state(false);
   let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
+  let data = $state<{ semana: string; noticias: DigestData['noticias'] } | null>(null);
+  let error = $state(false);
+  let loading = $state(true);
 
   const lightBg = 'bg-white/65 backdrop-blur-[2px]';
   const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
@@ -16,6 +18,26 @@
   const darkAltBg = 'bg-[#08111e]/72 backdrop-blur-[2px]';
   function sectionBg(light: boolean, alt = false) {
     return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
+  }
+
+  async function fetchNoticias() {
+    loading = true;
+    error = false;
+    data = null;
+    try {
+      const res = await fetch(PUBLIC_NOTICIAS_API_URL, { signal: AbortSignal.timeout(10000) });
+      if (!res.ok) throw new Error('API error');
+      const json = (await res.json()) as DigestData;
+      if (!json?.noticias || !Array.isArray(json.noticias)) {
+        error = true;
+        return;
+      }
+      data = { semana: json.semana ?? '', noticias: json.noticias };
+    } catch {
+      error = true;
+    } finally {
+      loading = false;
+    }
   }
 
   onMount(() => {
@@ -27,6 +49,7 @@
     import('$lib/components/quienes-somos/NetworkParticlesBg.svelte').then((mod) => {
       NetworkParticlesCmp = mod.default;
     });
+    fetchNoticias();
     return () => window.removeEventListener('themechange', handler);
   });
 </script>
@@ -58,10 +81,10 @@
         Novedades de IA para el sector eventos
       </p>
     </FadeIn>
-    {#if pageData.data?.semana && !pageData.error}
+    {#if data?.semana && !error && !loading}
       <FadeIn delay={0.4}>
         <p class="relative z-10 mt-2 text-sm font-medium transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
-          Semana del reporte: {pageData.data.semana}
+          Semana del reporte: {data.semana}
         </p>
       </FadeIn>
     {/if}
@@ -69,7 +92,13 @@
 
   <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="max-w-6xl mx-auto relative z-10">
-      {#if pageData.error || !pageData.data?.noticias?.length}
+      {#if loading}
+        <FadeIn delay={0.1}>
+          <div class="text-center py-16 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light border-gray-100 bg-white/90 text-gray-600 backdrop-blur-sm' : 'border-white/10 bg-[#0d1829]/80 text-gray-300 backdrop-blur-sm'}">
+            <p class="text-lg font-medium">Cargando noticias…</p>
+          </div>
+        </FadeIn>
+      {:else if error || !data?.noticias?.length}
         <FadeIn delay={0.1}>
           <div class="text-center py-16 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light shadow-card-light-hover border-gray-100 bg-white/90 text-gray-600 backdrop-blur-sm' : 'border-white/10 bg-[#0d1829]/80 text-gray-300 backdrop-blur-sm'}">
             <p class="text-lg font-medium">Próxima edición en camino</p>
@@ -78,10 +107,10 @@
         </FadeIn>
       {:else}
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {#each pageData.data.noticias as noticia, i}
+          {#each data.noticias as noticia, i}
             <FadeIn delay={0.05 * i} className="h-full">
               <a
-                href="/digest/{i}"
+                href="/blog/{i}"
                 class="block h-full rounded-2xl border p-6 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 micro-active-press {isLight
                   ? 'shadow-card-light shadow-card-light-hover border-gray-100 bg-gradient-to-br from-[#DE3B84]/10 via-white/95 to-[#FFC12D]/6 hover:border-brand-magenta/40 hover:shadow-card-light-hover backdrop-blur-sm'
                   : 'border-white/8 bg-gradient-to-br from-azul/10 via-[#0d1829]/90 to-blue-900/20 hover:border-azul/40 hover:shadow-lg hover:shadow-azul/10 backdrop-blur-sm'}"
