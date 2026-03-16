@@ -9,7 +9,9 @@ const config = {
         if (path.includes('/favicon')) return;
         throw new Error(message);
       },
-      handleMissingId: 'ignore'
+      handleMissingId: 'ignore',
+      // /blog/[id] no se pre-renderiza (datos en cliente); evita fallo de build al no tener entries
+      handleUnseenRoutes: 'ignore'
     }
   }
 };
