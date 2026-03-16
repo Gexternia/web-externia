@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
+
   export interface FlickCardData {
     emoji: string;
     category: string;
@@ -13,16 +15,33 @@
 
   let { cards, isLight }: { cards: FlickCardData[]; isLight: boolean } = $props();
 
-  const CARD_W = 600;
-  const CARD_H = 630;
-  const X_SPREAD = 760;
+  let viewportW = $state(1024);
+
+  const CARD_W = $derived(
+    viewportW < 640 ? 280 : viewportW < 1024 ? 400 : 600
+  );
+  const CARD_H = $derived(
+    viewportW < 640 ? 320 : viewportW < 1024 ? 450 : 630
+  );
+  const X_SPREAD = $derived(
+    viewportW < 640 ? 300 : viewportW < 1024 ? 460 : 760
+  );
   const ROT_DEG = 18;
-  const Y_ARC = 180;
+  const Y_ARC = $derived(viewportW < 640 ? 80 : viewportW < 1024 ? 120 : 180);
   const SCALE_OFF = 0.17;
   const FRICTION = 0.88;
-  const PX_PER_CARD = 260;
+  const PX_PER_CARD = $derived(
+    viewportW < 640 ? 100 : viewportW < 1024 ? 180 : 260
+  );
 
   const n = $derived(cards.length);
+
+  onMount(() => {
+    viewportW = typeof window !== 'undefined' ? window.innerWidth : 1024;
+    const resize = () => { viewportW = window.innerWidth; };
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  });
 
   let offset = $state(0);
   let offsetRef = 0;
@@ -121,7 +140,6 @@
     Math.abs(velCards) > 0.08 ? applyMomentum(velCards, offsetRef) : snapTo(offsetRef);
   }
 
-  import { onDestroy } from 'svelte';
   onDestroy(() => {
     if (typeof cancelAnimationFrame !== 'undefined' && rafId) cancelAnimationFrame(rafId);
   });
@@ -170,7 +188,7 @@
       <button
         type="button"
         onclick={() => jumpTo(i)}
-        class="px-4 py-2 rounded-full text-base font-semibold border transition-all duration-200 {i === centeredIdx ? (isLight ? 'bg-brand-magenta text-white border-brand-magenta' : 'bg-azul text-white border-azul') : (isLight ? 'bg-white/60 text-gray-600 border-gray-200 hover:opacity-80' : 'bg-white/5 text-gray-400 border-white/10 hover:opacity-80')}"
+        class="min-h-[44px] px-4 py-3 sm:py-2 rounded-full text-sm sm:text-base font-semibold border transition-all duration-200 {i === centeredIdx ? (isLight ? 'bg-brand-magenta text-white border-brand-magenta' : 'bg-azul text-white border-azul') : (isLight ? 'bg-white/60 text-gray-600 border-gray-200 hover:opacity-80' : 'bg-white/5 text-gray-400 border-white/10 hover:opacity-80')}"
         style="opacity: {i === centeredIdx ? 1 : 0.4}; transform: scale({i === centeredIdx ? 1 : 0.93})"
       >
         {card.emoji} {card.title}
@@ -203,10 +221,9 @@
   {/key}
 
   <!-- Wheel -->
-  <div class="relative w-full overflow-visible touch-none" style="height: {CARD_H + 220}px">
+  <div class="relative w-full overflow-x-clip overflow-y-visible touch-none max-w-[100vw]" style="height: {CARD_H + (viewportW < 640 ? 120 : viewportW < 1024 ? 180 : 220)}px">
     <div
-      class="absolute cursor-grab active:cursor-grabbing"
-      style="top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 100vw; z-index: 60"
+      class="absolute inset-0 cursor-grab active:cursor-grabbing max-w-full z-[60]"
       onpointerdown={onDown}
       onpointermove={onMove}
       onpointerup={onUp}
@@ -239,13 +256,13 @@
                 class="w-full h-full object-contain"
               />
             </div>
-            <div class="h-1/2 flex flex-col justify-between p-6 bg-gradient-to-br {isLight ? card.gradientLight : card.gradientDark} rounded-b-[24px]">
+            <div class="h-1/2 flex flex-col justify-between p-4 sm:p-6 bg-gradient-to-br {isLight ? card.gradientLight : card.gradientDark} rounded-b-[24px]">
               <div>
-                <span class="inline-block px-3 py-1 rounded-full text-sm font-bold tracking-wide uppercase mb-4 bg-white/25 text-white">
+                <span class="inline-block px-2 py-1 sm:px-3 rounded-full text-xs sm:text-sm font-bold tracking-wide uppercase mb-2 sm:mb-4 bg-white/25 text-white">
                   {card.category}
                 </span>
-                <h3 class="text-3xl font-black text-white mb-3">{card.title}</h3>
-                <p class="text-white/95 text-base leading-relaxed">{card.desc}</p>
+                <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-white mb-2 sm:mb-3">{card.title}</h3>
+                <p class="text-white/95 text-sm sm:text-base leading-relaxed line-clamp-2 sm:line-clamp-none">{card.desc}</p>
               </div>
               <div>
                 <div class="h-px bg-white/30 mb-3"></div>
@@ -256,14 +273,14 @@
             </div>
           {:else}
             <div class="absolute inset-0 bg-gradient-to-br {isLight ? card.gradientLight : card.gradientDark} rounded-[24px]"></div>
-            <div class="relative z-10 flex flex-col justify-between h-full p-8">
+            <div class="relative z-10 flex flex-col justify-between h-full p-4 sm:p-6 md:p-8">
               <div>
-                <span class="inline-block px-3 py-1 rounded-full text-sm font-bold tracking-wide uppercase mb-5 bg-white/25 text-white">
+                <span class="inline-block px-2 py-1 sm:px-3 rounded-full text-xs sm:text-sm font-bold tracking-wide uppercase mb-2 sm:mb-5 bg-white/25 text-white">
                   {card.category}
                 </span>
-                <div class="text-7xl mb-5">{card.emoji}</div>
-                <h3 class="text-3xl font-black text-white mb-4">{card.title}</h3>
-                <p class="text-white/95 text-base leading-relaxed">{card.desc}</p>
+                <div class="text-5xl sm:text-6xl md:text-7xl mb-3 sm:mb-5">{card.emoji}</div>
+                <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-white mb-2 sm:mb-4">{card.title}</h3>
+                <p class="text-white/95 text-sm sm:text-base leading-relaxed line-clamp-2 sm:line-clamp-none">{card.desc}</p>
               </div>
               <div>
                 <div class="h-px bg-white/30 mb-4"></div>

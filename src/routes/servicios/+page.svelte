@@ -101,23 +101,22 @@
 <div class="relative z-10 transition-colors duration-500">
   <!-- Hero -->
   <section class="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-4 text-center transition-colors duration-500 {sectionBg(isLight)}">
-    <div class="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
-    <div class="absolute bottom-1/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
+    <div class="absolute top-1/4 -left-32 sm:-left-48 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
+    <div class="absolute bottom-1/4 -right-32 sm:-right-48 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
 
     <FadeIn delay={0.1} className="relative z-10 mb-6">
       <SectionLabel text="Nuestras Activaciones" {isLight} />
     </FadeIn>
 
     <FadeIn delay={0.2}>
-      <h1 class="relative z-10 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight max-w-5xl transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-        Experiencias de <span class="gradient-text-animate">IA</span><br />que impactan
+      <h1 class="relative z-10 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight tracking-tight max-w-5xl px-1 transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
+        Experiencias de <span class="gradient-text-animate">IA</span><br class="sm:hidden" />que impactan
       </h1>
     </FadeIn>
 
     <FadeIn delay={0.4}>
       <p class="relative z-10 mt-6 text-lg sm:text-xl max-w-2xl leading-relaxed transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-300'}">
-        Activaciones experienciales, consultoría estratégica y formación especializada —
-        todo bajo la filosofía <strong>MAPI</strong>: Medible, Asequible, Personalizado e Innovador.
+        Activaciones experienciales bajo la filosofía <strong>MAPI</strong>: Medible, Asequible, Personalizado e Innovador.
       </p>
     </FadeIn>
 

@@ -28,7 +28,7 @@
 
 <button
   onclick={toggle}
-  class="micro-active-press fixed top-6 right-6 z-50 flex items-center justify-center w-12 h-12 rounded-full border border-white/20 backdrop-blur-md bg-white/10 shadow-lg cursor-pointer transition-all duration-300 hover:scale-110 hover:border-white/40"
+  class="micro-active-press hidden md:flex fixed top-6 right-6 z-50 items-center justify-center w-12 h-12 rounded-full border border-white/20 backdrop-blur-md bg-white/10 shadow-lg cursor-pointer transition-all duration-300 hover:scale-110 hover:border-white/40 min-w-[44px] min-h-[44px]"
   style="transform: scale({$scale}); pointer-events: auto"
   aria-label="Toggle theme"
 >

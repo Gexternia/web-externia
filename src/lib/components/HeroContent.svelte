@@ -39,7 +39,7 @@
       src={isDark ? '/logo-externia-clean.png' : '/logo-externia-light-fixed.png'}
       alt="Externia"
       class="w-[360px] sm:w-[500px] md:w-[650px] lg:w-[800px] mx-auto object-contain drop-shadow-lg transition-all duration-300"
-      style="opacity: {opacity * $initialOpacity}; transform: scale({scale}) translate(-1cm, {$initialY * Math.max(0, 1 - scrollY/300) + y * Math.min(1, scrollY/300)}px)"
+      style="opacity: {opacity * $initialOpacity}; transform: scale({scale}) translate(-0.5rem, {$initialY * Math.max(0, 1 - scrollY/300) + y * Math.min(1, scrollY/300)}px)"
     />
   </a>
 </div>

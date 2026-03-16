@@ -19,6 +19,20 @@
   let scrolled = $state(false);
   const navY = spring(-100, { stiffness: 0.2, damping: 0.7 });
 
+  function toggleTheme() {
+    menuOpen = false;
+    if (document.documentElement.classList.contains('light')) {
+      document.documentElement.classList.remove('light');
+      localStorage.setItem('theme', 'dark');
+      isDark = true;
+    } else {
+      document.documentElement.classList.add('light');
+      localStorage.setItem('theme', 'light');
+      isDark = false;
+    }
+    window.dispatchEvent(new CustomEvent('themechange', { detail: { isDark } }));
+  }
+
   onMount(() => {
     navY.set(0);
     isDark = !document.documentElement.classList.contains('light');
@@ -38,24 +52,24 @@
 </script>
 
 <nav
-  class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 {scrolled && isDark ? 'bg-black/80 backdrop-blur-md' : scrolled && !isDark ? 'bg-white/80 backdrop-blur-md' : 'bg-transparent'}"
+  class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 {(scrolled || menuOpen) && isDark ? 'bg-black/80 backdrop-blur-md' : (scrolled || menuOpen) && !isDark ? 'bg-white/80 backdrop-blur-md' : 'bg-transparent'}"
   style="transform: translateY({$navY}px)"
 >
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16 sm:h-20">
-      <div class="flex-shrink-0 -ml-[1cm]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-[100vw]">
+    <div class="flex items-center justify-between h-14 sm:h-16 md:h-20">
+      <div class="flex-shrink-0 -ml-1 sm:ml-0">
         {#if !isHome}
-          <a href="/">
+          <a href="/" class="block min-w-[44px] min-h-[44px] flex items-center">
             <img
               src={isDark ? '/logo-externia-clean.png' : '/logo-externia-light-fixed.png'}
               alt="Externia — Inicio"
-              class="h-8 sm:h-10 w-auto object-contain"
+              class="h-7 sm:h-8 md:h-10 w-auto object-contain"
             />
           </a>
         {/if}
       </div>
 
-      <div class="hidden md:flex items-center gap-8 fixed right-[calc(2cm+4.5rem)] top-0 h-16 sm:h-20">
+      <div class="hidden md:flex items-center gap-5 lg:gap-8 fixed right-24 top-0 h-14 sm:h-16 md:h-20">
         {#each navLinks as link}
           <a
             href={link.href}
@@ -68,8 +82,8 @@
 
       <button
         onclick={() => (menuOpen = !menuOpen)}
-        class="md:hidden p-2 rounded-lg transition-colors duration-300 micro-active-press {isDark ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-black/5'}"
-        aria-label="Toggle menu"
+        class="md:hidden min-w-[44px] min-h-[44px] p-3 rounded-lg flex items-center justify-center transition-colors duration-300 micro-active-press {isDark ? 'text-white hover:bg-white/10' : 'text-gray-800 hover:bg-black/5'}"
+        aria-label="Abrir menú"
       >
         {#if menuOpen}
           <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -88,11 +102,19 @@
         {#each navLinks as link}
           <a
             href={link.href}
-            class="micro-link-underline block py-3 px-2 text-sm font-medium transition-colors duration-300 micro-active-press {isDark ? 'text-gray-300 hover:text-azul' : 'text-gray-600 hover:text-brand-magenta'}"
+            onclick={() => (menuOpen = false)}
+            class="micro-link-underline block py-4 px-4 text-base font-medium transition-colors duration-300 micro-active-press min-h-[48px] flex items-center {isDark ? 'text-gray-300 hover:text-azul' : 'text-gray-600 hover:text-brand-magenta'}"
           >
             {link.label}
           </a>
         {/each}
+        <button
+          type="button"
+          onclick={toggleTheme}
+          class="micro-link-underline w-full text-left py-4 px-4 text-base font-medium transition-colors duration-300 micro-active-press min-h-[48px] flex items-center border-t {isDark ? 'text-gray-300 hover:text-azul border-white/10' : 'text-gray-600 hover:text-brand-magenta border-gray-200'}"
+        >
+          {isDark ? 'Modo claro' : 'Modo oscuro'}
+        </button>
       </div>
     {/if}
   </div>

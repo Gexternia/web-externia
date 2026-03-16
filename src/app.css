@@ -129,13 +129,21 @@
   animation: btn-border-glow 4s ease-in-out infinite;
 }
 
-/* Global resets */
+/* Global resets — responsive base */
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-smooth: always;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+html,
+body {
+  min-width: 0;
+  max-width: 100vw;
 }
 
 body {
