@@ -404,7 +404,7 @@
           <div class="clients-track flex gap-8 sm:gap-12 items-center py-4 w-max">
             {#each [1, 2] as _}
               {#each clientLogos as logo}
-                <div class="clients-logo flex-shrink-0 flex items-center justify-center w-24 h-14 sm:w-40 sm:h-20 md:w-44 md:h-24 px-3 sm:px-4 grayscale hover:grayscale-0 opacity-80 hover:opacity-100 transition-all duration-300">
+                <div class="clients-logo flex-shrink-0 flex items-center justify-center w-24 h-14 sm:w-40 sm:h-20 md:w-44 md:h-24 px-3 sm:px-4 opacity-90 hover:opacity-100 transition-opacity duration-300">
                   <img src="/clients/{logo}.png" alt="Cliente" class="max-h-10 sm:max-h-14 md:max-h-16 w-auto object-contain" loading="lazy" />
                 </div>
               {/each}
