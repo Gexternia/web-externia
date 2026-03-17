@@ -22,6 +22,19 @@
     return () => window.removeEventListener('themechange', handler);
   });
 
+  $effect(() => {
+    const el = clientsScrollRef;
+    if (!el) return;
+    const tick = () => {
+      if (!clientsAutoScroll || !el || clientsDragStart) return;
+      el.scrollLeft += 0.8;
+      const half = el.scrollWidth / 2;
+      if (el.scrollLeft >= half) el.scrollLeft -= half;
+    };
+    const id = window.setInterval(tick, 16);
+    return () => window.clearInterval(id);
+  });
+
   const lightBg = 'bg-white/65 backdrop-blur-[2px]';
   const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
   const darkBg = 'bg-[#060d1a]/72 backdrop-blur-[2px]';
@@ -70,6 +83,43 @@
     { icon: '💡', label: 'Creatividad disruptiva' },
     { icon: '🤝', label: 'Respeto por las personas' },
   ];
+
+  const clientLogos = ['client-1', 'opc-catalunya', 'ifaes', 'el-economista', 'ecoener', 'caixabank', 'ing', 'stage-entertainment', 'idipaz', 'amazon', 'eventoplus', 'american-express', 'universidad-cordoba', 'camara-espanola', 'aegve', 'uppereat', 'cett', 'snapsight', 'somos-experiences', 'kpmg'];
+
+  let clientsScrollRef: HTMLDivElement;
+  let clientsAutoScroll = $state(true);
+  let clientsDragStart = $state<{ x: number; scrollLeft: number } | null>(null);
+
+  function clientsOnPointerDown(e: MouseEvent | TouchEvent) {
+    if (!clientsScrollRef) return;
+    clientsAutoScroll = false;
+    const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    clientsDragStart = { x, scrollLeft: clientsScrollRef.scrollLeft };
+    if ('touches' in e) {
+      window.addEventListener('touchmove', clientsOnPointerMove, { passive: false });
+      window.addEventListener('touchend', clientsOnPointerUp);
+    } else {
+      window.addEventListener('mousemove', clientsOnPointerMove);
+      window.addEventListener('mouseup', clientsOnPointerUp);
+    }
+  }
+
+  function clientsOnPointerMove(e: MouseEvent | TouchEvent) {
+    if (!clientsDragStart || !clientsScrollRef) return;
+    if ('touches' in e) e.preventDefault();
+    const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const delta = clientsDragStart.x - x;
+    clientsScrollRef.scrollLeft = clientsDragStart.scrollLeft + delta;
+  }
+
+  function clientsOnPointerUp() {
+    clientsDragStart = null;
+    clientsAutoScroll = true;
+    window.removeEventListener('mousemove', clientsOnPointerMove);
+    window.removeEventListener('mouseup', clientsOnPointerUp);
+    window.removeEventListener('touchmove', clientsOnPointerMove);
+    window.removeEventListener('touchend', clientsOnPointerUp);
+  }
 
   let ctaHovered = $state(false);
   let primaryRef: HTMLSpanElement;
@@ -331,6 +381,37 @@
           </div>
         </FadeIn>
       </div>
+
+      <!-- Carrusel de logos: Hemos trabajado con todos estos clientes -->
+      <FadeIn delay={0.4} className="mt-16">
+        <p class="text-center text-lg sm:text-xl font-semibold tracking-wide uppercase mb-6 sm:mb-8 text-black">
+          Hemos trabajado con todos estos clientes
+        </p>
+        <div
+          bind:this={clientsScrollRef}
+          role="region"
+          aria-label="Carrusel de clientes"
+          class="clients-carousel overflow-x-auto overflow-y-hidden w-full select-none touch-pan-x"
+          style="scrollbar-width: none; -ms-overflow-style: none;"
+          onmousedown={clientsOnPointerDown}
+          onmousemove={clientsOnPointerMove}
+          onmouseup={clientsOnPointerUp}
+          onmouseleave={clientsOnPointerUp}
+          ontouchstart={clientsOnPointerDown}
+          ontouchmove={clientsOnPointerMove}
+          ontouchend={clientsOnPointerUp}
+        >
+          <div class="clients-track flex gap-8 sm:gap-12 items-center py-4 w-max">
+            {#each [1, 2] as _}
+              {#each clientLogos as logo}
+                <div class="clients-logo flex-shrink-0 flex items-center justify-center w-24 h-14 sm:w-40 sm:h-20 md:w-44 md:h-24 px-3 sm:px-4 grayscale hover:grayscale-0 opacity-80 hover:opacity-100 transition-all duration-300">
+                  <img src="/clients/{logo}.png" alt="Cliente" class="max-h-10 sm:max-h-14 md:max-h-16 w-auto object-contain" loading="lazy" />
+                </div>
+              {/each}
+            {/each}
+          </div>
+        </div>
+      </FadeIn>
     </div>
   </section>
 
@@ -371,3 +452,9 @@
     </div>
   </section>
 </div>
+
+<style>
+  .clients-carousel::-webkit-scrollbar {
+    display: none;
+  }
+</style>
