@@ -121,15 +121,13 @@
                 <p class="mt-3 text-sm line-clamp-3 transition-colors duration-500 {isLight ? 'text-gray-600' : 'text-gray-400'}">
                   {noticia.resumen || 'Sin resumen.'}
                 </p>
-                {#if noticia.formato_actividad}
-                  <span
-                    class="mt-4 inline-block px-3 py-2 sm:py-1 rounded-full text-xs font-semibold transition-colors duration-500 min-h-[36px] flex items-center {isLight
-                      ? 'bg-brand-magenta/15 text-brand-fuchsia'
-                      : 'bg-azul/15 text-blue-300'}"
-                  >
-                    {noticia.formato_actividad}
-                  </span>
-                {/if}
+                <span
+                  class="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-500 min-h-[40px] {isLight
+                    ? 'bg-brand-magenta/20 text-brand-fuchsia hover:bg-brand-magenta/30'
+                    : 'bg-azul/20 text-blue-300 hover:bg-azul/30'}"
+                >
+                  ver blog
+                </span>
               </a>
             </FadeIn>
           {/each}
