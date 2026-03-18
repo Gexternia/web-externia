@@ -31,10 +31,30 @@
       </a>
       <span class={isDark ? 'text-gray-600' : 'text-gray-300'} aria-hidden="true">|</span>
       <a
-        href="#privacidad"
+        href="/aviso-legal"
+        target="_blank"
+        rel="noopener noreferrer"
         class="text-sm py-2 px-1 transition-colors duration-200 min-h-[44px] flex items-center {isDark ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}"
       >
-        Política de Privacidad
+        Aviso legal
+      </a>
+      <span class={isDark ? 'text-gray-600' : 'text-gray-300'} aria-hidden="true">|</span>
+      <a
+        href="/politica-privacidad"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-sm py-2 px-1 transition-colors duration-200 min-h-[44px] flex items-center {isDark ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}"
+      >
+        Política de privacidad
+      </a>
+      <span class={isDark ? 'text-gray-600' : 'text-gray-300'} aria-hidden="true">|</span>
+      <a
+        href="/politica-cookies"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-sm py-2 px-1 transition-colors duration-200 min-h-[44px] flex items-center {isDark ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}"
+      >
+        Política de Cookies
       </a>
     </div>
 
