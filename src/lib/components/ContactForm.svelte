@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * Contáctanos — Envía a POST /api/contact (Resend) o a PUBLIC_CONTACT_FORM_URL si está definida.
+   * Contáctanos — Envía a Formspree (PUBLIC_CONTACT_FORM_URL) o a /api/contact si no está definida.
    */
   import { onMount } from 'svelte';
   import { env } from '$env/dynamic/public';
@@ -70,7 +70,7 @@
     if (sending || submitted) return;
     sending = true;
     errorMessage = null;
-    const url = env.PUBLIC_CONTACT_FORM_URL || '/api/contact';
+    const url = env.PUBLIC_CONTACT_FORM_URL || 'https://formspree.io/f/mgonqpad';
     try {
       const res = await fetch(url, {
         method: 'POST',
