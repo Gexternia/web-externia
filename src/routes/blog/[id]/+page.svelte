@@ -48,12 +48,18 @@
     primaryRef.style.transform = 'translateX(0%)';
   }
 
+  function hasVisibleText(value?: string): boolean {
+    if (!value) return false;
+    const cleaned = value.trim().replace(/\s+/g, ' ');
+    return cleaned !== '' && cleaned !== '-' && cleaned !== '—' && cleaned !== '–';
+  }
+
   function buildComoUsarDesc(n: NoticiaItem): string {
     const parts: string[] = [];
-    if (n.relevancia_eventos?.trim()) parts.push(`Relevancia para eventos: ${n.relevancia_eventos}`);
-    if (n.formato_actividad?.trim()) parts.push(`Formato de actividad: ${n.formato_actividad}`);
-    if (n.tipo_speaker?.trim()) parts.push(`Tipo de speaker: ${n.tipo_speaker}`);
-    if (n.audiencia?.trim()) parts.push(`Audiencia: ${n.audiencia}`);
+    if (hasVisibleText(n.relevancia_eventos)) parts.push(`Relevancia para eventos: ${n.relevancia_eventos}`);
+    if (hasVisibleText(n.formato_actividad)) parts.push(`Formato de actividad: ${n.formato_actividad}`);
+    if (hasVisibleText(n.tipo_speaker)) parts.push(`Tipo de speaker: ${n.tipo_speaker}`);
+    if (hasVisibleText(n.audiencia)) parts.push(`Audiencia: ${n.audiencia}`);
     return parts.join('. ') || 'Aplica esta novedad adaptándola a las necesidades concretas de tu evento.';
   }
 
