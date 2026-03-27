@@ -128,7 +128,7 @@
   </section>
 
   <!-- Activaciones -->
-  <section id="activaciones" class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
+  <section id="activaciones" class="section-divider relative py-28 px-4 overflow-x-visible overflow-y-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-20">
         <SectionLabel text="01 · Activaciones de IA Experiencial" {isLight} />
@@ -140,8 +140,11 @@
         </p>
       </FadeIn>
 
-      <FadeIn delay={0.2}>
-        <WheelCarousel cards={ACTIVATION_CARDS} {isLight} />
+      <!-- Carrusel a ancho viewport: el centro del arco coincide con el centro de pantalla y las cartas laterales no quedan recortadas por max-w-7xl -->
+      <FadeIn delay={0.2} className="overflow-visible">
+        <div class="relative w-screen max-w-[100vw] left-1/2 -translate-x-1/2 overflow-visible">
+          <WheelCarousel cards={ACTIVATION_CARDS} {isLight} />
+        </div>
       </FadeIn>
 
       <FadeIn delay={0.35} className="mt-24 flex flex-wrap justify-center gap-6">
