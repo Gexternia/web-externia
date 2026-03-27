@@ -5,6 +5,7 @@ const config = {
   kit: {
     adapter: adapter({ pages: 'dist', assets: 'dist', strict: false }),
     prerender: {
+      origin: 'https://web-externia.onrender.com',
       handleHttpError: ({ path, referrer, message }) => {
         if (path.includes('/favicon')) return;
         throw new Error(message);

@@ -220,8 +220,11 @@
     </div>
   {/key}
 
-  <!-- Wheel -->
-  <div class="relative w-full overflow-x-clip overflow-y-visible touch-none max-w-[100vw]" style="height: {CARD_H + (viewportW < 640 ? 120 : viewportW < 1024 ? 180 : 220)}px">
+  <!-- Wheel: en móvil clip para evitar scroll; en md+ visible para que las cartas laterales lleguen al borde del viewport -->
+  <div
+    class="relative w-full touch-none max-w-[100vw] max-md:overflow-x-clip md:overflow-x-visible overflow-y-visible"
+    style="height: {CARD_H + (viewportW < 640 ? 120 : viewportW < 1024 ? 180 : 220)}px"
+  >
     <div
       class="absolute inset-0 cursor-grab active:cursor-grabbing max-w-full z-[60]"
       onpointerdown={onDown}
