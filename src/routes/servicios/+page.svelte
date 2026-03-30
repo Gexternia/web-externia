@@ -128,7 +128,7 @@
   </section>
 
   <!-- Activaciones -->
-  <section id="activaciones" class="section-divider relative py-28 px-4 overflow-x-visible overflow-y-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
+  <section id="activaciones" class="section-divider relative py-28 px-4 overflow-x-hidden overflow-y-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-20">
         <SectionLabel text="01 · Activaciones de IA Experiencial" {isLight} />
