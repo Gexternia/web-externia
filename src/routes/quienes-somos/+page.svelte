@@ -384,7 +384,7 @@
 
       <!-- Carrusel de logos: Hemos trabajado con todos estos clientes -->
       <FadeIn delay={0.4} className="mt-16">
-        <p class="text-center text-lg sm:text-xl font-semibold tracking-wide uppercase mb-6 sm:mb-8 text-black">
+        <p class="text-center text-lg sm:text-xl font-semibold tracking-wide uppercase mb-6 sm:mb-8 {isLight ? 'text-gray-900' : 'text-white'}">
           Hemos trabajado con todos estos clientes
         </p>
         <div

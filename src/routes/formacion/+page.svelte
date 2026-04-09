@@ -352,15 +352,15 @@
         </h2>
       </FadeIn>
 
-      <div class="grid sm:grid-cols-2 gap-5">
+      <div class="grid sm:grid-cols-2 gap-5 items-stretch">
         {#each publicos as item, i}
-          <MagneticRepel strength={12} radius={150}>
-            <FadeIn delay={i * 0.08}>
+          <MagneticRepel strength={12} radius={150} className="h-full min-h-0">
+            <FadeIn delay={i * 0.08} className="h-full">
               <div class="flex gap-4 p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 h-full {isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 hover:border-brand-magenta/20' : 'bg-[#0d1829]/80 border-white/5 hover:border-azul/30'}">
-                <span class="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-lg {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}" aria-hidden="true">👤</span>
-                <div class="min-w-0">
+                <span class="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-lg self-start {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}" aria-hidden="true">👤</span>
+                <div class="min-w-0 flex flex-col flex-1">
                   <p class="font-bold text-base mb-1 {isLight ? 'text-gray-900' : 'text-white'}">{item.label}</p>
-                  <p class="text-sm sm:text-base leading-relaxed {isLight ? 'text-gray-600' : 'text-gray-400'}">{item.desc}</p>
+                  <p class="text-sm sm:text-base leading-relaxed flex-1 {isLight ? 'text-gray-600' : 'text-gray-400'}">{item.desc}</p>
                 </div>
               </div>
             </FadeIn>
@@ -380,10 +380,10 @@
         </h2>
       </FadeIn>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
         {#each diferenciasItems as item, i}
-          <MagneticRepel strength={13} radius={160}>
-            <FadeIn delay={i * 0.08}>
+          <MagneticRepel strength={13} radius={160} className="h-full min-h-0">
+            <FadeIn delay={i * 0.08} className="h-full">
               <TiltCard className="rounded-2xl border overflow-hidden transition-all duration-300 h-full flex flex-col {isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 hover:border-brand-magenta/30 backdrop-blur-sm' : 'bg-[#0d1829]/80 border-white/5 hover:border-azul/40 backdrop-blur-sm'}">
                 <div class="w-full h-1 flex-shrink-0 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-gradient-to-r from-azul to-blue-400'}"></div>
                 <div class="p-6 flex-1 flex flex-col">

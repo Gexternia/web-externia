@@ -6,9 +6,10 @@
   interface Props {
     strength?: number;
     radius?: number;
+    className?: string;
   }
 
-  let { strength = 14, radius = 185 }: Props = $props();
+  let { strength = 14, radius = 185, className = '' }: Props = $props();
 
   let el: HTMLDivElement;
   const x = spring(0, { stiffness: 35, damping: 26 });
@@ -35,6 +36,6 @@
   });
 </script>
 
-<div bind:this={el} style="transform: translate({$x}px, {$y}px)">
+<div bind:this={el} class={className} style="transform: translate({$x}px, {$y}px)">
   <slot />
 </div>
