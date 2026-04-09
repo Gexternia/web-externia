@@ -7,7 +7,8 @@
   import FadeIn from '$lib/components/shared/FadeIn.svelte';
 
   /** Si true, siempre fondo blanco y estilo claro (p. ej. en página Contacto, como Servicios). */
-  let { forceLight = false } = $props();
+  /** Si true, la sección no aplica fondo propio (el padre ya lo gestiona). */
+  let { forceLight = false, noBg = false } = $props();
   let isLight = $state(false);
   let effectiveLight = $derived(forceLight || isLight);
 
@@ -99,7 +100,7 @@
 
 <section
   id="formulario-contacto"
-  class="relative py-24 sm:py-32 px-4 overflow-hidden transition-colors duration-500 {effectiveLight ? 'bg-gray-50/65' : 'bg-[#08111e]/72'} backdrop-blur-[2px]"
+  class="relative {noBg ? 'pt-6 pb-24 sm:pb-32' : 'py-24 sm:py-32'} px-4 overflow-hidden transition-colors duration-500 {noBg ? '' : (effectiveLight ? 'bg-white/65' : 'bg-[#060d1a]/72')} {noBg ? '' : 'backdrop-blur-[2px]'}"
 >
   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-3xl opacity-10 pointer-events-none transition-colors duration-500 {effectiveLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
 
