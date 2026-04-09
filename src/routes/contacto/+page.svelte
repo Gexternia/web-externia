@@ -42,12 +42,13 @@
   <NetworkParticlesCmp {isLight} />
 {/if}
 
-<div class="relative min-h-screen z-10">
-  <!-- Hero — mismo fondo que Servicios (partículas + secciones, claro/oscuro) -->
-  <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center transition-colors duration-500 {sectionBg(isLight)}">
-    <div class="absolute top-1/4 -left-48 w-[400px] h-[400px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
-    <div class="absolute bottom-1/4 -right-48 w-[400px] h-[400px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
+<div class="relative min-h-screen z-10 overflow-hidden transition-colors duration-500 {isLight ? 'bg-white/65' : 'bg-[#060d1a]/72'}">
+  <!-- Glows compartidos que se extienden por toda la página -->
+  <div class="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
+  <div class="absolute top-3/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-15 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
 
+  <!-- Hero -->
+  <section class="section-divider relative flex flex-col items-center justify-center pt-24 pb-10 px-4 text-center">
     <FadeIn class="relative z-10">
       <span class="inline-block px-5 py-2 rounded-full text-sm font-bold tracking-widest uppercase mb-4 transition-colors duration-500 {pillClass}">
         Contáctanos
@@ -61,6 +62,6 @@
     </FadeIn>
   </section>
 
-  <!-- Formulario — sigue el tema (claro/oscuro) como Servicios -->
-  <ContactForm />
+  <!-- Formulario sin fondo propio (lo hereda del contenedor) -->
+  <ContactForm noBg />
 </div>
