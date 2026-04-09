@@ -239,14 +239,14 @@
   <div bind:this={stageRef} class="relative overflow-hidden rounded-2xl {variant === 'large' ? 'h-96' : 'h-72'}">
     <!-- Back layer: revealed content -->
     <div
-      class="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-6 text-center bg-gradient-to-br {gradient}"
+      class="absolute inset-0 rounded-2xl flex flex-col items-center justify-start gap-4 p-6 text-center bg-gradient-to-br {gradient} overflow-y-auto"
     >
       <div
-        class="flex flex-col items-center gap-3 transition-all duration-[420ms]"
+        class="flex flex-col items-center gap-3 transition-all duration-[420ms] w-full"
         style="transform: scale({backScale}); opacity: {backOpacity}; transition-delay: {phase === 'open' ? '100ms' : '0ms'}"
       >
         <h3 class="{variant === 'large' ? 'text-3xl' : 'text-xl'} font-bold text-white">{title}</h3>
-        <p class="{variant === 'large' ? 'text-lg' : 'text-sm'} text-white/95 leading-relaxed">{desc}</p>
+        <p class="{variant === 'large' ? 'text-base' : 'text-sm'} text-white/95 leading-relaxed">{desc}</p>
         <span class="{variant === 'large' ? 'text-sm' : 'text-xs'} text-white/60 mt-1">Click para cerrar</span>
       </div>
     </div>
