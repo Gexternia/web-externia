@@ -26,7 +26,7 @@
     const el = clientsScrollRef;
     if (!el) return;
     const tick = () => {
-      if (!clientsAutoScroll || !el || clientsDragStart) return;
+      if (!clientsAutoScroll || !el) return;
       el.scrollLeft += 0.8;
       const half = el.scrollWidth / 2;
       if (el.scrollLeft >= half) el.scrollLeft -= half;
@@ -84,42 +84,10 @@
     { icon: '🤝', label: 'Respeto por las personas' },
   ];
 
-  const clientLogos = ['client-1', 'opc-catalunya', 'ifaes', 'el-economista', 'ecoener', 'caixabank', 'ing', 'stage-entertainment', 'idipaz', 'amazon', 'eventoplus', 'american-express', 'universidad-cordoba', 'camara-espanola', 'aegve', 'uppereat', 'cett', 'snapsight', 'somos-experiences', 'kpmg'];
+  const clientLogos = ['opc-catalunya', 'ifaes', 'el-economista', 'ecoener', 'caixabank', 'ing', 'stage-entertainment', 'idipaz', 'amazon', 'eventoplus', 'american-express', 'universidad-cordoba', 'camara-espanola', 'aegve', 'uppereat', 'cett', 'snapsight', 'somos-experiences', 'kpmg'];
 
   let clientsScrollRef: HTMLDivElement;
   let clientsAutoScroll = $state(true);
-  let clientsDragStart = $state<{ x: number; scrollLeft: number } | null>(null);
-
-  function clientsOnPointerDown(e: MouseEvent | TouchEvent) {
-    if (!clientsScrollRef) return;
-    clientsAutoScroll = false;
-    const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    clientsDragStart = { x, scrollLeft: clientsScrollRef.scrollLeft };
-    if ('touches' in e) {
-      window.addEventListener('touchmove', clientsOnPointerMove, { passive: false });
-      window.addEventListener('touchend', clientsOnPointerUp);
-    } else {
-      window.addEventListener('mousemove', clientsOnPointerMove);
-      window.addEventListener('mouseup', clientsOnPointerUp);
-    }
-  }
-
-  function clientsOnPointerMove(e: MouseEvent | TouchEvent) {
-    if (!clientsDragStart || !clientsScrollRef) return;
-    if ('touches' in e) e.preventDefault();
-    const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const delta = clientsDragStart.x - x;
-    clientsScrollRef.scrollLeft = clientsDragStart.scrollLeft + delta;
-  }
-
-  function clientsOnPointerUp() {
-    clientsDragStart = null;
-    clientsAutoScroll = true;
-    window.removeEventListener('mousemove', clientsOnPointerMove);
-    window.removeEventListener('mouseup', clientsOnPointerUp);
-    window.removeEventListener('touchmove', clientsOnPointerMove);
-    window.removeEventListener('touchend', clientsOnPointerUp);
-  }
 
   let ctaHovered = $state(false);
   let primaryRef: HTMLSpanElement;
@@ -391,15 +359,8 @@
           bind:this={clientsScrollRef}
           role="region"
           aria-label="Carrusel de clientes"
-          class="clients-carousel overflow-x-auto overflow-y-hidden w-full select-none touch-pan-x"
-          style="scrollbar-width: none; -ms-overflow-style: none;"
-          onmousedown={clientsOnPointerDown}
-          onmousemove={clientsOnPointerMove}
-          onmouseup={clientsOnPointerUp}
-          onmouseleave={clientsOnPointerUp}
-          ontouchstart={clientsOnPointerDown}
-          ontouchmove={clientsOnPointerMove}
-          ontouchend={clientsOnPointerUp}
+          class="clients-carousel overflow-x-auto overflow-y-hidden w-full"
+          style="scrollbar-width: none; -ms-overflow-style: none; pointer-events: none;"
         >
           <div class="clients-track flex gap-8 sm:gap-12 items-center py-4 w-max">
             {#each [1, 2] as _}

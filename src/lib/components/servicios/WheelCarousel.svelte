@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { scale, fade } from 'svelte/transition';
 
   export interface FlickCardData {
     emoji: string;
@@ -52,6 +53,14 @@
   let dragVel = 0;
   let isDragging = false;
   let rafId = 0;
+  let tapMoved = false;
+  let mobileExpanded = $state(false);
+
+  // Cerrar el expand si cambia la tarjeta activa
+  $effect(() => {
+    centeredIdx;
+    mobileExpanded = false;
+  });
 
   function wrappedPos(rawPos: number, num: number): number {
     return ((rawPos + num / 2) % num + num) % num - num / 2;
@@ -115,6 +124,7 @@
   function onDown(e: PointerEvent) {
     if (typeof cancelAnimationFrame !== 'undefined') cancelAnimationFrame(rafId);
     isDragging = true;
+    tapMoved = false;
     startOffsetRef = offsetRef;
     dragStartX = e.clientX;
     lastX = e.clientX;
@@ -125,6 +135,7 @@
 
   function onMove(e: PointerEvent) {
     if (!isDragging) return;
+    if (Math.abs(e.clientX - dragStartX) > 10) tapMoved = true;
     const now = performance.now();
     const dt = now - lastT;
     if (dt > 0) dragVel = (e.clientX - lastX) / dt;
@@ -136,6 +147,10 @@
   function onUp() {
     if (!isDragging) return;
     isDragging = false;
+    if (!tapMoved && viewportW < 640) {
+      mobileExpanded = !mobileExpanded;
+      return;
+    }
     const velCards = -(dragVel * (1000 / 60)) / PX_PER_CARD;
     Math.abs(velCards) > 0.08 ? applyMomentum(velCards, offsetRef) : snapTo(offsetRef);
   }
@@ -297,4 +312,57 @@
       </div>
     {/each}
   </div>
+
+  <!-- Overlay expandido (solo móvil) -->
+  {#if mobileExpanded && viewportW < 640}
+    <div
+      transition:fade={{ duration: 180 }}
+      class="fixed inset-0 z-[300] flex items-end justify-center p-4 pb-6"
+      style="background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);"
+      onclick={() => mobileExpanded = false}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        transition:scale={{ duration: 250, start: 0.92 }}
+        class="relative w-full max-w-sm rounded-[24px] overflow-hidden"
+        onclick={(e) => e.stopPropagation()}
+      >
+        {#if current.image}
+          <div class="h-52 overflow-hidden flex items-center justify-center bg-gray-900/30 rounded-t-[24px]">
+            <img src={current.image} alt={current.title} class="w-full h-full object-contain" />
+          </div>
+          <div class="flex flex-col gap-3 p-5 bg-gradient-to-br {isLight ? current.gradientLight : current.gradientDark} rounded-b-[24px]">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-white/25 text-white w-fit">
+              {current.category}
+            </span>
+            <h3 class="text-2xl font-black text-white">{current.title}</h3>
+            <p class="text-white/95 text-sm leading-relaxed">{current.desc}</p>
+            <div class="h-px bg-white/30"></div>
+            <p class="text-white/90 text-sm leading-relaxed">
+              <span class="font-bold text-white">Ideal para:</span> {current.ideal}
+            </p>
+          </div>
+        {:else}
+          <div class="flex flex-col gap-3 p-5 bg-gradient-to-br {isLight ? current.gradientLight : current.gradientDark} rounded-[24px]">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-white/25 text-white w-fit">
+              {current.category}
+            </span>
+            <div class="text-5xl">{current.emoji}</div>
+            <h3 class="text-2xl font-black text-white">{current.title}</h3>
+            <p class="text-white/95 text-sm leading-relaxed">{current.desc}</p>
+            <div class="h-px bg-white/30"></div>
+            <p class="text-white/90 text-sm leading-relaxed">
+              <span class="font-bold text-white">Ideal para:</span> {current.ideal}
+            </p>
+          </div>
+        {/if}
+        <button
+          onclick={() => mobileExpanded = false}
+          class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center text-sm font-bold"
+          aria-label="Cerrar"
+        >✕</button>
+      </div>
+    </div>
+  {/if}
 </div>
