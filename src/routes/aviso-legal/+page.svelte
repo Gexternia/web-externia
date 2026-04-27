@@ -23,15 +23,14 @@
 
     <h2 class="text-xl font-semibold mt-8 mb-4">Datos identificativos</h2>
     <p>
-      En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico, a continuación, se exponen los datos identificativos de la empresa/propietario del dominio <a href="https://web-externia.onrender.com/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://web-externia.onrender.com</a>:
+      En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico, a continuación, se exponen los datos identificativos de la empresa/propietario del dominio <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://externia.ai</a>:
     </p>
     <ul class="list-none space-y-1 my-6">
-      <li><strong>Nombre de dominio:</strong> web-externia.onrender.com</li>
-      <li><strong>Denominación social:</strong> Externia</li>
-      <li><strong>CIF/NIF:</strong> [INTRODUCIR NÚMERO DE IDENTIFICACIÓN]</li>
-      <li><strong>Domicilio social:</strong> [INTRODUCIR DIRECCIÓN FÍSICA]</li>
-      <li><strong>E-mail:</strong> [INTRODUCIR CORREO ELECTRÓNICO]</li>
-      <li><strong>Datos registrales:</strong> [INTRODUCIR DATOS DE REGISTRO, EJ: REGISTRO MERCANTIL DE...]</li>
+      <li><strong>Nombre de dominio:</strong> externia.ai</li>
+      <li><strong>Denominación social:</strong> Externia Event Solutions S.L.</li>
+      <li><strong>CIF/NIF:</strong> B8669238</li>
+      <li><strong>Domicilio social:</strong> C/ San Pedro De Cardeña 8, 9 derecha. 28033. Madrid.</li>
+      <li><strong>E-mail:</strong> g.prado@externia.ai</li>
     </ul>
 
     <h2 class="text-xl font-semibold mt-8 mb-4">Derechos de propiedad intelectual e industrial</h2>
@@ -42,10 +41,10 @@
       Todos los contenidos del sitio web se encuentran debidamente protegidos por la normativa de propiedad intelectual e industrial, así como inscritos en los registros públicos correspondientes. Independientemente de la finalidad para la que fueran destinados, la reproducción total o parcial, uso, explotación, distribución y comercialización, requiere en todo caso de la autorización escrita previa por parte del responsable. Cualquier uso no autorizado previamente se considera un incumplimiento grave de los derechos de propiedad intelectual o industrial del autor.
     </p>
     <p>
-      Los diseños, logotipos, texto y/o gráficos ajenos al responsable y que pudieran aparecer en el sitio web, pertenecen a sus respectivos propietarios, siendo ellos mismos responsables de cualquier posible controversia que pudiera suscitarse respecto a los mismos. El responsable autoriza expresamente a que terceros puedan redirigir directamente a los contenidos concretos del sitio web, y en todo caso redirigir al sitio web principal de <a href="https://web-externia.onrender.com/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://web-externia.onrender.com</a>.
+      Los diseños, logotipos, texto y/o gráficos ajenos al responsable y que pudieran aparecer en el sitio web, pertenecen a sus respectivos propietarios, siendo ellos mismos responsables de cualquier posible controversia que pudiera suscitarse respecto a los mismos. El responsable autoriza expresamente a que terceros puedan redirigir directamente a los contenidos concretos del sitio web, y en todo caso redirigir al sitio web principal de <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://externia.ai</a>.
     </p>
     <p>
-      Para realizar cualquier tipo de observación respecto a posibles incumplimientos de los derechos de propiedad intelectual o industrial, así como sobre cualquiera de los contenidos del sitio web, puede hacerlo a través del correo electrónico [INTRODUCIR EMAIL] o a la siguiente dirección postal: [INTRODUCIR DIRECCIÓN].
+      Para realizar cualquier tipo de observación respecto a posibles incumplimientos de los derechos de propiedad intelectual o industrial, así como sobre cualquiera de los contenidos del sitio web, puede hacerlo a través del correo electrónico g.prado@externia.ai o a la siguiente dirección postal: C/ San Pedro De Cardeña 8, 9 derecha. 28033. Madrid.
     </p>
 
     <h2 class="text-xl font-semibold mt-8 mb-4">Navegación, acceso y seguridad</h2>
@@ -81,7 +80,7 @@
 
     <h2 class="text-xl font-semibold mt-8 mb-4">Ley aplicable y jurisdicción</h2>
     <p>
-      Las presentes Condiciones se regirán e interpretarán de acuerdo con la legislación común española. Para cuantas cuestiones pudieran surgir sobre la interpretación, cumplimiento o rescisión de las Condiciones, las Partes se someten a la jurisdicción y competencia de los Juzgados y Tribunales de la ciudad de [CIUDAD, EJ: MADRID].
+      Las presentes Condiciones se regirán e interpretarán de acuerdo con la legislación común española. Para cuantas cuestiones pudieran surgir sobre la interpretación, cumplimiento o rescisión de las Condiciones, las Partes se someten a la jurisdicción y competencia de los Juzgados y Tribunales de la ciudad de Madrid.
     </p>
 
     <h2 class="text-xl font-semibold mt-8 mb-4">PROTECCIÓN DE DATOS DE CARÁCTER PERSONAL (INFORMACIÓN BÁSICA)</h2>
@@ -94,7 +93,7 @@
           </tr>
           <tr class={isLight ? 'border-b border-gray-200' : 'border-b border-white/20'}>
             <td class="py-3 px-4 font-medium">Responsable</td>
-            <td class="py-3 px-4">Externia</td>
+            <td class="py-3 px-4">Externia Event Solutions S.L.</td>
           </tr>
           <tr class={isLight ? 'border-b border-gray-200' : 'border-b border-white/20'}>
             <td class="py-3 px-4 font-medium">Finalidad</td>
@@ -121,7 +120,7 @@
     </div>
 
     <p class="mt-8 pt-6 border-t {isLight ? 'border-gray-200' : 'border-white/10'} text-sm opacity-80">
-      Fecha última actualización: 18/03/2026
+      Fecha última actualización: 27/04/2026
     </p>
   </div>
 </div>
