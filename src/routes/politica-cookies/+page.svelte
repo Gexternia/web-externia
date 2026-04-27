@@ -18,7 +18,7 @@
   <div class="max-w-3xl mx-auto space-y-4 text-base leading-relaxed">
     <h1 class="text-3xl font-bold mb-8">POLÍTICA DE COOKIES</h1>
     <p>
-      Externia informa acerca del uso de las cookies en su página web: <a href="https://web-externia.onrender.com/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://web-externia.onrender.com/</a>
+      Externia informa acerca del uso de las cookies en su página web: <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://externia.ai/</a>
     </p>
 
     <h2 class="text-xl font-semibold mt-8 mb-4">¿Qué son las cookies?</h2>
@@ -65,10 +65,10 @@
       A continuación, se identifican las cookies que están siendo utilizadas en este portal:
     </p>
     <p>
-      La web <a href="https://web-externia.onrender.com/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://web-externia.onrender.com</a> no utiliza cookies para recoger información de las personas o usuarias. Únicamente utiliza cookies propias, de sesión, con finalidad técnica (aquellas que permiten a la persona o usuario la navegación a través del sitio web y la utilización de las diferentes opciones y servicios que en ella existen).
+      La web <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://externia.ai</a> no utiliza cookies para recoger información de las personas o usuarias. Únicamente utiliza cookies propias, de sesión, con finalidad técnica (aquellas que permiten a la persona o usuario la navegación a través del sitio web y la utilización de las diferentes opciones y servicios que en ella existen).
     </p>
     <p>
-      <a href="https://web-externia.onrender.com/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://web-externia.onrender.com</a> muestra información sobre su Política de cookies en la parte inferior o superior de cualquier página del portal con cada inicio de sesión. Ante esta información es posible llevar a cabo las siguientes acciones:
+      <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://externia.ai</a> muestra información sobre su Política de cookies en la parte inferior o superior de cualquier página del portal con cada inicio de sesión. Ante esta información es posible llevar a cabo las siguientes acciones:
     </p>
     <ul class="list-disc pl-6 space-y-2 my-4">
       <li><strong>Aceptar cookies:</strong> No se volverá a visualizar este aviso al acceder a cualquier página del portal durante la presente sesión.</li>
@@ -76,7 +76,7 @@
     </ul>
 
     <p class="mt-8 pt-6 border-t {isLight ? 'border-gray-200' : 'border-white/10'} text-sm opacity-80">
-      Fecha última actualización: 18/03/2026
+      Fecha última actualización: 27/04/2026
     </p>
   </div>
 </div>

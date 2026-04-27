@@ -26,11 +26,11 @@
       Cumpliendo con las nuevas disposiciones del Reglamento (UE) 2016/679 del PE y del Consejo de 27 de abril de 2016 y de la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de derechos digitales, relativas a la protección de las personas físicas en lo que respecta al tratamiento de datos personales y a la libre circulación de estos datos y por el que se deroga la Directiva 95/46/CE, le informamos que el responsable del tratamiento de los datos es:
     </p>
     <ul class="list-none space-y-1 my-6">
-      <li><strong>Nombre/Empresa:</strong> Externia</li>
-      <li><strong>CIF:</strong> [INTRODUCIR CIF/NIF]</li>
-      <li><strong>Domicilio social:</strong> [INTRODUCIR DIRECCIÓN POSTAL]</li>
-      <li><strong>Correo electrónico:</strong> [INTRODUCIR EMAIL DE CONTACTO]</li>
-      <li><strong>Página web:</strong> <a href="https://web-externia.onrender.com/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://web-externia.onrender.com/</a></li>
+      <li><strong>Nombre/Empresa:</strong> Externia Event Solutions S.L.</li>
+      <li><strong>CIF:</strong> B8669238</li>
+      <li><strong>Domicilio social:</strong> C/ San Pedro De Cardeña 8, 9 derecha. 28033. Madrid.</li>
+      <li><strong>Correo electrónico:</strong> g.prado@externia.ai</li>
+      <li><strong>Página web:</strong> <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://externia.ai/</a></li>
     </ul>
 
     <p>
@@ -70,7 +70,7 @@
 
     <h2 class="text-xl font-semibold mt-8 mb-4">Uso imagen</h2>
     <p>
-      Todas las imágenes/videos que publicamos, son única y exclusivamente con la finalidad de informar de la actividad que llevamos a cabo, y porque hemos recabado el consentimiento del interesado (art. 6.1.a GDPR). Si alguna persona se considera afectada por la publicación de su imagen y no quiere que se difunda, solo será necesario que lo transmita por e-mail a [INTRODUCIR EMAIL DE CONTACTO] e inmediatamente procederemos a eliminarla.
+      Todas las imágenes/videos que publicamos, son única y exclusivamente con la finalidad de informar de la actividad que llevamos a cabo, y porque hemos recabado el consentimiento del interesado (art. 6.1.a GDPR). Si alguna persona se considera afectada por la publicación de su imagen y no quiere que se difunda, solo será necesario que lo transmita por e-mail a g.prado@externia.ai e inmediatamente procederemos a eliminarla.
     </p>
 
     <h2 class="text-xl font-semibold mt-8 mb-4">Finalidad del tratamiento de los datos personales</h2>
@@ -142,7 +142,7 @@
       <li>Derecho a la <strong>PORTABILIDAD</strong> de los datos.</li>
     </ul>
     <p>
-      Podrás ejercer tales derechos presentando copia de un documento identificativo y exponiendo brevemente su caso mediante carta dirigida a Externia en la dirección postal [INTRODUCIR DIRECCIÓN POSTAL], o a través del correo electrónico [INTRODUCIR EMAIL DE CONTACTO].
+      Podrás ejercer tales derechos presentando copia de un documento identificativo y exponiendo brevemente su caso mediante carta dirigida a Externia Event Solutions S.L. en la dirección postal C/ San Pedro De Cardeña 8, 9 derecha. 28033. Madrid., o a través del correo electrónico g.prado@externia.ai.
     </p>
     <p>
       Además, tiene derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (AEPD) en <a href="https://sedeagpd.gob.es/sede-electronica-web/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://sedeagpd.gob.es/sede-electronica-web/</a>.
@@ -157,7 +157,7 @@
     </p>
 
     <p class="mt-8 pt-6 border-t {isLight ? 'border-gray-200' : 'border-white/10'} text-sm opacity-80">
-      Fecha última actualización: 18/03/2026
+      Fecha última actualización: 27/04/2026
     </p>
   </div>
 </div>
