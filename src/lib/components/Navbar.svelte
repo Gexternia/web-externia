@@ -60,10 +60,17 @@
       <div class="flex-shrink-0 -ml-1 sm:ml-0">
         {#if !isHome}
           <a href="/" class="block min-w-[44px] min-h-[44px] flex items-center">
+            <!-- Lockup: visible en desktop (md+) -->
             <img
-              src={isDark ? '/logo-externia-clean.png' : '/logo-externia-light-fixed.png'}
+              src={isDark ? '/externia-lockup-white.svg' : '/externia-lockup.svg'}
               alt="Externia — Inicio"
-              class="h-7 sm:h-8 md:h-10 w-auto object-contain"
+              class="hidden md:block h-7 md:h-9 w-auto object-contain"
+            />
+            <!-- Icon: visible en móvil (< md) -->
+            <img
+              src={isDark ? '/externia-icon-white.svg' : '/externia-icon.svg'}
+              alt="Externia — Inicio"
+              class="block md:hidden h-8 w-auto object-contain"
             />
           </a>
         {/if}

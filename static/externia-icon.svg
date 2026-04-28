@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+  <defs>
+    <linearGradient id="externiaBrand" x1="0" y1="0" x2="40" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0"    stop-color="#FFC12D"/>
+      <stop offset="0.28" stop-color="#F7A361"/>
+      <stop offset="0.55" stop-color="#EE847B"/>
+      <stop offset="0.80" stop-color="#DE3B84"/>
+      <stop offset="1"    stop-color="#D6007D"/>
+    </linearGradient>
+  </defs>
+  <g fill="url(#externiaBrand)">
+    <rect x="4" y="7"  width="32" height="5"/>
+    <rect x="4" y="17" width="22" height="5"/>
+    <rect x="4" y="27" width="32" height="5"/>
+    <circle cx="33" cy="19.5" r="2.5"/>
+  </g>
+</svg>
