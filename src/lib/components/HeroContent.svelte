@@ -1,30 +1,16 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { spring } from 'svelte/motion';
 
   let isDark = $state(true);
-  let scrollY = $state(0);
-  const initialOpacity = spring(0, { stiffness: 0.4, damping: 0.6 });
-  const initialY = spring(40, { stiffness: 0.4, damping: 0.6 });
-  let opacity = $derived(Math.max(0, 1 - scrollY / 300));
-  let scale = $derived(Math.max(0.3, 1 - (scrollY / 300) * 0.7));
-  let y = $derived(Math.max(-150, -(scrollY / 300) * 150));
 
   onMount(() => {
-    initialOpacity.set(1);
-    initialY.set(0);
     isDark = !document.documentElement.classList.contains('light');
     const themeHandler = () => {
       isDark = !document.documentElement.classList.contains('light');
     };
     window.addEventListener('themechange', themeHandler);
-
-    const scrollHandler = () => { scrollY = window.scrollY; };
-    window.addEventListener('scroll', scrollHandler);
-
     return () => {
       window.removeEventListener('themechange', themeHandler);
-      window.removeEventListener('scroll', scrollHandler);
     };
   });
 </script>
@@ -35,11 +21,15 @@
     class="micro-active-press block pointer-events-auto cursor-pointer transition-transform duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 {isDark ? 'focus:ring-azul' : 'focus:ring-brand-magenta'}"
     aria-label="Ir a Quiénes Somos"
   >
-    <img
-      src={isDark ? '/logo-externia-clean.png' : '/logo-externia-light-fixed.png'}
-      alt="Externia"
-      class="w-[360px] sm:w-[500px] md:w-[650px] lg:w-[800px] mx-auto object-contain drop-shadow-lg transition-all duration-300"
-      style="opacity: {opacity * $initialOpacity}; transform: scale({scale}) translate(-0.5rem, {$initialY * Math.max(0, 1 - scrollY/300) + y * Math.min(1, scrollY/300)}px)"
-    />
+    {#key isDark}
+      <video
+        src={isDark ? '/externia-blanco-sin-fondo.webm' : '/externia-sin-fondo.webm'}
+        autoplay
+        loop
+        muted
+        playsinline
+        class="w-[960px] max-w-full mx-auto object-contain drop-shadow-lg"
+      />
+    {/key}
   </a>
 </div>

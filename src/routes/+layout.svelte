@@ -5,7 +5,7 @@
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
   import Footer from '$lib/components/Footer.svelte';
 
-  const ogImageUrl = $derived(`${$page.url.origin}/Logo.svg`);
+  const ogImageUrl = $derived(`${$page.url.origin}/externia-icon.svg`);
 </script>
 
 <svelte:head>
