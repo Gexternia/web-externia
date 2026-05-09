@@ -54,11 +54,6 @@
   });
 </script>
 
-<svelte:head>
-  <title>Blog de Inteligencia Artificial — Externia AI for Events</title>
-  <meta name="description" content="Novedades de IA para el sector eventos. Resumen semanal." />
-</svelte:head>
-
 {#if NetworkParticlesCmp}
   <NetworkParticlesCmp {isLight} />
 {/if}

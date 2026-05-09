@@ -1,24 +1,29 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { PUBLIC_NOTICIAS_API_URL } from '$env/static/public';
+  import type { PageData } from './$types';
   import FadeIn from '$lib/components/shared/FadeIn.svelte';
   import FlipCard from '$lib/components/quienes-somos/FlipCard.svelte';
   import NetworkParticlesBg from '$lib/components/quienes-somos/NetworkParticlesBg.svelte';
+  import {
+    buildArticleBreadcrumbItems,
+    buildArticleSchema,
+    buildBreadcrumbSchema,
+    toJsonLdString
+  } from '$lib/seo/json-ld';
   import type { NoticiaItem } from '$lib/types/noticias';
+
+  let { data }: { data: PageData } = $props();
 
   let isLight = $state(false);
   let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
-  let noticia = $state<NoticiaItem | null>(null);
-  let error = $state(false);
-  let loading = $state(true);
   let ctaHovered = $state(false);
   let primaryRef: HTMLSpanElement;
   let cloneRef: HTMLSpanElement;
   const TR = 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
 
-  const id = $derived($page.params.id);
-  const idNum = $derived(parseInt(id, 10));
+  const noticia = $derived(data.noticia);
+  const error = $derived(data.error);
 
   function onBtnEnter() {
     ctaHovered = true;
@@ -71,38 +76,6 @@
     return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
   }
 
-  async function fetchNoticia() {
-    if (Number.isNaN(idNum) || idNum < 0) {
-      error = true;
-      loading = false;
-      noticia = null;
-      return;
-    }
-    loading = true;
-    error = false;
-    noticia = null;
-    try {
-      const res = await fetch(PUBLIC_NOTICIAS_API_URL, { signal: AbortSignal.timeout(10000) });
-      if (!res.ok) {
-        error = true;
-        return;
-      }
-      const json = await res.json();
-      const noticias: NoticiaItem[] = json?.noticias ?? [];
-      noticia = noticias[idNum] ?? null;
-      if (!noticia) error = true;
-    } catch {
-      error = true;
-    } finally {
-      loading = false;
-    }
-  }
-
-  $effect(() => {
-    id;
-    fetchNoticia();
-  });
-
   onMount(() => {
     isLight = document.documentElement.classList.contains('light');
     const handler = () => {
@@ -114,11 +87,57 @@
     });
     return () => window.removeEventListener('themechange', handler);
   });
+
+  const articleTitle = $derived(`${noticia?.titulo ?? 'Noticia'} — Blog IA | Externia`);
+  const articleDescription = $derived(
+    noticia?.resumen ?? 'Detalle de noticia del AI Insight Digest.'
+  );
+
+  const origin = $derived($page.url.origin);
+  const pathname = $derived($page.url.pathname);
+  const jsonLdImage = $derived(`${origin}/externia-icon.svg`);
+
+  const articleJsonLd = $derived(
+    noticia && !error
+      ? buildArticleSchema({
+          origin,
+          pathname,
+          headline: noticia.titulo?.trim() || 'Sin título',
+          description: noticia.resumen?.trim() || articleDescription,
+          imageUrl: jsonLdImage
+        })
+      : null
+  );
+
+  const articleBreadcrumbJsonLd = $derived(
+    noticia && !error
+      ? buildBreadcrumbSchema(
+          buildArticleBreadcrumbItems(origin, pathname, noticia.titulo?.trim() || 'Noticia')
+        )
+      : null
+  );
+
+  const articleJsonLdTag = $derived(
+    articleJsonLd && articleBreadcrumbJsonLd
+      ? '<script type="application/ld+json">' +
+          toJsonLdString(articleJsonLd) +
+          '<\/script><script type="application/ld+json">' +
+          toJsonLdString(articleBreadcrumbJsonLd) +
+          '<\/script>'
+      : ''
+  );
 </script>
 
 <svelte:head>
-  <title>{noticia?.titulo ?? 'Noticia'} — Blog IA | Externia</title>
-  <meta name="description" content={noticia?.resumen ?? 'Detalle de noticia del AI Insight Digest.'} />
+  <title>{articleTitle}</title>
+  <meta name="description" content={articleDescription} />
+  <meta property="og:title" content={articleTitle} />
+  <meta property="og:description" content={articleDescription} />
+  <meta name="twitter:title" content={articleTitle} />
+  <meta name="twitter:description" content={articleDescription} />
+  {#if articleJsonLdTag}
+    {@html articleJsonLdTag}
+  {/if}
 </svelte:head>
 
 {#if NetworkParticlesCmp}
@@ -126,13 +145,7 @@
 {/if}
 
 <div class="relative min-h-screen z-10 transition-colors duration-500">
-  {#if loading}
-    <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
-      <FadeIn delay={0.1}>
-        <p class="text-lg font-medium transition-colors duration-500 {isLight ? 'text-gray-600' : 'text-gray-300'}">Cargando…</p>
-      </FadeIn>
-    </section>
-  {:else if error || !noticia}
+  {#if error || !noticia}
     <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
       <FadeIn delay={0.1}>
         <h1 class="text-2xl font-bold transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">Noticia no encontrada</h1>

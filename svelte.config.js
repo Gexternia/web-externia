@@ -5,13 +5,13 @@ const config = {
   kit: {
     adapter: adapter({ pages: 'dist', assets: 'dist', strict: false }),
     prerender: {
-      origin: 'https://web-externia.onrender.com',
+      origin: 'https://externia.ai',
       handleHttpError: ({ path, referrer, message }) => {
         if (path.includes('/favicon')) return;
         throw new Error(message);
       },
       handleMissingId: 'ignore',
-      // /blog/[id] no se pre-renderiza (datos en cliente); evita fallo de build al no tener entries
+      // Rutas dinámicas no listadas en `entries()` se ignoran (p. ej. /blog/abc).
       handleUnseenRoutes: 'ignore'
     }
   }

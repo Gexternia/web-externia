@@ -123,11 +123,6 @@
   }
 </script>
 
-<svelte:head>
-  <title>Quiénes Somos — Externia AI for Events</title>
-  <meta name="description" content="Externia es la primera consultora de inteligencia artificial especializada al 100% en el sector MICE." />
-</svelte:head>
-
 {#if NetworkParticlesBg}
   <NetworkParticlesBg {isLight} />
 {/if}

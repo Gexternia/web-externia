@@ -3,9 +3,6 @@ dist/
 build/
 .svelte-kit/
 
-# generated types
-.astro/
-
 # dependencies
 node_modules/
 

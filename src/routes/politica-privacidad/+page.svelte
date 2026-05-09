@@ -10,10 +10,6 @@
   });
 </script>
 
-<svelte:head>
-  <title>Política de privacidad — Externia</title>
-</svelte:head>
-
 <div class="min-h-screen py-24 px-4 {isLight ? 'bg-gray-50 text-gray-900' : 'bg-[#0a0a14] text-gray-100'}">
   <div class="max-w-3xl mx-auto space-y-4 text-base leading-relaxed">
     <h1 class="text-3xl font-bold mb-8">POLÍTICA DE PRIVACIDAD Y PROTECCIÓN DE DATOS</h1>

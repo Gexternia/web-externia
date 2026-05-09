@@ -76,11 +76,6 @@
   }
 </script>
 
-<svelte:head>
-  <title>Consultoría — Externia AI for Events</title>
-  <meta name="description" content="Consultoría estratégica de IA para eventos. Integración real, no genérica, diseñada para el sector MICE." />
-</svelte:head>
-
 {#if NetworkParticlesCmp}
   <NetworkParticlesCmp {isLight} />
 {/if}

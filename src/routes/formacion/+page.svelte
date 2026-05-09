@@ -143,11 +143,6 @@
 
 </script>
 
-<svelte:head>
-  <title>Formación — Externia AI for Events</title>
-  <meta name="description" content="Formaciones en IA para eventos. Programas y talleres." />
-</svelte:head>
-
 {#if NetworkParticlesCmp}
   <NetworkParticlesCmp {isLight} />
 {/if}

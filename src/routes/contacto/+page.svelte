@@ -33,11 +33,6 @@
   });
 </script>
 
-<svelte:head>
-  <title>Contáctanos — Externia AI for Events</title>
-  <meta name="description" content="Contacta con Externia. Cuéntanos tu proyecto o evento." />
-</svelte:head>
-
 {#if NetworkParticlesCmp}
   <NetworkParticlesCmp {isLight} />
 {/if}

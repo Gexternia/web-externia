@@ -89,11 +89,6 @@
   }
 </script>
 
-<svelte:head>
-  <title>Activaciones — Externia AI for Events</title>
-  <meta name="description" content="Activaciones de IA para eventos. Experiencias interactivas, consultoría y formación." />
-</svelte:head>
-
 {#if NetworkParticlesCmp}
   <NetworkParticlesCmp {isLight} />
 {/if}
