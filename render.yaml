@@ -1,0 +1,17 @@
+# Render Blueprint — SvelteKit con adapter-node (servidor Node, no sitio estático).
+# Si el servicio ya existe como "Static Site", créalo de nuevo como "Web Service"
+# o cambia el tipo en el panel; los sitios estáticos exigen `dist`, que ya no se genera.
+services:
+  - type: web
+    name: web-externia
+    runtime: node
+    plan: free
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ORIGIN
+        value: https://externia.ai
+      # Configura en el panel de Render (no subas secretos al repo):
+      # RESEND_API_KEY, CONTACT_TO_EMAIL, NOTICIAS_API_URL
