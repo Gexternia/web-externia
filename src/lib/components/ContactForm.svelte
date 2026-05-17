@@ -1,6 +1,7 @@
 <script lang="ts">
   /**
-   * Contáctanos — Envía a Formspree (PUBLIC_CONTACT_FORM_URL) o a /api/contact si no está definida.
+   * Contáctanos — usa el backend propio en `/api/contact` y permite override
+   * con PUBLIC_CONTACT_FORM_URL si alguna vez se quiere externalizar.
    */
   import { onMount } from 'svelte';
   import { env } from '$env/dynamic/public';
@@ -24,8 +25,8 @@
   let errorMessage = $state<string | null>(null);
 
   let ctaHovered = $state(false);
-  let primaryRef: HTMLSpanElement;
-  let cloneRef: HTMLSpanElement;
+  let primaryRef = $state<HTMLSpanElement | undefined>();
+  let cloneRef = $state<HTMLSpanElement | undefined>();
   const TR = 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
 
   function onBtnEnter() {
@@ -71,7 +72,7 @@
     if (sending || submitted) return;
     sending = true;
     errorMessage = null;
-    const url = env.PUBLIC_CONTACT_FORM_URL || 'https://formspree.io/f/mgonqpad';
+    const url = env.PUBLIC_CONTACT_FORM_URL || '/api/contact';
     try {
       const res = await fetch(url, {
         method: 'POST',
@@ -105,7 +106,7 @@
   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-3xl opacity-10 pointer-events-none transition-colors duration-500 {effectiveLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
 
   <div class="max-w-2xl mx-auto relative z-10">
-    <FadeIn class="text-center mb-12">
+    <FadeIn className="text-center mb-12">
       <span
         class="inline-block px-5 py-2 rounded-full text-sm font-bold tracking-widest uppercase mb-4 transition-colors duration-500 {effectiveLight ? 'bg-brand-magenta/15 text-[#a82a5f]' : 'bg-white/15 text-blue-200'}"
       >

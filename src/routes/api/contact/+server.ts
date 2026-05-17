@@ -1,17 +1,20 @@
 /**
  * API de contacto — envía el formulario por email con Resend.
  * Requiere: RESEND_API_KEY y CONTACT_TO_EMAIL en .env
- * Nota: con adapter-static este endpoint no existe en producción; usa
- * PUBLIC_CONTACT_FORM_URL (Formspree, etc.) o despliega con adapter-node.
  */
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { env } from '$env/dynamic/private';
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const CONTACT_TO = process.env.CONTACT_TO_EMAIL || 'g.prado@externia.ai';
+function isValidEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
 
 export const POST: RequestHandler = async ({ request }) => {
-  if (!RESEND_API_KEY) {
+  const resendApiKey = env.RESEND_API_KEY;
+  const contactTo = env.CONTACT_TO_EMAIL || 'g.prado@externia.ai';
+
+  if (!resendApiKey) {
     return json(
       { ok: false, error: 'Servidor sin configurar (RESEND_API_KEY)' },
       { status: 503 }
@@ -35,16 +38,20 @@ export const POST: RequestHandler = async ({ request }) => {
     return json({ ok: false, error: 'Faltan email o mensaje' }, { status: 400 });
   }
 
+  if (!isValidEmail(from)) {
+    return json({ ok: false, error: 'El email no es válido' }, { status: 400 });
+  }
+
   try {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${RESEND_API_KEY}`
+        Authorization: `Bearer ${resendApiKey}`
       },
       body: JSON.stringify({
         from: 'Contacto Web <onboarding@resend.dev>',
-        to: [CONTACT_TO],
+        to: [contactTo],
         reply_to: from,
         subject: `Contacto Externia${name ? ` — ${name}` : ''}`,
         html: `

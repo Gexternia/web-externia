@@ -1,16 +1,16 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { PUBLIC_NOTICIAS_API_URL } from '$env/static/public';
+  import type { PageData } from './$types';
   import FadeIn from '$lib/components/shared/FadeIn.svelte';
   import SectionLabel from '$lib/components/shared/SectionLabel.svelte';
   import NetworkParticlesBg from '$lib/components/quienes-somos/NetworkParticlesBg.svelte';
-  import type { DigestData } from '$lib/types/noticias';
+
+  let { data }: { data: PageData } = $props();
 
   let isLight = $state(false);
   let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
-  let data = $state<{ semana: string; noticias: DigestData['noticias'] } | null>(null);
-  let error = $state(false);
-  let loading = $state(true);
+  const digest = $derived(data.digest);
+  const error = $derived(data.error);
 
   const lightBg = 'bg-white/65 backdrop-blur-[2px]';
   const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
@@ -18,26 +18,6 @@
   const darkAltBg = 'bg-[#08111e]/72 backdrop-blur-[2px]';
   function sectionBg(light: boolean, alt = false) {
     return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
-  }
-
-  async function fetchNoticias() {
-    loading = true;
-    error = false;
-    data = null;
-    try {
-      const res = await fetch(PUBLIC_NOTICIAS_API_URL, { signal: AbortSignal.timeout(10000) });
-      if (!res.ok) throw new Error('API error');
-      const json = (await res.json()) as DigestData;
-      if (!json?.noticias || !Array.isArray(json.noticias)) {
-        error = true;
-        return;
-      }
-      data = { semana: json.semana ?? '', noticias: json.noticias };
-    } catch {
-      error = true;
-    } finally {
-      loading = false;
-    }
   }
 
   onMount(() => {
@@ -49,7 +29,6 @@
     import('$lib/components/quienes-somos/NetworkParticlesBg.svelte').then((mod) => {
       NetworkParticlesCmp = mod.default;
     });
-    fetchNoticias();
     return () => window.removeEventListener('themechange', handler);
   });
 </script>
@@ -76,10 +55,10 @@
         Novedades de IA para el sector eventos
       </p>
     </FadeIn>
-    {#if data?.semana && !error && !loading}
+    {#if digest?.semana && !error}
       <FadeIn delay={0.4}>
         <p class="relative z-10 mt-2 text-sm font-medium transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
-          Semana del reporte: {data.semana}
+          Semana del reporte: {digest.semana}
         </p>
       </FadeIn>
     {/if}
@@ -87,13 +66,7 @@
 
   <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="max-w-6xl mx-auto relative z-10">
-      {#if loading}
-        <FadeIn delay={0.1}>
-          <div class="text-center py-16 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light border-gray-100 bg-white/90 text-gray-600 backdrop-blur-sm' : 'border-white/10 bg-[#0d1829]/80 text-gray-300 backdrop-blur-sm'}">
-            <p class="text-lg font-medium">Cargando noticias…</p>
-          </div>
-        </FadeIn>
-      {:else if error || !data?.noticias?.length}
+      {#if error || !digest?.noticias?.length}
         <FadeIn delay={0.1}>
           <div class="text-center py-16 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light shadow-card-light-hover border-gray-100 bg-white/90 text-gray-600 backdrop-blur-sm' : 'border-white/10 bg-[#0d1829]/80 text-gray-300 backdrop-blur-sm'}">
             <p class="text-lg font-medium">Próxima edición en camino</p>
@@ -102,7 +75,7 @@
         </FadeIn>
       {:else}
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {#each data.noticias as noticia, i}
+          {#each digest.noticias as noticia, i}
             <FadeIn delay={0.05 * i} className="h-full">
               <a
                 href="/blog/{i}"

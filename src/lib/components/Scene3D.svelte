@@ -8,34 +8,41 @@
 
   onMount(() => {
     isLight = document.documentElement.classList.contains('light');
-    const handler = () => {
-      isLight = document.documentElement.classList.contains('light');
-      if (isLight) {
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-          instanced.setColorAt(i, new THREE.Color(LIGHT_COLORS[Math.floor(Math.random() * 5)]));
-        }
-        const count = geo.attributes.position.count;
-        const colors = new Float32Array(count * 3);
-        for (let i = 0; i < count; i++) {
-          const c = LIGHT_COLORS[Math.floor(Math.random() * 5)];
-          colors[i * 3] = ((c >> 16) & 255) / 255;
-          colors[i * 3 + 1] = ((c >> 8) & 255) / 255;
-          colors[i * 3 + 2] = (c & 255) / 255;
-        }
-        geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        mesh.material = matLight;
-      } else {
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-          instanced.setColorAt(i, new THREE.Color(0x3b82f6));
-        }
-        geo.deleteAttribute('color');
-        mesh.material = matDark;
-      }
-      if (instanced.instanceColor) instanced.instanceColor.needsUpdate = true;
-    };
-    window.addEventListener('themechange', handler);
+    let cancelled = false;
+    let disposeScene: (() => void) | undefined;
+    let idleId = 0;
 
-    const scene = new THREE.Scene();
+    const init = () => {
+      if (cancelled) return;
+
+      const handler = () => {
+        isLight = document.documentElement.classList.contains('light');
+        if (isLight) {
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            instanced.setColorAt(i, new THREE.Color(LIGHT_COLORS[Math.floor(Math.random() * 5)]));
+          }
+          const count = geo.attributes.position.count;
+          const colors = new Float32Array(count * 3);
+          for (let i = 0; i < count; i++) {
+            const c = LIGHT_COLORS[Math.floor(Math.random() * 5)];
+            colors[i * 3] = ((c >> 16) & 255) / 255;
+            colors[i * 3 + 1] = ((c >> 8) & 255) / 255;
+            colors[i * 3 + 2] = (c & 255) / 255;
+          }
+          geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          mesh.material = matLight;
+        } else {
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            instanced.setColorAt(i, new THREE.Color(0x3b82f6));
+          }
+          geo.deleteAttribute('color');
+          mesh.material = matDark;
+        }
+        if (instanced.instanceColor) instanced.instanceColor.needsUpdate = true;
+      };
+      window.addEventListener('themechange', handler);
+
+      const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
     camera.position.z = 5;
 
@@ -65,7 +72,10 @@
       emissive: 0x1d4ed8,
       emissiveIntensity: 0.35
     });
-    const mesh = new THREE.Mesh(geo, matDark);
+    const mesh = new THREE.Mesh<
+      THREE.OctahedronGeometry,
+      THREE.MeshBasicMaterial | THREE.MeshStandardMaterial
+    >(geo, matDark);
     mesh.scale.set(0.9, 1.2, 0.9);
     scene.add(mesh);
 
@@ -143,14 +153,34 @@
       controls.update();
       renderer.render(scene, camera);
     };
-    animate();
+      animate();
+
+      disposeScene = () => {
+        window.removeEventListener('themechange', handler);
+        window.removeEventListener('resize', resize);
+        cancelAnimationFrame(raf);
+        renderer.dispose();
+        container.removeChild(renderer.domElement);
+      };
+    };
+
+    const scheduleInit = () => {
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+        if ('requestIdleCallback' in window) {
+          idleId = requestIdleCallback(init, { timeout: 500 });
+        } else {
+          init();
+        }
+      });
+    };
+
+    scheduleInit();
 
     return () => {
-      window.removeEventListener('themechange', handler);
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(raf);
-      renderer.dispose();
-      container.removeChild(renderer.domElement);
+      cancelled = true;
+      if (idleId) cancelIdleCallback(idleId);
+      disposeScene?.();
     };
   });
 </script>

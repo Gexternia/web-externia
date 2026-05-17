@@ -18,8 +18,8 @@
   let isLight = $state(false);
   let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
   let ctaHovered = $state(false);
-  let primaryRef: HTMLSpanElement;
-  let cloneRef: HTMLSpanElement;
+  let primaryRef = $state<HTMLSpanElement | undefined>();
+  let cloneRef = $state<HTMLSpanElement | undefined>();
   const TR = 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
 
   const noticia = $derived(data.noticia);

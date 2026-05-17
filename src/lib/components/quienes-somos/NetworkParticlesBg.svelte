@@ -8,7 +8,7 @@
   let ParticlesCmp = $state<typeof import('@tsparticles/svelte').default | null>(null);
   let ready = $state(false);
 
-  onMount(async () => {
+  onMount(() => {
     let cancelled = false;
     const load = async () => {
       const [mod] = await Promise.all([
@@ -19,7 +19,7 @@
       ParticlesCmp = mod.default;
       ready = true;
     };
-    const id = window.setTimeout(() => load(), 120);
+    const id = window.setTimeout(() => void load(), 120);
     return () => {
       cancelled = true;
       clearTimeout(id);
@@ -56,7 +56,7 @@
           direction: 'none' as const,
           outModes: { default: 'bounce' as const },
         },
-        number: { density: { enable: true, area: 1100 }, value: 32 },
+        number: { density: { enable: true }, value: 32 },
         opacity: { value: { min: 0.9, max: 1.0 } },
         size: { value: { min: 4, max: 6 } },
         shape: { type: 'circle' },

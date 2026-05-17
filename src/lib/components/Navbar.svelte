@@ -3,7 +3,7 @@
   import { spring } from 'svelte/motion';
   import { page } from '$app/stores';
 
-  const isHome = $derived(($page.url.pathname === '/' || $page.url.pathname === '') ?? false);
+  const isHome = $derived($page.url.pathname === '/');
 
   const navLinks = [
     { label: 'Quiénes Somos', href: '/quienes-somos' },

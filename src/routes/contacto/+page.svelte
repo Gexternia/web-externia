@@ -44,7 +44,7 @@
 
   <!-- Hero -->
   <section class="section-divider relative flex flex-col items-center justify-center pt-24 pb-10 px-4 text-center">
-    <FadeIn class="relative z-10">
+    <FadeIn className="relative z-10">
       <span class="inline-block px-5 py-2 rounded-full text-sm font-bold tracking-widest uppercase mb-4 transition-colors duration-500 {pillClass}">
         Contáctanos
       </span>
