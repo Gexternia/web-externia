@@ -1,0 +1,224 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import type { PageData } from './$types';
+  import FadeIn from '$lib/components/shared/FadeIn.svelte';
+  import FlipCard from '$lib/components/quienes-somos/FlipCard.svelte';
+  import NetworkParticlesBg from '$lib/components/quienes-somos/NetworkParticlesBg.svelte';
+  import {
+    buildArticleSchema,
+    buildBreadcrumbSchema,
+    buildTravelManagerArticleBreadcrumbItems,
+    toJsonLdString
+  } from '$lib/seo/json-ld';
+  import type { NoticiaItem } from '$lib/types/noticias';
+
+  let { data }: { data: PageData } = $props();
+
+  let isLight = $state(false);
+  let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
+  let ctaHovered = $state(false);
+  let primaryRef = $state<HTMLSpanElement | undefined>();
+  let cloneRef = $state<HTMLSpanElement | undefined>();
+  const TR = 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
+
+  const noticia = $derived(data.noticia);
+  const error = $derived(data.error);
+
+  function onBtnEnter() {
+    ctaHovered = true;
+    if (!primaryRef || !cloneRef) return;
+    primaryRef.style.transition = 'none';
+    primaryRef.style.transform = 'translateX(0%)';
+    cloneRef.style.transition = 'none';
+    cloneRef.style.transform = 'translateX(-110%)';
+    primaryRef.getBoundingClientRect();
+    primaryRef.style.transition = TR;
+    primaryRef.style.transform = 'translateX(110%)';
+    cloneRef.style.transition = TR;
+    cloneRef.style.transform = 'translateX(0%)';
+  }
+
+  function onBtnLeave() {
+    ctaHovered = false;
+    if (!primaryRef || !cloneRef) return;
+    primaryRef.style.transition = 'none';
+    primaryRef.style.transform = 'translateX(-110%)';
+    cloneRef.style.transition = 'none';
+    cloneRef.style.transform = 'translateX(0%)';
+    cloneRef.getBoundingClientRect();
+    cloneRef.style.transition = TR;
+    cloneRef.style.transform = 'translateX(110%)';
+    primaryRef.style.transition = TR;
+    primaryRef.style.transform = 'translateX(0%)';
+  }
+
+  function hasVisibleText(value?: string): boolean {
+    if (!value) return false;
+    const cleaned = value.trim().replace(/\s+/g, ' ');
+    return cleaned !== '' && cleaned !== '-' && cleaned !== '—' && cleaned !== '–';
+  }
+
+  function buildComoUsarDesc(n: NoticiaItem): string {
+    const parts: string[] = [];
+    if (hasVisibleText(n.relevancia_eventos)) parts.push(`Relevancia para eventos: ${n.relevancia_eventos}`);
+    if (hasVisibleText(n.formato_actividad)) parts.push(`Formato de actividad: ${n.formato_actividad}`);
+    if (hasVisibleText(n.tipo_speaker)) parts.push(`Tipo de speaker: ${n.tipo_speaker}`);
+    if (hasVisibleText(n.audiencia)) parts.push(`Audiencia: ${n.audiencia}`);
+    return parts.join('. ') || 'Aplica esta novedad adaptándola a la estrategia de viajes y eventos de tu organización.';
+  }
+
+  const lightBg = 'bg-white/65 backdrop-blur-[2px]';
+  const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
+  const darkBg = 'bg-[#060d1a]/72 backdrop-blur-[2px]';
+  const darkAltBg = 'bg-[#08111e]/72 backdrop-blur-[2px]';
+  function sectionBg(light: boolean, alt = false) {
+    return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
+  }
+
+  onMount(() => {
+    isLight = document.documentElement.classList.contains('light');
+    const handler = () => {
+      isLight = document.documentElement.classList.contains('light');
+    };
+    window.addEventListener('themechange', handler);
+    import('$lib/components/quienes-somos/NetworkParticlesBg.svelte').then((mod) => {
+      NetworkParticlesCmp = mod.default;
+    });
+    return () => window.removeEventListener('themechange', handler);
+  });
+
+  const articleTitle = $derived(`${noticia?.titulo ?? 'Noticia'} — Blog Travel Manager | Externia`);
+  const articleDescription = $derived(
+    noticia?.resumen ?? 'Detalle de noticia del blog Travel Manager.'
+  );
+
+  const origin = $derived($page.url.origin);
+  const pathname = $derived($page.url.pathname);
+  const jsonLdImage = $derived(`${origin}/externia-icon.svg`);
+
+  const articleJsonLd = $derived(
+    noticia && !error
+      ? buildArticleSchema({
+          origin,
+          pathname,
+          headline: noticia.titulo?.trim() || 'Sin título',
+          description: noticia.resumen?.trim() || articleDescription,
+          imageUrl: jsonLdImage
+        })
+      : null
+  );
+
+  const articleBreadcrumbJsonLd = $derived(
+    noticia && !error
+      ? buildBreadcrumbSchema(
+          buildTravelManagerArticleBreadcrumbItems(
+            origin,
+            pathname,
+            noticia.titulo?.trim() || 'Noticia'
+          )
+        )
+      : null
+  );
+
+  const articleJsonLdTag = $derived(
+    articleJsonLd && articleBreadcrumbJsonLd
+      ? '<script type="application/ld+json">' +
+          toJsonLdString(articleJsonLd) +
+          '<\/script><script type="application/ld+json">' +
+          toJsonLdString(articleBreadcrumbJsonLd) +
+          '<\/script>'
+      : ''
+  );
+</script>
+
+<svelte:head>
+  <title>{articleTitle}</title>
+  <meta name="description" content={articleDescription} />
+  <meta property="og:title" content={articleTitle} />
+  <meta property="og:description" content={articleDescription} />
+  <meta name="twitter:title" content={articleTitle} />
+  <meta name="twitter:description" content={articleDescription} />
+  {#if articleJsonLdTag}
+    {@html articleJsonLdTag}
+  {/if}
+</svelte:head>
+
+{#if NetworkParticlesCmp}
+  <NetworkParticlesCmp {isLight} />
+{/if}
+
+<div class="relative min-h-screen z-10 transition-colors duration-500">
+  {#if error || !noticia}
+    <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+      <FadeIn delay={0.1}>
+        <h1 class="text-2xl font-bold transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">Noticia no encontrada</h1>
+        <a
+          href="/blog/travel-manager"
+          class="mt-6 inline-block px-6 py-3 rounded-xl font-semibold transition-all duration-300 {isLight
+            ? 'bg-brand-magenta text-white hover:bg-brand-fuchsia'
+            : 'bg-azul text-white hover:bg-blue-600'}"
+        >
+          Volver al Blog Travel Manager
+        </a>
+      </FadeIn>
+    </section>
+  {:else}
+    {@const n = noticia}
+    <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+      <div class="max-w-3xl mx-auto relative z-10">
+        <FadeIn delay={0.1}>
+          <a
+            href="/blog/travel-manager"
+            class="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-azul hover:text-blue-300'}"
+          >
+            ← Volver al Blog Travel Manager
+          </a>
+        </FadeIn>
+
+        <FadeIn delay={0.15}>
+          <h1 class="mt-6 text-3xl sm:text-4xl font-black leading-tight tracking-tight transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
+            {n.titulo || 'Sin título'}
+          </h1>
+        </FadeIn>
+
+        <FadeIn delay={0.2}>
+          <p class="mt-6 text-lg leading-relaxed transition-colors duration-500 {isLight ? 'text-gray-600' : 'text-gray-300'}">
+            {n.resumen || 'Sin resumen.'}
+          </p>
+        </FadeIn>
+
+        <FadeIn delay={0.25} className="mt-10">
+          <FlipCard
+            icon="💡"
+            title="¿Cómo usar esta novedad en tu estrategia Travel Manager?"
+            desc={buildComoUsarDesc(n)}
+            gradient="from-[#EE847B] to-[#DE3B84]"
+            variant="large"
+            {isLight}
+          />
+        </FadeIn>
+
+        {#if n.url?.trim()}
+          <FadeIn delay={0.3}>
+            <a
+              href={n.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-cta-animated micro-active-press relative inline-block overflow-hidden mt-8 px-10 py-4 rounded-full text-base font-bold text-white transition-all duration-300 hover:scale-105 {isLight
+                ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia'
+                : 'bg-azul'}"
+              style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
+              onmouseenter={onBtnEnter}
+              onmouseleave={onBtnLeave}
+            >
+              <span class="invisible whitespace-nowrap">Leer noticia original →</span>
+              <span bind:this={primaryRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(0%)">Leer noticia original →</span>
+              <span bind:this={cloneRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(-110%)">Leer noticia original →</span>
+            </a>
+          </FadeIn>
+        {/if}
+      </div>
+    </section>
+  {/if}
+</div>

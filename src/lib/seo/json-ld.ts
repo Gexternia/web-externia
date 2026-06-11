@@ -8,6 +8,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   consultoria: 'Consultoría',
   formacion: 'Formación',
   blog: 'Blog',
+  'travel-manager': 'Travel Manager',
   contacto: 'Contáctanos',
   'aviso-legal': 'Aviso legal',
   'politica-cookies': 'Política de cookies',
@@ -119,6 +120,20 @@ export function buildArticleBreadcrumbItems(
   return [
     { name: 'Inicio', item: `${base}/` },
     { name: 'Blog', item: `${base}/blog` },
+    { name: articleTitle, item: `${base}${articlePath}` }
+  ];
+}
+
+export function buildTravelManagerArticleBreadcrumbItems(
+  origin: string,
+  articlePath: string,
+  articleTitle: string
+): BreadcrumbItem[] {
+  const base = origin.replace(/\/$/, '');
+  return [
+    { name: 'Inicio', item: `${base}/` },
+    { name: 'Blog', item: `${base}/blog` },
+    { name: 'Travel Manager', item: `${base}/blog/travel-manager` },
     { name: articleTitle, item: `${base}${articlePath}` }
   ];
 }

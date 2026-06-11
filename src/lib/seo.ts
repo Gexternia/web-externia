@@ -29,6 +29,10 @@ const ROUTES: Record<string, SeoEntry> = {
     title: 'Blog de Inteligencia Artificial — Externia AI for Events',
     description: 'Novedades de IA para el sector eventos. Resumen semanal.'
   },
+  '/blog/travel-manager': {
+    title: 'Blog Travel Manager — Externia AI for Events',
+    description: 'Novedades de IA para travel managers y organizadores de eventos.'
+  },
   '/contacto': {
     title: 'Contáctanos — Externia AI for Events',
     description: 'Contacta con Externia. Cuéntanos tu proyecto o evento.'
@@ -56,7 +60,7 @@ export function getSeo(pathname: string): SeoEntry {
   return ROUTES[normalized] ?? ROUTES['/'];
 }
 
-/** Rutas /blog/123: metadatos sociales los define la página (contenido dinámico). */
+/** Rutas de artículos del blog: metadatos sociales los define la página (contenido dinámico). */
 export function isBlogArticlePath(pathname: string): boolean {
-  return /^\/blog\/\d+$/.test(pathname);
+  return /^\/blog\/\d+$/.test(pathname) || /^\/blog\/travel-manager\/\d+$/.test(pathname);
 }

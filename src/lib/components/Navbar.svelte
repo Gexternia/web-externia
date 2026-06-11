@@ -11,6 +11,7 @@
     { label: 'Consultoría', href: '/consultoria' },
     { label: 'Formación', href: '/formacion' },
     { label: 'Blog', href: '/blog' },
+    { label: 'Travel Manager', href: '/blog/travel-manager' },
     { label: 'Contáctanos', href: '/contacto' }
   ];
 
