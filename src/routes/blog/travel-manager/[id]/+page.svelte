@@ -150,7 +150,7 @@
 
 <div class="relative min-h-screen z-10 transition-colors duration-500">
   {#if error || !noticia}
-    <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+    <section class="section-divider relative flex flex-col items-center justify-center py-16 sm:py-20 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
       <FadeIn delay={0.1}>
         <h1 class="text-2xl font-bold transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">Noticia no encontrada</h1>
         <a
@@ -165,7 +165,7 @@
     </section>
   {:else}
     {@const n = noticia}
-    <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+    <section class="section-divider relative py-16 sm:py-20 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
       <div class="max-w-3xl mx-auto relative z-10">
         <FadeIn delay={0.1}>
           <a

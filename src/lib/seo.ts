@@ -64,3 +64,10 @@ export function getSeo(pathname: string): SeoEntry {
 export function isBlogArticlePath(pathname: string): boolean {
   return /^\/blog\/\d+$/.test(pathname) || /^\/blog\/travel-manager\/\d+$/.test(pathname);
 }
+
+/** Sección Travel Manager: sin chrome global de Externia (navbar, footer). */
+export function isTravelManagerPath(pathname: string): boolean {
+  const normalized =
+    pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+  return normalized === '/blog/travel-manager' || normalized.startsWith('/blog/travel-manager/');
+}

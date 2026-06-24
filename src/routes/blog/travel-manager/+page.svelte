@@ -43,7 +43,7 @@
 {/if}
 
 <div class="relative min-h-screen z-10 transition-colors duration-500">
-  <section class="section-divider relative flex flex-col items-center justify-center pt-28 pb-16 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="section-divider relative flex flex-col items-center justify-center pt-12 sm:pt-16 pb-16 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="absolute top-1/4 -left-48 w-[400px] h-[400px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
     <div class="absolute bottom-1/4 -right-48 w-[400px] h-[400px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
 
@@ -91,7 +91,7 @@
                     <div class="absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_25%_20%,white,transparent_28%),radial-gradient(circle_at_75%_80%,white,transparent_22%)]"></div>
                     <div class="absolute inset-x-0 top-0 h-12 bg-[#e21717]"></div>
                     <div class="absolute left-6 top-5 rounded bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-[#e21717]">
-                      Externia
+                      Travel Manager
                     </div>
                     <div class="absolute inset-0 flex items-center justify-center px-6 text-center">
                       <p class="text-4xl sm:text-6xl font-black uppercase tracking-tight text-white/85 drop-shadow-lg">

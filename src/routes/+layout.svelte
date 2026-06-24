@@ -1,7 +1,7 @@
 <script lang="ts">
   import '../app.css';
   import { page } from '$app/stores';
-  import { getSeo, isBlogArticlePath } from '$lib/seo';
+  import { getSeo, isBlogArticlePath, isTravelManagerPath } from '$lib/seo';
   import {
     buildGraphOrganizationWebSite,
     maybeBreadcrumbSchema,
@@ -14,6 +14,7 @@
   const pathname = $derived($page.url.pathname);
   const seo = $derived(getSeo(pathname));
   const isBlogArticle = $derived(isBlogArticlePath(pathname));
+  const isTravelManager = $derived(isTravelManagerPath(pathname));
   const canonicalUrl = $derived(`${$page.url.origin}${pathname === '/' ? '' : pathname}`);
   const ogImageUrl = $derived(`${$page.url.origin}/externia-icon.svg`);
 
@@ -71,9 +72,13 @@
   {/if}
 </svelte:head>
 
-<Navbar />
-<ThemeToggle />
+{#if !isTravelManager}
+  <Navbar />
+{/if}
+<ThemeToggle mobileVisible={isTravelManager} />
 <main class="theme-transition w-full min-w-0 overflow-x-hidden">
   <slot />
 </main>
-<Footer />
+{#if !isTravelManager}
+  <Footer />
+{/if}
