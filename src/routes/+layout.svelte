@@ -74,8 +74,8 @@
 
 {#if !isTravelManager}
   <Navbar />
+  <ThemeToggle />
 {/if}
-<ThemeToggle mobileVisible={isTravelManager} />
 <main class="theme-transition w-full min-w-0 overflow-x-hidden">
   <slot />
 </main>
