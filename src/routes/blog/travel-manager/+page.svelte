@@ -47,21 +47,14 @@
           {#if featured}
             <article class="group">
               <a href="/blog/travel-manager/0" class="block">
-                <!-- Main Image Banner (Solid Red) -->
-                <div class="relative w-full h-[260px] sm:h-[360px] bg-[#d6001c] flex items-center justify-center">
-                  <!-- AEGVE Colaboradores Banner Text and Logo -->
-                  <div class="relative z-10 text-center px-6">
-                    <img
-                      src="/logo-aegve.png"
-                      alt="AEGVE"
-                      class="h-12 sm:h-16 w-auto object-contain mx-auto mb-3"
-                    />
-                    <h2 class="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-white">
-                      Colaboradores
-                    </h2>
-                  </div>
-
-                  <div class="absolute top-4 left-4 bg-white text-[#d6001c] text-[10px] font-black uppercase tracking-wider px-3 py-1">
+                <!-- Main Image Banner (Only colaboradores-eventos.png image) -->
+                <div class="relative w-full h-[260px] sm:h-[360px] bg-[#d6001c] flex items-center justify-center overflow-hidden">
+                  <img
+                    src="/colaboradores-eventos.png"
+                    alt="AEGVE Colaboradores"
+                    class="w-full h-full object-cover object-center"
+                  />
+                  <div class="absolute top-4 left-4 bg-white text-[#d6001c] text-[10px] font-black uppercase tracking-wider px-3 py-1 z-10">
                     Travel Manager
                   </div>
                 </div>
@@ -95,16 +88,13 @@
               {#each digest.noticias.slice(1, 4) as noticia, i}
                 <article class="group flex flex-col">
                   <a href="/blog/travel-manager/{i + 1}" class="block flex-1">
-                    <!-- Thumbnail Banner (Solid Red) -->
-                    <div class="relative h-36 bg-[#d6001c] flex flex-col items-center justify-center text-center p-4">
+                    <!-- Thumbnail Banner (Only colaboradores-eventos.png image) -->
+                    <div class="relative h-36 bg-[#d6001c] overflow-hidden">
                       <img
-                        src="/logo-aegve.png"
-                        alt="AEGVE"
-                        class="h-7 w-auto object-contain mx-auto mb-1"
+                        src="/colaboradores-eventos.png"
+                        alt="Jornada AEGVE"
+                        class="w-full h-full object-cover object-center"
                       />
-                      <span class="block text-[9px] uppercase tracking-wider text-white/90 font-bold">
-                        Jornada AEGVE
-                      </span>
                     </div>
 
                     <!-- Title & Date -->
@@ -130,66 +120,60 @@
         <!-- Right Sidebar -->
         <aside class="space-y-6">
           
-          <!-- Anuario AEGVE Card -->
-          <div class="border-b border-gray-200 pb-5">
-            <a href="/blog/travel-manager/1" class="group flex items-start gap-4">
-              <div class="w-24 h-24 shrink-0 bg-gray-900 flex items-center justify-center p-2 text-center text-white border border-gray-200">
-                <div>
-                  <span class="block text-[10px] text-gray-400 uppercase tracking-widest">2025/2026</span>
-                  <span class="block text-xs font-black uppercase text-red-500">Anuario</span>
-                  <span class="block text-sm font-bold">AEGVE</span>
+          <!-- Card 1 -->
+          {#if digest?.noticias?.[1]}
+            <div class="border-b border-gray-200 pb-5">
+              <a href="/blog/travel-manager/1" class="group flex items-start gap-4">
+                <div class="w-24 h-20 shrink-0 bg-[#d6001c] flex items-center justify-center p-2">
+                  <img src="/logo-aegve.png" alt="AEGVE" class="h-6 w-auto object-contain" />
                 </div>
-              </div>
-              <div>
-                <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Publicaciones</span>
-                <h3 class="text-sm font-bold text-gray-900 group-hover:text-[#d6001c] transition-colors leading-snug mt-1">
-                  Anuario AEGVE 2025 / 2026
-                </h3>
-              </div>
-            </a>
-          </div>
-
-          <!-- Curso Gestión Viajes Card -->
-          <div class="border-b border-gray-200 pb-5">
-            <a href="/blog/travel-manager/2" class="group flex items-start gap-4">
-              <div class="w-24 h-24 shrink-0 bg-[#d6001c] flex items-center justify-center p-2 text-center text-white">
                 <div>
-                  <span class="block text-[9px] uppercase tracking-widest text-white/80">Formación</span>
-                  <span class="block text-xs font-black uppercase">Travel</span>
-                  <span class="block text-xs font-black uppercase">Manager</span>
+                  <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Publicaciones</span>
+                  <h3 class="text-sm font-bold text-gray-900 group-hover:text-[#d6001c] transition-colors leading-snug mt-1">
+                    {digest.noticias[1].titulo}
+                  </h3>
                 </div>
-              </div>
-              <div class="flex-1">
-                <span class="text-[10px] uppercase font-bold text-[#d6001c] tracking-wider">Formación</span>
-                <h3 class="text-sm font-bold text-gray-900 group-hover:text-[#d6001c] transition-colors leading-snug mt-0.5">
-                  Curso Gestión Viajes de Empresa 2026
-                </h3>
-                <span class="inline-block mt-3 text-[10px] font-black uppercase tracking-wider bg-[#d6001c] text-white px-2.5 py-1">
-                  Apúntate al curso
-                </span>
-              </div>
-            </a>
-          </div>
+              </a>
+            </div>
+          {/if}
 
-          <!-- Business Travel Monitor Card -->
-          <div class="border-b border-gray-200 pb-5">
-            <a href="/blog/travel-manager/3" class="group flex items-start gap-4">
-              <div class="w-24 h-20 shrink-0 bg-gray-900 text-white flex flex-col items-center justify-center p-2">
-                <span class="text-[9px] font-bold text-gray-300">II Business</span>
-                <span class="text-[10px] font-black text-red-500">Travel Monitor</span>
-                <span class="text-[8px] text-white/70 mt-0.5">aegve 25</span>
-              </div>
-              <div>
-                <h3 class="text-sm font-bold text-gray-900 group-hover:text-[#d6001c] transition-colors leading-snug">
-                  II Business Travel Monitor
-                </h3>
-              </div>
-            </a>
-          </div>
+          <!-- Card 2 -->
+          {#if digest?.noticias?.[2]}
+            <div class="border-b border-gray-200 pb-5">
+              <a href="/blog/travel-manager/2" class="group flex items-start gap-4">
+                <div class="w-24 h-20 shrink-0 bg-[#d6001c] flex items-center justify-center p-2">
+                  <img src="/logo-aegve.png" alt="AEGVE" class="h-6 w-auto object-contain" />
+                </div>
+                <div class="flex-1">
+                  <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Publicaciones</span>
+                  <h3 class="text-sm font-bold text-gray-900 group-hover:text-[#d6001c] transition-colors leading-snug mt-0.5">
+                    {digest.noticias[2].titulo}
+                  </h3>
+                </div>
+              </a>
+            </div>
+          {/if}
+
+          <!-- Card 3 -->
+          {#if digest?.noticias?.[3]}
+            <div class="border-b border-gray-200 pb-5">
+              <a href="/blog/travel-manager/3" class="group flex items-start gap-4">
+                <div class="w-24 h-20 shrink-0 bg-[#d6001c] flex items-center justify-center p-2">
+                  <img src="/logo-aegve.png" alt="AEGVE" class="h-6 w-auto object-contain" />
+                </div>
+                <div>
+                  <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Publicaciones</span>
+                  <h3 class="text-sm font-bold text-gray-900 group-hover:text-[#d6001c] transition-colors leading-snug mt-1">
+                    {digest.noticias[3].titulo}
+                  </h3>
+                </div>
+              </a>
+            </div>
+          {/if}
 
           <!-- Quiénes somos AEGVE Card -->
           <div class="border-b border-gray-200 pb-5">
-            <a href="/blog/travel-manager" class="group flex items-center gap-4">
+            <a href="https://aegve.es/nosotros/quienes-somos/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4">
               <div class="w-24 h-16 shrink-0 bg-[#d6001c] text-white flex items-center justify-center p-2">
                 <img src="/logo-aegve.png" alt="AEGVE" class="h-6 w-auto object-contain" />
               </div>
@@ -203,7 +187,7 @@
 
           <!-- Chester AEGVE Card -->
           <div>
-            <a href="/blog/travel-manager" class="group flex items-center gap-4">
+            <a href="https://aegve.es/category/chester/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4">
               <div class="w-24 h-14 shrink-0 bg-[#d6001c] text-white flex items-center justify-center p-2">
                 <span class="text-xs font-black uppercase text-white">Chester AEGVE</span>
               </div>
