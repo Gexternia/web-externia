@@ -46,12 +46,12 @@
         opacity: 0.85
       });
       const coreMatLight = new THREE.MeshStandardMaterial({
-        color: 0xde3b84,
-        emissive: 0xd6007d,
-        emissiveIntensity: 0.6,
+        color: 0xee847b,
+        emissive: 0xde3b84,
+        emissiveIntensity: 0.15,
         wireframe: true,
         transparent: true,
-        opacity: 0.9
+        opacity: 0.32
       });
       const coreMesh = new THREE.Mesh(coreGeo, isLight ? coreMatLight : coreMatDark);
       mainGroup.add(coreMesh);
@@ -60,7 +60,7 @@
       const NODE_COUNT = 36;
       const nodeGeo = new THREE.SphereGeometry(0.04, 12, 12);
       const nodeMatDark = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
-      const nodeMatLight = new THREE.MeshBasicMaterial({ color: 0xffc12d });
+      const nodeMatLight = new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.55 });
       
       const nodeGroup = new THREE.Group();
       const nodePositions: THREE.Vector3[] = [];
@@ -102,7 +102,7 @@
       const lineGeo = new THREE.BufferGeometry();
       lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
       const lineMatDark = new THREE.LineBasicMaterial({ color: 0x0070f3, transparent: true, opacity: 0.4 });
-      const lineMatLight = new THREE.LineBasicMaterial({ color: 0xee847b, transparent: true, opacity: 0.5 });
+      const lineMatLight = new THREE.LineBasicMaterial({ color: 0xee847b, transparent: true, opacity: 0.22 });
       const lineMesh = new THREE.LineSegments(lineGeo, isLight ? lineMatLight : lineMatDark);
       mainGroup.add(lineMesh);
 
@@ -110,7 +110,7 @@
       const ringGeo1 = new THREE.TorusGeometry(2.05, 0.008, 16, 90);
       const ringGeo2 = new THREE.TorusGeometry(2.35, 0.006, 16, 90);
       const ringMatDark = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.35 });
-      const ringMatLight = new THREE.MeshBasicMaterial({ color: 0xde3b84, transparent: true, opacity: 0.4 });
+      const ringMatLight = new THREE.MeshBasicMaterial({ color: 0xde3b84, transparent: true, opacity: 0.2 });
 
       const ring1 = new THREE.Mesh(ringGeo1, isLight ? ringMatLight : ringMatDark);
       ring1.rotation.x = Math.PI / 3;
@@ -132,7 +132,7 @@
       }
       pulseGeo.setAttribute('position', new THREE.BufferAttribute(pulsePos, 3));
       const pulseMatDark = new THREE.PointsMaterial({ color: 0x38bdf8, size: 0.035, transparent: true, opacity: 0.75 });
-      const pulseMatLight = new THREE.PointsMaterial({ color: 0xffc12d, size: 0.035, transparent: true, opacity: 0.8 });
+      const pulseMatLight = new THREE.PointsMaterial({ color: 0xf59e0b, size: 0.035, transparent: true, opacity: 0.35 });
       const pulsePoints = new THREE.Points(pulseGeo, isLight ? pulseMatLight : pulseMatDark);
       mainGroup.add(pulsePoints);
 
