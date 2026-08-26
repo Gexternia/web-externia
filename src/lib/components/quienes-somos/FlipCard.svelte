@@ -80,6 +80,27 @@
 
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+  // Dynamic trigonometric arm tracking to stay anchored to top-outer corners of closing panels
+  const leftArmTransform = $derived.by(() => {
+    const deltaX = ($leftX / 100) * (cardWidth / 2);
+    const deltaY = cardHeight - 48;
+    const rad = Math.atan2(deltaX, deltaY);
+    const deg = (rad * 180) / Math.PI;
+    const dist = Math.hypot(deltaX, deltaY);
+    const scaleY = (dist / deltaY) * $leftArmScaleY;
+    return `transform: rotate(${deg.toFixed(2)}deg) scaleY(${scaleY.toFixed(3)}); opacity: ${$leftArmOpacity};`;
+  });
+
+  const rightArmTransform = $derived.by(() => {
+    const deltaX = ($rightX / 100) * (cardWidth / 2);
+    const deltaY = cardHeight - 48;
+    const rad = Math.atan2(deltaX, deltaY);
+    const deg = (rad * 180) / Math.PI;
+    const dist = Math.hypot(deltaX, deltaY);
+    const scaleY = (dist / deltaY) * $rightArmScaleY;
+    return `transform: rotate(${deg.toFixed(2)}deg) scaleY(${scaleY.toFixed(3)}); opacity: ${$rightArmOpacity};`;
+  });
+
   async function doOpen() {
     phase = 'opening';
     busy = true;
@@ -95,33 +116,36 @@
       pushX = v;
       pushOpacity = 1;
     });
-    springIn.set(-15);
-    await sleep(420);
+    springIn.set(-58);
+    await sleep(350);
     unsubPush();
 
     // 2. Robot walks + curtain follows
-    const walkDuration = 2000;
+    const walkDuration = 1800;
     const start = performance.now();
-    const waddleY = [0, -7, 0, -7, 0, -7, 0, -7, 0, -7, 0];
 
-    curtainX.set(110, { duration: 1920, delay: 80 });
+    curtainX.set(100, { duration: 1750, delay: 50 });
+
+    const unsubCurtain = curtainX.subscribe((cx) => {
+      // Align robot pushing hands with the curtain edge
+      pushX = (cx / 100) * cardWidth - 58;
+    });
 
     function walkFrame(t: number) {
       if (t >= 1) return;
-      const progress = t;
-      pushX = -15 + progress * (walkEndX - -15);
-      const yi = Math.min(Math.floor(progress * waddleY.length), waddleY.length - 1);
-      pushY = waddleY[yi] ?? 0;
+      // Natural walking sine oscillation
+      pushY = Math.sin(t * Math.PI * 14) * 3.5;
       requestAnimationFrame(() => walkFrame((performance.now() - start) / walkDuration));
     }
     requestAnimationFrame(() => walkFrame(0));
 
     await sleep(walkDuration);
+    unsubCurtain();
 
     pushX = -90;
     pushOpacity = 0;
     pushY = 0;
-    curtainX.set(110, { duration: 0 });
+    curtainX.set(100, { duration: 0 });
     phase = 'open';
     busy = false;
   }
@@ -130,82 +154,74 @@
     phase = 'closing';
     busy = true;
 
-    leftX.set(-101, { duration: 0 });
-    rightX.set(101, { duration: 0 });
+    leftX.set(-100, { duration: 0 });
+    rightX.set(100, { duration: 0 });
     leftOpacity = 1;
     rightOpacity = 1;
     leftArmScaleY.set(0, { duration: 0 });
-    leftArmRotate.set(-28, { duration: 0 });
     leftArmOpacity.set(0, { duration: 0 });
     rightArmScaleY.set(0, { duration: 0 });
-    rightArmRotate.set(28, { duration: 0 });
     rightArmOpacity.set(0, { duration: 0 });
 
     // 1. Pull robot springs up
     pullY = 110;
     pullOpacity = 0;
-    const pullSpring = spring(110, { stiffness: 0.22, damping: 0.2 });
+    const pullSpring = spring(110, { stiffness: 0.24, damping: 0.2 });
     const unsubPull = pullSpring.subscribe((v) => {
       pullY = v;
       pullOpacity = 1;
     });
     pullSpring.set(0);
-    await sleep(500);
+    await sleep(450);
     unsubPull();
 
-    // 2. Tug animation (runs in parallel with arm grow)
-    const tugY = [0, -12, 3, -9, 2, -6, 0];
-    const tugDuration = 1100;
+    // 2. Tug animation
+    const tugDuration = 1000;
     const tugTween = tweened(0, { duration: tugDuration });
     tugTween.set(1, { duration: tugDuration });
     const unsubTug = tugTween.subscribe((t) => {
-      const i = Math.min(Math.floor(t * (tugY.length - 1)), tugY.length - 1);
-      pullY = tugY[i] ?? 0;
+      pullY = Math.sin(t * Math.PI * 6) * 5;
     });
 
-    // 3. Arms grow (parallel with tug)
-    leftArmScaleY.set(1, { duration: 280 });
-    leftArmOpacity.set(1, { duration: 280 });
-    rightArmScaleY.set(1, { duration: 280 });
-    rightArmOpacity.set(1, { duration: 280 });
-    await sleep(1100);
+    // 3. Arms grow to touch top corners
+    leftArmScaleY.set(1, { duration: 250 });
+    leftArmOpacity.set(1, { duration: 250 });
+    rightArmScaleY.set(1, { duration: 250 });
+    rightArmOpacity.set(1, { duration: 250 });
+    await sleep(800);
     unsubTug();
 
-    // 4. Curtains close + arms retract
-    leftX.set(0, { duration: 1500 });
-    rightX.set(0, { duration: 1500 });
-    leftArmRotate.set(-4, { duration: 1500 });
-    leftArmScaleY.set(0, { duration: 1500 });
-    leftArmOpacity.set(0, { duration: 1500 });
-    rightArmRotate.set(4, { duration: 1500 });
-    rightArmScaleY.set(0, { duration: 1500 });
-    rightArmOpacity.set(0, { duration: 1500 });
-    await sleep(1550);
+    // 4. Curtains close + arms track top corners & retract seamlessly
+    leftX.set(0, { duration: 1300 });
+    rightX.set(0, { duration: 1300 });
+    leftArmScaleY.set(0, { duration: 1350 });
+    leftArmOpacity.set(0, { duration: 1350 });
+    rightArmScaleY.set(0, { duration: 1350 });
+    rightArmOpacity.set(0, { duration: 1350 });
+    await sleep(1350);
 
-    // 5. Robot drops
+    // 5. Robot drops back down
     pullY = 0;
-    const dropTween = tweened(0, { duration: 320 });
-    dropTween.set(1, { duration: 320 });
+    const dropTween = tweened(0, { duration: 300 });
+    dropTween.set(1, { duration: 300 });
     const unsubDrop = dropTween.subscribe((t) => {
       pullY = t * 110;
       pullOpacity = 1 - t;
     });
-    await sleep(350);
+    await sleep(320);
     unsubDrop();
 
     // Reset
     curtainX.set(0, { duration: 0 });
-    leftX.set(-101, { duration: 0 });
-    rightX.set(101, { duration: 0 });
+    leftX.set(-100, { duration: 0 });
+    rightX.set(100, { duration: 0 });
     leftOpacity = 0;
     rightOpacity = 0;
     pullY = 110;
     pullOpacity = 0;
     leftArmScaleY.set(0, { duration: 0 });
-    leftArmRotate.set(-28, { duration: 0 });
     leftArmOpacity.set(0, { duration: 0 });
     rightArmScaleY.set(0, { duration: 0 });
-    rightArmRotate.set(28, { duration: 0 });
     rightArmOpacity.set(0, { duration: 0 });
 
     phase = 'idle';
@@ -298,42 +314,40 @@
     </div>
   </div>
 
-  <!-- Left arm bar (8px at shoulder, 16px at hand) -->
+  <!-- Left mechanical cable arm -->
   <div
     class="absolute pointer-events-none arm-with-hand"
     style="
       bottom: 48px;
-      left: calc(50% - 42px);
-      width: 16px;
-      height: 230px;
-      background: linear-gradient(to top, #9B5CF8 0%, #3B82F6 100%);
+      left: 50%;
+      width: 14px;
+      height: {cardHeight - 48}px;
+      background: linear-gradient(to top, #9B5CF8 0%, #38BDF8 100%);
       z-index: 55;
       transform-origin: 50% 100%;
-      transform: scaleY({$leftArmScaleY}) rotate({$leftArmRotate}deg);
-      opacity: {$leftArmOpacity};
+      {leftArmTransform}
     "
   ></div>
 
-  <!-- Right arm bar (8px at shoulder, 16px at hand) -->
+  <!-- Right mechanical cable arm -->
   <div
     class="absolute pointer-events-none arm-with-hand"
     style="
       bottom: 48px;
-      left: calc(50% + 22px);
-      width: 16px;
-      height: 230px;
-      background: linear-gradient(to top, #9B5CF8 0%, #3B82F6 100%);
+      left: 50%;
+      width: 14px;
+      height: {cardHeight - 48}px;
+      background: linear-gradient(to top, #9B5CF8 0%, #38BDF8 100%);
       z-index: 55;
       transform-origin: 50% 100%;
-      transform: scaleY({$rightArmScaleY}) rotate({$rightArmRotate}deg);
-      opacity: {$rightArmOpacity};
+      {rightArmTransform}
     "
   ></div>
 
   <!-- Pull robot -->
   <div
     class="absolute z-50 pointer-events-none"
-    style="bottom: 0; left: 50%; margin-left: -40px; z-index: 60; transform: translateY({pullY}px); opacity: {pullOpacity}"
+    style="bottom: 0; left: 50%; margin-left: -42px; z-index: 60; transform: translateY({pullY}px); opacity: {pullOpacity}"
   >
     <PullRobot pulling={phase === 'closing'} />
   </div>
