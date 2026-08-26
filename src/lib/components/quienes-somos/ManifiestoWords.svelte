@@ -26,9 +26,6 @@
 <div
   bind:this={el}
   class="text-3xl sm:text-4xl md:text-5xl font-black leading-snug tracking-tight {isLight ? 'text-black' : 'text-white'}"
-  style="text-shadow: {isLight
-    ? '0 2px 8px rgba(222, 59, 132, 0.4), 0 4px 16px rgba(214, 0, 125, 0.25), 0 0 24px rgba(255, 193, 45, 0.15)'
-    : '0 2px 8px rgba(0, 112, 243, 0.5), 0 4px 16px rgba(59, 130, 246, 0.3), 0 0 24px rgba(59, 130, 246, 0.2)'};"
 >
   {#each words as word, i}
     {@const isPhrase2 = i >= phrase2Start}
