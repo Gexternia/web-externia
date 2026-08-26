@@ -22,18 +22,7 @@
     return () => window.removeEventListener('themechange', handler);
   });
 
-  $effect(() => {
-    const el = clientsScrollRef;
-    if (!el) return;
-    const tick = () => {
-      if (!clientsAutoScroll || !el) return;
-      el.scrollLeft += 0.8;
-      const half = el.scrollWidth / 2;
-      if (el.scrollLeft >= half) el.scrollLeft -= half;
-    };
-    const id = window.setInterval(tick, 16);
-    return () => window.clearInterval(id);
-  });
+
 
   const lightBg = 'bg-white/65 backdrop-blur-[2px]';
   const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
@@ -86,8 +75,7 @@
 
   const clientLogos = ['opc-catalunya', 'ifaes', 'el-economista', 'ecoener', 'caixabank', 'ing', 'stage-entertainment', 'idipaz', 'amazon', 'eventoplus', 'american-express', 'universidad-cordoba', 'camara-espanola', 'aegve', 'uppereat', 'cett', 'snapsight', 'somos-experiences', 'kpmg'];
 
-  let clientsScrollRef: HTMLDivElement;
-  let clientsAutoScroll = $state(true);
+
 
   let ctaHovered = $state(false);
   let primaryRef: HTMLSpanElement;
@@ -147,8 +135,34 @@
     </FadeIn>
   </section>
 
+  <!-- Clientes -->
+  <section class="section-divider relative py-16 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
+    <div class="max-w-7xl mx-auto relative z-10">
+      <FadeIn delay={0.1}>
+        <p class="text-center text-lg sm:text-xl font-semibold tracking-wide uppercase mb-6 sm:mb-8 {isLight ? 'text-gray-900' : 'text-white'}">
+          CLIENTES QUE CONFÍAN EN NOSOTROS
+        </p>
+        <div
+          role="region"
+          aria-label="Carrusel de clientes"
+          class="overflow-hidden w-full"
+        >
+          <div class="clients-track-marquee flex gap-8 sm:gap-12 items-center py-4 w-max">
+            {#each [1, 2] as _}
+              {#each clientLogos as logo}
+                <div class="clients-logo flex-shrink-0 flex items-center justify-center w-24 h-14 sm:w-40 sm:h-20 md:w-44 md:h-24 px-3 sm:px-4 opacity-90 hover:opacity-100 transition-opacity duration-300">
+                  <img src="/clients/{logo}.webp" alt="Cliente" class="max-h-10 sm:max-h-14 md:max-h-16 w-auto object-contain" loading="lazy" />
+                </div>
+              {/each}
+            {/each}
+          </div>
+        </div>
+      </FadeIn>
+    </div>
+  </section>
+
   <!-- Manifiesto -->
-  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {isLight ? 'bg-gradient-to-br from-[#f0a0c0] via-[#dc80c8] to-[#f8c090]' : 'bg-[#060d1a]/95 backdrop-blur-sm'}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
     <div class="max-w-5xl mx-auto text-center relative z-10">
       <ManifiestoWords words={manifestWords} highlight={manifestHighlight} {isLight} phrase2Start={9} />
     </div>
@@ -205,7 +219,7 @@
               <div class="absolute -inset-3 rounded-3xl blur-2xl opacity-25 pointer-events-none {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-yellow' : 'bg-azul'}"></div>
               <TiltCard className="block">
                 <div class="relative rounded-2xl overflow-hidden border transition-shadow duration-300 {isLight ? 'border-brand-magenta/15 shadow-card-light shadow-card-light-hover' : 'border-white/8'}">
-                  <img src="/team/guillermo-premio.png" alt="Guillermo Prado — MPI Iberian Awards 2025" class="w-full h-[240px] sm:h-[320px] md:h-[380px] object-cover object-top block" />
+                  <img src="/team/guillermo-premio.webp" alt="Guillermo Prado — MPI Iberian Awards 2025" class="w-full h-[240px] sm:h-[320px] md:h-[380px] object-cover object-top block" />
                   <div class="absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border {isLight ? 'bg-white/85 border-brand-magenta/15' : 'bg-black/75 border-white/10'}">
                     <p class="text-xs font-bold tracking-widest uppercase {isLight ? 'text-brand-magenta' : 'text-azul'}">🏆 MPI Iberian Awards 2025</p>
                     <p class="text-sm font-semibold mt-0.5 {isLight ? 'text-gray-900' : 'text-white'}">🥇 Ganador · Event Industry Entrepreneur</p>
@@ -305,7 +319,7 @@
           <TiltCard className="block">
             <div class="rounded-2xl overflow-hidden border transition-shadow duration-300 {isLight ? 'border-brand-magenta/15 shadow-card-light shadow-card-light-hover bg-white/90 backdrop-blur-sm' : 'border-white/8 bg-[#0d1829]/80 backdrop-blur-sm'}">
               <div class="relative overflow-hidden h-[200px] sm:h-[240px] md:h-[280px]">
-                <img src="/team/guillermo-ganador.png" alt="Guillermo Prado — Ganador Event Industry Entrepreneur 2025" class="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-105" />
+                <img src="/team/guillermo-ganador.webp" alt="Guillermo Prado — Ganador Event Industry Entrepreneur 2025" class="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-105" />
               </div>
               <div class="p-6">
                 <div class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-3 {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/10 text-azul'}">Fundador & CEO</div>
@@ -326,7 +340,7 @@
         <FadeIn delay={0.25} from="right" className="lg:col-span-3 flex flex-col justify-between gap-6">
           <TiltCard className="block">
             <div class="relative rounded-2xl overflow-hidden border {isLight ? 'border-brand-magenta/15' : 'border-white/8'}">
-              <img src="/team/equipo-mpi.png" alt="Equipo Externia en MPI Iberian Chapter" class="w-full h-[260px] sm:h-[340px] md:h-[420px] object-cover object-center transition-transform duration-700 hover:scale-105" />
+              <img src="/team/equipo-mpi.webp" alt="Equipo Externia en MPI Iberian Chapter" class="w-full h-[260px] sm:h-[340px] md:h-[420px] object-cover object-center transition-transform duration-700 hover:scale-105" />
               <div class="absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border {isLight ? 'bg-white/85 border-brand-magenta/15' : 'bg-black/75 border-white/10'}">
                 <p class="text-xs font-bold tracking-widest uppercase {isLight ? 'text-brand-magenta' : 'text-azul'}">MPI Iberian Chapter · Valencia 2025</p>
                 <p class="text-sm mt-0.5 {isLight ? 'text-gray-700' : 'text-gray-300'}">Equipo Externia en el Global Meetings Industry Day</p>
@@ -344,30 +358,6 @@
           </div>
         </FadeIn>
       </div>
-
-      <!-- Carrusel de logos: Hemos trabajado con todos estos clientes -->
-      <FadeIn delay={0.4} className="mt-16">
-        <p class="text-center text-lg sm:text-xl font-semibold tracking-wide uppercase mb-6 sm:mb-8 {isLight ? 'text-gray-900' : 'text-white'}">
-          Hemos trabajado con todos estos clientes
-        </p>
-        <div
-          bind:this={clientsScrollRef}
-          role="region"
-          aria-label="Carrusel de clientes"
-          class="clients-carousel overflow-x-auto overflow-y-hidden w-full"
-          style="scrollbar-width: none; -ms-overflow-style: none; pointer-events: none;"
-        >
-          <div class="clients-track flex gap-8 sm:gap-12 items-center py-4 w-max">
-            {#each [1, 2] as _}
-              {#each clientLogos as logo}
-                <div class="clients-logo flex-shrink-0 flex items-center justify-center w-24 h-14 sm:w-40 sm:h-20 md:w-44 md:h-24 px-3 sm:px-4 opacity-90 hover:opacity-100 transition-opacity duration-300">
-                  <img src="/clients/{logo}.png" alt="Cliente" class="max-h-10 sm:max-h-14 md:max-h-16 w-auto object-contain" loading="lazy" />
-                </div>
-              {/each}
-            {/each}
-          </div>
-        </div>
-      </FadeIn>
     </div>
   </section>
 

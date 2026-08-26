@@ -300,3 +300,35 @@ html {
 }
 .light .micro-link-underline::after { background: #DE3B84; }
 :root:not(.light) .micro-link-underline::after { background: #60a5fa; }
+
+/* GPU-accelerated marquee animation */
+@keyframes marquee-scroll {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+.clients-track-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 35s linear infinite;
+  will-change: transform;
+}
+
+.clients-track-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Mobile GPU optimization: lighter backdrop-blur on small screens */
+@media (max-width: 768px) {
+  .backdrop-blur-3xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-xl,
+  .backdrop-blur-lg,
+  .backdrop-blur-md,
+  .backdrop-blur-sm,
+  .backdrop-blur-\[2px\] {
+    backdrop-filter: blur(2px) !important;
+    -webkit-backdrop-filter: blur(2px) !important;
+  }
+}
+
