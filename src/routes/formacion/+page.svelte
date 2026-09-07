@@ -6,6 +6,7 @@
   import SectionLabel from '$lib/components/shared/SectionLabel.svelte';
   import TiltCard from '$lib/components/shared/TiltCard.svelte';
   import MagneticRepel from '$lib/components/shared/MagneticRepel.svelte';
+  import Icon from '$lib/components/shared/Icon.svelte';
 
   let isLight = $state(false);
   let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
@@ -25,8 +26,8 @@
 
   const lightBg = 'bg-white/65 backdrop-blur-[2px]';
   const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
-  const darkBg = 'bg-[#060d1a]/72 backdrop-blur-[2px]';
-  const darkAltBg = 'bg-[#08111e]/72 backdrop-blur-[2px]';
+  const darkBg = 'bg-[#000000]/80 backdrop-blur-[2px]';
+  const darkAltBg = 'bg-[#08080a]/80 backdrop-blur-[2px]';
 
   function sectionBg(light: boolean, alt = false) {
     return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
@@ -88,9 +89,9 @@
   ];
 
   const programasResumen = [
-    { icon: '🌱', title: 'Taller Introductorio', level: 'Nivel básico', desc: 'Para equipos que quieren empezar a usar la IA de forma práctica y rápida. Resultados visibles desde la primera sesión.', gradient: 'from-[#DE3B84]/8 to-[#FFC12D]/4', hoverLight: 'hover:border-[#DE3B84]/50' },
-    { icon: '🚀', title: 'Programa Avanzado', level: 'Nivel estratégico', desc: 'Para profesionales que buscan una visión completa: herramientas, flujos de trabajo, casos de uso y aplicación al negocio de eventos.', gradient: 'from-[#FFC12D]/8 to-[#F7A361]/4', hoverLight: 'hover:border-[#FFC12D]/50' },
-    { icon: '🎯', title: 'Formación a Medida', level: 'Personalizado', desc: 'Programas específicos para agencias o departamentos, incluyendo formatos presenciales, online e híbridos.', gradient: 'from-[#F7A361]/8 to-[#EE847B]/4', hoverLight: 'hover:border-[#F7A361]/50' },
+    { icon: 'leaf', title: 'Taller Introductorio', level: 'Nivel básico', desc: 'Para equipos que quieren empezar a usar la IA de forma práctica y rápida. Resultados visibles desde la primera sesión.', gradient: 'from-[#DE3B84]/8 to-[#FFC12D]/4', hoverLight: 'hover:border-[#DE3B84]/50' },
+    { icon: 'rocket', title: 'Programa Avanzado', level: 'Nivel estratégico', desc: 'Para profesionales que buscan una visión completa: herramientas, flujos de trabajo, casos de uso y aplicación al negocio de eventos.', gradient: 'from-[#FFC12D]/8 to-[#F7A361]/4', hoverLight: 'hover:border-[#FFC12D]/50' },
+    { icon: 'target', title: 'Formación a Medida', level: 'Personalizado', desc: 'Programas específicos para agencias o departamentos, incluyendo formatos presenciales, online e híbridos.', gradient: 'from-[#F7A361]/8 to-[#EE847B]/4', hoverLight: 'hover:border-[#F7A361]/50' },
   ];
 
   const publicos = [
@@ -101,11 +102,11 @@
   ];
 
   const diferenciasItems = [
-    { icon: '🎯', title: '100% aplicada al sector MICE y eventos', desc: 'No enseñamos IA genérica. Cada ejemplo, herramienta y ejercicio está pensado para la realidad de un profesional de eventos.' },
-    { icon: '👤', title: 'Formador con credencial científica y experiencia de sector', desc: 'Una combinación que no encontrarás en ninguna otra formación del mercado español.' },
-    { icon: '⚡', title: 'Práctica desde el primer minuto', desc: 'Nada de diapositivas interminables: trabajamos con herramientas reales y casos aplicables desde el mismo día.' },
-    { icon: '🔄', title: 'Actualización continua', desc: 'El mundo de la IA cambia cada semana. Nuestros programas se actualizan constantemente para incluir las herramientas y tendencias más relevantes.' },
-    { icon: '⚖️', title: 'Cumplimiento legal integrado', desc: 'Abordamos el uso ético y legal de la IA desde el inicio, incluyendo la Ley de IA de la UE y el RGPD aplicado al sector.' },
+    { icon: 'target', title: '100% aplicada al sector MICE y eventos', desc: 'No enseñamos IA genérica. Cada ejemplo, herramienta y ejercicio está pensado para la realidad de un profesional de eventos.' },
+    { icon: 'user', title: 'Formador con credencial científica y experiencia de sector', desc: 'Una combinación que no encontrarás en ninguna otra formación del mercado español.' },
+    { icon: 'zap', title: 'Práctica desde el primer minuto', desc: 'Nada de diapositivas interminables: trabajamos con herramientas reales y casos aplicables desde el mismo día.' },
+    { icon: 'refresh', title: 'Actualización continua', desc: 'El mundo de la IA cambia cada semana. Nuestros programas se actualizan constantemente para incluir las herramientas y tendencias más relevantes.' },
+    { icon: 'scale', title: 'Cumplimiento legal integrado', desc: 'Abordamos el uso ético y legal de la IA desde el inicio, incluyendo la Ley de IA de la UE y el RGPD aplicado al sector.' },
   ];
 
   let ctaHovered = $state(false);
@@ -140,7 +141,6 @@
     primaryRef.style.transition = TR;
     primaryRef.style.transform = 'translateX(0%)';
   }
-
 </script>
 
 {#if NetworkParticlesCmp}
@@ -149,9 +149,9 @@
 
 <div class="relative z-10 transition-colors duration-500">
   <!-- Hero -->
-  <section class="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-4 text-center transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-4 text-center transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
     <div class="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
-    <div class="absolute bottom-1/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
+    <div class="absolute bottom-1/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-fuchsia' : 'bg-blue-900'}"></div>
 
     <FadeIn delay={0.1} className="relative z-10 mb-6">
       <SectionLabel text="Formación" {isLight} />
@@ -190,8 +190,8 @@
         {#each programasResumen as p, i}
           <MagneticRepel strength={13} radius={175}>
             <FadeIn delay={i * 0.12}>
-              <div class="h-full p-7 rounded-2xl border transition-all duration-300 cursor-default {isLight ? `shadow-card-light shadow-card-light-hover bg-gradient-to-br ${p.gradient} bg-white/90 border-gray-100 ${p.hoverLight} backdrop-blur-sm` : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/45 hover:bg-[#00c8ff]/6 backdrop-blur-sm'}">
-                <div class="text-4xl mb-5">{p.icon}</div>
+              <div class="h-full p-7 rounded-2xl border transition-all duration-300 cursor-default {isLight ? `shadow-card-light shadow-card-light-hover bg-gradient-to-br ${p.gradient} bg-white/90 border-gray-100 ${p.hoverLight} backdrop-blur-sm` : 'bg-[#121214]/90 border-white/10 hover:border-azul/40 backdrop-blur-sm'}">
+                <div class="mb-5 flex {isLight ? 'text-brand-magenta' : 'text-azul'}"><Icon name={p.icon} class="w-10 h-10" /></div>
                 <div class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/10 text-azul'}">{p.level}</div>
                 <h3 class="text-lg font-black mb-3 {isLight ? 'text-gray-900' : 'text-white'}">{p.title}</h3>
                 <p class="text-sm leading-relaxed {isLight ? 'text-gray-500' : 'text-gray-400'}">{p.desc}</p>
@@ -204,7 +204,7 @@
   </section>
 
   <!-- ¿Por qué formarse? -->
-  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
     <div class="max-w-4xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
         <SectionLabel text="¿Por qué formarse con Externia?" {isLight} />
@@ -229,7 +229,7 @@
         </p>
       </FadeIn>
       <FadeIn delay={0.3}>
-        <blockquote class="relative mt-12 px-6 sm:px-8 py-8 sm:py-10 rounded-2xl overflow-hidden {isLight ? 'bg-gradient-to-br from-brand-magenta/8 via-white to-brand-fuchsia/6 border border-brand-magenta/15' : 'bg-gradient-to-br from-azul/12 via-[#0d1829] to-blue-500/8 border border-azul/20'}">
+        <blockquote class="relative mt-12 px-6 sm:px-8 py-8 sm:py-10 rounded-2xl overflow-hidden {isLight ? 'bg-gradient-to-br from-brand-magenta/8 via-white to-brand-fuchsia/6 border border-brand-magenta/15' : 'bg-gradient-to-br from-azul/12 via-[#121214] to-blue-500/8 border border-azul/20'}">
           <span class="absolute top-5 left-6 text-5xl sm:text-6xl font-serif leading-none select-none {isLight ? 'text-brand-magenta/15' : 'text-azul/20'}" aria-hidden="true">"</span>
           <div class="relative">
             <p class="text-base sm:text-lg font-semibold tracking-tight m-0 mb-3 {isLight ? 'text-gray-600' : 'text-gray-400'}">No enseñamos herramientas.</p>
@@ -257,7 +257,7 @@
           <button
             type="button"
             onclick={() => (expanded = expanded === i ? null : i)}
-            class="rounded-2xl border p-5 sm:p-6 text-left transition-colors duration-300 flex items-center gap-4 w-full {expanded === i ? (isLight ? 'bg-brand-magenta/10 border-brand-magenta/50 shadow-card-light shadow-card-light-hover ring-2 ring-brand-magenta/20' : 'bg-azul/10 border-azul/50 shadow-lg ring-2 ring-azul/20') : (isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 hover:border-brand-magenta/30' : 'bg-[#0d1829]/90 border-white/8 hover:border-azul/40')}"
+            class="rounded-2xl border p-5 sm:p-6 text-left transition-colors duration-300 flex items-center gap-4 w-full {expanded === i ? (isLight ? 'bg-brand-magenta/10 border-brand-magenta/50 shadow-card-light shadow-card-light-hover ring-2 ring-brand-magenta/20' : 'bg-azul/10 border-azul/50 shadow-lg ring-2 ring-azul/20') : (isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 hover:border-brand-magenta/30' : 'bg-[#121214]/90 border-white/10 hover:border-azul/40')}"
           >
             <span class="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-lg font-black text-white {isLight ? 'bg-brand-magenta' : 'bg-azul'}">{p.num}</span>
             <span class="font-bold text-base sm:text-lg truncate {isLight ? 'text-gray-900' : 'text-white'}">{p.title}</span>
@@ -274,7 +274,7 @@
             class="overflow-hidden"
           >
             {#each PROGRAMAS_DATA.filter((_, idx) => idx === expanded) as p}
-              <div class="rounded-2xl border overflow-hidden {isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 backdrop-blur-sm border-brand-magenta/20' : 'bg-[#0d1829]/90 border-white/8 backdrop-blur-sm border-azul/30'}">
+              <div class="rounded-2xl border overflow-hidden {isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 backdrop-blur-sm border-brand-magenta/20' : 'bg-[#121214]/95 border-white/10 backdrop-blur-sm border-azul/30'}">
                 <div class="h-1 w-full {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-gradient-to-r from-azul to-blue-400'}"></div>
                 <div class="p-8 sm:p-10">
                   <div class="flex flex-col md:flex-row md:items-start gap-8">
@@ -287,7 +287,7 @@
 
                       <div class="rounded-xl p-5 mb-6 {isLight ? 'bg-gray-50/80' : 'bg-white/5'}">
                         <p class="text-sm font-bold mb-4 flex items-center gap-2 {isLight ? 'text-brand-magenta' : 'text-azul'}">
-                          <span aria-hidden="true">✓</span> {p.listTitle}
+                          <Icon name="check" class="w-4 h-4" /> {p.listTitle}
                         </p>
                         <ul class="space-y-3 text-sm sm:text-base leading-relaxed {isLight ? 'text-gray-600' : 'text-gray-400'}">
                           {#each p.items as item}
@@ -305,21 +305,27 @@
 
                       <div class="grid sm:grid-cols-3 gap-6 pt-6 border-t {isLight ? 'border-gray-200' : 'border-white/10'}">
                         <div class="flex gap-3">
-                          <span class="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-lg {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}" aria-hidden="true">⏱</span>
+                          <span class="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}">
+                            <Icon name="clock" class="w-5 h-5" />
+                          </span>
                           <div>
                             <span class="text-xs font-bold tracking-widest uppercase block mb-0.5 {isLight ? 'text-brand-magenta' : 'text-azul'}">Duración</span>
                             <p class="text-sm leading-snug {isLight ? 'text-gray-700' : 'text-gray-300'}">{p.duracion}</p>
                           </div>
                         </div>
                         <div class="flex gap-3">
-                          <span class="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-lg {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}" aria-hidden="true">👥</span>
+                          <span class="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}">
+                            <Icon name="users" class="w-5 h-5" />
+                          </span>
                           <div>
                             <span class="text-xs font-bold tracking-widest uppercase block mb-0.5 {isLight ? 'text-brand-magenta' : 'text-azul'}">Dirigido a</span>
                             <p class="text-sm leading-snug {isLight ? 'text-gray-700' : 'text-gray-300'}">{p.dirigido}</p>
                           </div>
                         </div>
                         <div class="flex gap-3">
-                          <span class="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-lg {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}" aria-hidden="true">📍</span>
+                          <span class="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}">
+                            <Icon name="map-pin" class="w-5 h-5" />
+                          </span>
                           <div>
                             <span class="text-xs font-bold tracking-widest uppercase block mb-0.5 {isLight ? 'text-brand-magenta' : 'text-azul'}">Modalidad</span>
                             <p class="text-sm leading-snug {isLight ? 'text-gray-700' : 'text-gray-300'}">{p.modalidad}</p>
@@ -338,7 +344,7 @@
   </section>
 
   <!-- ¿Para quién? -->
-  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
     <div class="max-w-4xl mx-auto relative z-10">
       <FadeIn className="text-center mb-12">
         <SectionLabel text="¿Para quién son estas formaciones?" {isLight} />
@@ -351,8 +357,10 @@
         {#each publicos as item, i}
           <MagneticRepel strength={12} radius={150} className="h-full min-h-0">
             <FadeIn delay={i * 0.08} className="h-full">
-              <div class="flex gap-4 p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 h-full {isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 hover:border-brand-magenta/20' : 'bg-[#0d1829]/80 border-white/5 hover:border-azul/30'}">
-                <span class="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-lg self-start {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}" aria-hidden="true">👤</span>
+              <div class="flex gap-4 p-6 rounded-2xl border transition-all duration-300 h-full {isLight ? 'shadow-card-light bg-white/90 border-gray-100 hover:border-brand-magenta/20' : 'bg-[#121214]/90 border-white/10 hover:border-azul/30'}">
+                <span class="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-lg self-start {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}">
+                  <Icon name="user" class="w-5 h-5" />
+                </span>
                 <div class="min-w-0 flex flex-col flex-1">
                   <p class="font-bold text-base mb-1 {isLight ? 'text-gray-900' : 'text-white'}">{item.label}</p>
                   <p class="text-sm sm:text-base leading-relaxed flex-1 {isLight ? 'text-gray-600' : 'text-gray-400'}">{item.desc}</p>
@@ -379,10 +387,12 @@
         {#each diferenciasItems as item, i}
           <MagneticRepel strength={13} radius={160} className="h-full min-h-0">
             <FadeIn delay={i * 0.08} className="h-full">
-              <TiltCard className="rounded-2xl border overflow-hidden transition-all duration-300 h-full flex flex-col {isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 hover:border-brand-magenta/30 backdrop-blur-sm' : 'bg-[#0d1829]/80 border-white/5 hover:border-azul/40 backdrop-blur-sm'}">
+              <TiltCard className="rounded-2xl border overflow-hidden transition-all duration-300 h-full flex flex-col {isLight ? 'shadow-card-light bg-white/90 border-gray-100 hover:border-brand-magenta/30 backdrop-blur-sm' : 'bg-[#121214]/90 border-white/10 hover:border-azul/40 backdrop-blur-sm'}">
                 <div class="w-full h-1 flex-shrink-0 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-gradient-to-r from-azul to-blue-400'}"></div>
                 <div class="p-6 flex-1 flex flex-col">
-                  <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4 {isLight ? 'bg-brand-magenta/10' : 'bg-azul/15'}">{item.icon}</div>
+                  <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/15 text-azul'}">
+                    <Icon name={item.icon} class="w-6 h-6" />
+                  </div>
                   <h3 class="text-lg font-bold mb-2 {isLight ? 'text-gray-900' : 'text-white'}">{item.title}</h3>
                   <p class="text-sm leading-relaxed flex-1 {isLight ? 'text-gray-600' : 'text-gray-400'}">{item.desc}</p>
                 </div>

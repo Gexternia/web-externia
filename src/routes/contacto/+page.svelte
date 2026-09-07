@@ -10,8 +10,8 @@
   // Mismos fondos que Servicios (claro y oscuro)
   const lightBg = 'bg-white/65 backdrop-blur-[2px]';
   const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
-  const darkBg = 'bg-[#060d1a]/72 backdrop-blur-[2px]';
-  const darkAltBg = 'bg-[#08111e]/72 backdrop-blur-[2px]';
+  const darkBg = 'bg-[#000000]/80 backdrop-blur-[2px]';
+  const darkAltBg = 'bg-[#08080a]/80 backdrop-blur-[2px]';
   function sectionBg(light: boolean, alt = false) {
     return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
   }
@@ -37,7 +37,7 @@
   <NetworkParticlesCmp {isLight} />
 {/if}
 
-<div class="relative min-h-screen z-10 overflow-hidden transition-colors duration-500 {isLight ? 'bg-white/65' : 'bg-[#060d1a]/72'}">
+<div class="relative min-h-screen z-10 overflow-hidden transition-colors duration-500 {isLight ? 'bg-white/65' : 'bg-[#000000]/80'} bg-cyber-grid">
   <!-- Glows compartidos que se extienden por toda la página -->
   <div class="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
   <div class="absolute top-3/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-15 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>

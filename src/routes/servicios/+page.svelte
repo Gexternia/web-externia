@@ -6,6 +6,7 @@
   import FadeIn from '$lib/components/shared/FadeIn.svelte';
   import SectionLabel from '$lib/components/shared/SectionLabel.svelte';
   import MagneticRepel from '$lib/components/shared/MagneticRepel.svelte';
+  import Icon from '$lib/components/shared/Icon.svelte';
 
   let isLight = $state(false);
   let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
@@ -24,35 +25,35 @@
 
   const lightBg = 'bg-white/65 backdrop-blur-[2px]';
   const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
-  const darkBg = 'bg-[#060d1a]/72 backdrop-blur-[2px]';
-  const darkAltBg = 'bg-[#08111e]/72 backdrop-blur-[2px]';
+  const darkBg = 'bg-[#000000]/80 backdrop-blur-[2px]';
+  const darkAltBg = 'bg-[#08080a]/80 backdrop-blur-[2px]';
 
   function sectionBg(light: boolean, alt = false) {
     return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
   }
 
   const ACTIVATION_CARDS = [
-    { emoji: '🖌️', category: 'Transformación Creativa', title: 'Smart Brush', desc: 'El asistente dibuja sobre una tableta y la IA transforma su trazo en una creación artística de alta calidad en tiempo real.', ideal: 'Stands en ferias, networking corporativo, lanzamientos de producto', gradientLight: 'from-[#DE3B84] via-[#D6007D] to-[#a8005f]', gradientDark: 'from-[#0070f3] via-[#0050c8] to-[#003a99]', image: '/activaciones/smart-brush.png' },
-    { emoji: '🎮', category: 'Experiencia Gamificada', title: 'RetroGame', desc: 'Aplicación en tótem digital que convierte a la persona y su negocio en un videojuego. Genera portada descargable e imprimible y personajes jugables. Efecto WOW y recuerdo duradero.', ideal: 'Eventos empresariales, ferias PYME, teambuilding', gradientLight: 'from-[#9B5CF8] via-[#7C3AED] to-[#5B21B6]', gradientDark: 'from-[#6366f1] via-[#4f46e5] to-[#4338ca]', image: '/activaciones/retrogame.png', link: 'https://tu-pyme-el-videojuego-de-los-90-46874276291.us-west1.run.app/' },
-    { emoji: '📖', category: 'Storytelling Visual', title: 'ComicGen', desc: 'Genera historias estilo novela gráfica en base a la persona y su PYME. El asistente es el protagonista de su propia historia heroica. Formato digital o impreso en mini revista.', ideal: 'Eventos corporativos, lanzamientos, ferias', gradientLight: 'from-[#F59E0B] via-[#D97706] to-[#B45309]', gradientDark: 'from-[#f97316] via-[#ea580c] to-[#c2410c]', image: '/activaciones/comicgen.png', link: 'https://comicgen-totem-46874276291.us-west1.run.app/' },
-    { emoji: '💳', category: 'Networking Digital', title: 'NeoCard', desc: 'Genera tarjetas de visita con IA. Los asistentes rellenan datos por voz o texto. Se imprime al momento con código QR vCard para enviar contactos al instante.', ideal: 'Networking, ferias, congresos, eventos B2B', gradientLight: 'from-[#0EA5E9] via-[#0284C7] to-[#0369A1]', gradientDark: 'from-[#06b6d4] via-[#0891b2] to-[#0e7490]', image: '/activaciones/neocard.png', link: 'https://generador-tarjetas.onrender.com/' },
-    { emoji: '🎨', category: 'Personalización Visual', title: 'FXstylized', desc: 'Convierte el rostro del invitado en objetos personalizados: blíster de juguetes, tazas, latas, pósters, llaveros. Imágenes compartibles al instante en redes para potenciar la viralidad.', ideal: 'Activaciones de marca, merchandising único, recuerdos personalizados', gradientLight: 'from-[#EC4899] via-[#DB2777] to-[#BE185D]', gradientDark: 'from-[#f472b6] via-[#ec4899] to-[#db2777]', image: '/activaciones/fxstylized.png' },
-    { emoji: '✨', category: 'Fotocall con IA', title: 'Profesi-O-Matic', desc: 'Fotocall con IA que convierte a los asistentes en sus profesiones soñadas. Eligen atrezzo, se fotografían y la IA genera una imagen de su "yo profesional". Descarga y comparte.', ideal: 'Ferias, eventos corporativos, teambuilding, activaciones virales', gradientLight: 'from-[#10B981] via-[#059669] to-[#047857]', gradientDark: 'from-[#34d399] via-[#10b981] to-[#059669]', image: '/activaciones/profesi-o-matic.png', link: 'https://profesi-o-matic-46874276291.us-west1.run.app/' },
-    { emoji: '🔮', category: 'Entretenimiento Personalizado', title: 'Mystic Oracle', desc: "Pitonisa virtual que 'predice' el futuro profesional del asistente de manera divertida e interactiva. Interacción por voz y consejos con humor.", ideal: 'Activaciones de marca, eventos temáticos, inauguraciones, cenas de gala', gradientLight: 'from-[#EE847B] via-[#DE3B84] to-[#b02060]', gradientDark: 'from-[#2860c0] via-[#1850a8] to-[#083890]', image: '/activaciones/mystic-oracle.png', link: 'https://madame-gemini-pitonisa-virtual-46874276291.us-west1.run.app/' },
-    { emoji: '😄', category: 'Entretenimiento Personalizado', title: 'Carizaturízame', desc: 'La IA redefine el arte de la caricatura: genera retratos humorísticos e hiperpersonalizados. Más de 2.300 caricaturas en un solo evento.', ideal: 'Ferias, eventos masivos, stands con alto tráfico de visitantes', gradientLight: 'from-[#DE3B84] via-[#EE847B] to-[#F7A361]', gradientDark: 'from-[#0070f3] via-[#1a60d0] to-[#3050b0]', image: '/activaciones/carizaturizame.png' },
+    { emoji: 'brush', iconName: 'brush', category: 'Transformación Creativa', title: 'Smart Brush', desc: 'El asistente dibuja sobre una tableta y la IA transforma su trazo en una creación artística de alta calidad en tiempo real.', ideal: 'Stands en ferias, networking corporativo, lanzamientos de producto', gradientLight: 'from-[#DE3B84] via-[#D6007D] to-[#a8005f]', gradientDark: 'from-[#0070f3] via-[#0050c8] to-[#003a99]', image: '/activaciones/smart-brush.png' },
+    { emoji: 'gamepad', iconName: 'gamepad', category: 'Experiencia Gamificada', title: 'RetroGame', desc: 'Aplicación en tótem digital que convierte a la persona y su negocio en un videojuego. Genera portada descargable e imprimible y personajes jugables. Efecto WOW y recuerdo duradero.', ideal: 'Eventos empresariales, ferias PYME, teambuilding', gradientLight: 'from-[#9B5CF8] via-[#7C3AED] to-[#5B21B6]', gradientDark: 'from-[#6366f1] via-[#4f46e5] to-[#4338ca]', image: '/activaciones/retrogame.png', link: 'https://tu-pyme-el-videojuego-de-los-90-46874276291.us-west1.run.app/' },
+    { emoji: 'book-open', iconName: 'book-open', category: 'Storytelling Visual', title: 'ComicGen', desc: 'Genera historias estilo novela gráfica en base a la persona y su PYME. El asistente es el protagonista de su propia historia heroica. Formato digital o impreso en mini revista.', ideal: 'Eventos corporativos, lanzamientos, ferias', gradientLight: 'from-[#F59E0B] via-[#D97706] to-[#B45309]', gradientDark: 'from-[#f97316] via-[#ea580c] to-[#c2410c]', image: '/activaciones/comicgen.png', link: 'https://comicgen-totem-46874276291.us-west1.run.app/' },
+    { emoji: 'credit-card', iconName: 'credit-card', category: 'Networking Digital', title: 'NeoCard', desc: 'Genera tarjetas de visita con IA. Los asistentes rellenan datos por voz o texto. Se imprime al momento con código QR vCard para enviar contactos al instante.', ideal: 'Networking, ferias, congresos, eventos B2B', gradientLight: 'from-[#0EA5E9] via-[#0284C7] to-[#0369A1]', gradientDark: 'from-[#06b6d4] via-[#0891b2] to-[#0e7490]', image: '/activaciones/neocard.png', link: 'https://generador-tarjetas.onrender.com/' },
+    { emoji: 'palette', iconName: 'palette', category: 'Personalización Visual', title: 'FXstylized', desc: 'Convierte el rostro del invitado en objetos personalizados: blíster de juguetes, tazas, latas, pósters, llaveros. Imágenes compartibles al instante en redes para potenciar la viralidad.', ideal: 'Activaciones de marca, merchandising único, recuerdos personalizados', gradientLight: 'from-[#EC4899] via-[#DB2777] to-[#BE185D]', gradientDark: 'from-[#f472b6] via-[#ec4899] to-[#db2777]', image: '/activaciones/fxstylized.png' },
+    { emoji: 'sparkles', iconName: 'sparkles', category: 'Fotocall con IA', title: 'Profesi-O-Matic', desc: 'Fotocall con IA que convierte a los asistentes en sus profesiones soñadas. Eligen atrezzo, se fotografían y la IA genera una imagen de su "yo profesional". Descarga y comparte.', ideal: 'Ferias, eventos corporativos, teambuilding, activaciones virales', gradientLight: 'from-[#10B981] via-[#059669] to-[#047857]', gradientDark: 'from-[#34d399] via-[#10b981] to-[#059669]', image: '/activaciones/profesi-o-matic.png', link: 'https://profesi-o-matic-46874276291.us-west1.run.app/' },
+    { emoji: 'crystal', iconName: 'crystal', category: 'Entretenimiento Personalizado', title: 'Mystic Oracle', desc: "Pitonisa virtual que 'predice' el futuro profesional del asistente de manera divertida e interactiva. Interacción por voz y consejos con humor.", ideal: 'Activaciones de marca, eventos temáticos, inauguraciones, cenas de gala', gradientLight: 'from-[#EE847B] via-[#DE3B84] to-[#b02060]', gradientDark: 'from-[#2860c0] via-[#1850a8] to-[#083890]', image: '/activaciones/mystic-oracle.png', link: 'https://madame-gemini-pitonisa-virtual-46874276291.us-west1.run.app/' },
+    { emoji: 'smile', iconName: 'smile', category: 'Entretenimiento Personalizado', title: 'Carizaturízame', desc: 'La IA redefine el arte de la caricatura: genera retratos humorísticos e hiperpersonalizados. Más de 2.300 caricaturas en un solo evento.', ideal: 'Ferias, eventos masivos, stands con alto tráfico de visitantes', gradientLight: 'from-[#DE3B84] via-[#EE847B] to-[#F7A361]', gradientDark: 'from-[#0070f3] via-[#1a60d0] to-[#3050b0]', image: '/activaciones/carizaturizame.png' },
   ];
 
   const paraQuienTypes = [
-    { icon: '🏷️', title: 'Activaciones de marca', desc: 'Donde el objetivo es generar efecto WOW y conexión emocional entre los asistentes y la marca.' },
-    { icon: '🏢', title: 'Eventos corporativos', desc: 'Para enriquecer momentos de networking, entretener en cenas de gala y crear oportunidades de patrocinio únicas.' },
-    { icon: '🎪', title: 'Ferias y congresos', desc: 'Para atraer un alto volumen de visitantes, captar su atención y dejar una impresión duradera.' },
-    { icon: '🤝', title: 'Teambuilding e incentivos', desc: 'Activaciones lúdicas que refuerzan la cohesión de equipo y generan recuerdos compartidos.' },
+    { iconName: 'tag', title: 'Activaciones de marca', desc: 'Donde el objetivo es generar efecto WOW y conexión emocional entre los asistentes y la marca.' },
+    { iconName: 'building', title: 'Eventos corporativos', desc: 'Para enriquecer momentos de networking, entretener en cenas de gala y crear oportunidades de patrocinio únicas.' },
+    { iconName: 'fair', title: 'Ferias y congresos', desc: 'Para atraer un alto volumen de visitantes, captar su atención y dejar una impresión duradera.' },
+    { iconName: 'handshake', title: 'Teambuilding e incentivos', desc: 'Activaciones lúdicas que refuerzan la cohesión de equipo y generan recuerdos compartidos.' },
   ];
 
   const categories = [
-    { icon: '🖌️', label: 'Transformación Creativa', count: 1 },
-    { icon: '🎮', label: 'Experiencias interactivas', count: 5 },
-    { icon: '🎭', label: 'Entretenimiento Personalizado', count: 2 },
+    { iconName: 'brush', label: 'Transformación Creativa', count: 1 },
+    { iconName: 'gamepad', label: 'Experiencias interactivas', count: 5 },
+    { iconName: 'smile', label: 'Entretenimiento Personalizado', count: 2 },
   ];
 
   let ctaHovered = $state(false);
@@ -95,9 +96,9 @@
 
 <div class="relative z-10 transition-colors duration-500">
   <!-- Hero -->
-  <section class="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-4 text-center transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-4 text-center transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
     <div class="absolute top-1/4 -left-32 sm:-left-48 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
-    <div class="absolute bottom-1/4 -right-32 sm:-right-48 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
+    <div class="absolute bottom-1/4 -right-32 sm:-right-48 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-fuchsia' : 'bg-blue-900'}"></div>
 
     <FadeIn delay={0.1} className="relative z-10 mb-6">
       <SectionLabel text="Nuestras Activaciones" {isLight} />
@@ -105,7 +106,7 @@
 
     <FadeIn delay={0.2}>
       <h1 class="relative z-10 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight tracking-tight max-w-5xl px-1 transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-        Experiencias de <span class="gradient-text-animate">IA</span><br class="sm:hidden" />que impactan
+        Experiencias de <span class="gradient-text-animate">IA</span> <br class="sm:hidden" />que impactan
       </h1>
     </FadeIn>
 
@@ -116,9 +117,9 @@
     </FadeIn>
 
     <FadeIn delay={0.6} className="relative z-10 mt-10 flex flex-wrap justify-center gap-4">
-      <SlideButton href="#activaciones" label="Activaciones" icon="🎯" {isLight} />
-      <SlideButton href="/consultoria" label="Consultoría" icon="🧠" {isLight} />
-      <SlideButton href="/formacion" label="Formación" icon="📚" {isLight} />
+      <SlideButton href="#activaciones" label="Activaciones" icon="target" {isLight} />
+      <SlideButton href="/consultoria" label="Consultoría" icon="brain" {isLight} />
+      <SlideButton href="/formacion" label="Formación" icon="book" {isLight} />
     </FadeIn>
   </section>
 
@@ -135,7 +136,7 @@
         </p>
       </FadeIn>
 
-      <!-- Carrusel a ancho viewport: el centro del arco coincide con el centro de pantalla y las cartas laterales no quedan recortadas por max-w-7xl -->
+      <!-- Carrusel a ancho viewport -->
       <FadeIn delay={0.2} className="overflow-visible">
         <div class="relative w-screen max-w-[100vw] left-1/2 -translate-x-1/2 overflow-visible">
           <WheelCarousel cards={ACTIVATION_CARDS} {isLight} />
@@ -144,8 +145,8 @@
 
       <FadeIn delay={0.35} className="mt-24 flex flex-wrap justify-center gap-6">
         {#each categories as cat}
-          <div class="flex items-center gap-3 px-5 py-3 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light bg-white/80 border-gray-100' : 'bg-[#0d1829]/80 border-white/8'}">
-            <span class="text-xl">{cat.icon}</span>
+          <div class="flex items-center gap-3 px-5 py-3 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light bg-white/80 border-gray-100' : 'bg-[#121214]/90 border-white/10'}">
+            <span class="text-xl flex items-center justify-center {isLight ? 'text-brand-magenta' : 'text-azul'}"><Icon name={cat.iconName} class="w-5 h-5" /></span>
             <div>
               <p class="text-xs font-bold {isLight ? 'text-gray-900' : 'text-white'}">{cat.label}</p>
               <p class="text-xs {isLight ? 'text-gray-400' : 'text-gray-500'}">{cat.count} activaciones</p>
@@ -157,11 +158,14 @@
   </section>
 
   <!-- Para quién -->
-  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {isLight ? 'bg-gradient-to-br from-[#f0a0c0] via-[#dc80c8] to-[#f8c090]' : 'bg-[#060d1a]/95 backdrop-blur-sm'}">
+  <section class="relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
+    <div class="absolute top-1/3 -left-48 w-[450px] h-[450px] rounded-full blur-3xl opacity-15 pointer-events-none {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
+    <div class="absolute bottom-1/3 -right-48 w-[450px] h-[450px] rounded-full blur-3xl opacity-15 pointer-events-none {isLight ? 'bg-brand-fuchsia' : 'bg-blue-800'}"></div>
+
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
-        <SectionLabel text="¿Para qué eventos?" {isLight} white={isLight} />
-        <h2 class="text-4xl sm:text-5xl font-black text-white">
+        <SectionLabel text="¿Para qué eventos?" {isLight} />
+        <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
           Diseñados para el <span class="gradient-text-animate">impacto real</span>
         </h2>
       </FadeIn>
@@ -170,10 +174,10 @@
         {#each paraQuienTypes as t, i}
           <FadeIn delay={i * 0.1}>
             <MagneticRepel strength={12} radius={155}>
-              <div class="p-6 rounded-2xl border text-center transition-all duration-300 hover:-translate-y-1 {isLight ? 'bg-white/15 border-white/25 backdrop-blur-sm hover:bg-white/25' : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 backdrop-blur-sm'}">
-                <div class="text-4xl mb-4">{t.icon}</div>
-                <h3 class="text-base font-black text-white mb-2">{t.title}</h3>
-                <p class="text-xs leading-relaxed {isLight ? 'text-white/75' : 'text-gray-400'}">{t.desc}</p>
+              <div class="p-6 rounded-2xl border text-center transition-all duration-300 {isLight ? 'shadow-card-light bg-white/90 border-gray-100 hover:border-brand-magenta/30' : 'bg-[#121214]/90 border-white/10 hover:border-azul/40 backdrop-blur-sm'}">
+                <div class="mb-4 flex justify-center {isLight ? 'text-brand-magenta' : 'text-azul'}"><Icon name={t.iconName} class="w-10 h-10" /></div>
+                <h3 class="text-base font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'} mb-2">{t.title}</h3>
+                <p class="text-xs leading-relaxed transition-colors duration-500 {isLight ? 'text-gray-600' : 'text-gray-400'}">{t.desc}</p>
               </div>
             </MagneticRepel>
           </FadeIn>
@@ -183,7 +187,7 @@
   </section>
 
   <!-- CTA -->
-  <section class="relative py-32 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="relative py-32 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-12 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
 
     <div class="max-w-3xl mx-auto text-center relative z-10">

@@ -1,5 +1,6 @@
 <script lang="ts">
   import '../app.css';
+  import { onMount, type Snippet } from 'svelte';
   import { page } from '$app/stores';
   import { getSeo, isBlogArticlePath, isTravelManagerPath } from '$lib/seo';
   import {
@@ -11,12 +12,30 @@
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
   import Footer from '$lib/components/Footer.svelte';
 
+  let { children }: { children?: Snippet } = $props();
+
   const pathname = $derived($page.url.pathname);
   const seo = $derived(getSeo(pathname));
   const isBlogArticle = $derived(isBlogArticlePath(pathname));
   const isTravelManager = $derived(isTravelManagerPath(pathname));
   const canonicalUrl = $derived(`${$page.url.origin}${pathname === '/' ? '' : pathname}`);
   const ogImageUrl = $derived(`${$page.url.origin}/externia-icon.svg`);
+
+  let scrollProgress = $state(0);
+
+  onMount(() => {
+    const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalScroll > 0) {
+        scrollProgress = Math.min(1, Math.max(0, window.scrollY / totalScroll));
+      } else {
+        scrollProgress = 0;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  });
 
   const jsonLdGraph = $derived(
     buildGraphOrganizationWebSite($page.url.origin, getSeo('/').description)
@@ -72,12 +91,23 @@
   {/if}
 </svelte:head>
 
+<!-- Reading progress bar line fixed at top -->
+<div
+  class="fixed top-0 left-0 right-0 h-[3px] z-[100] bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-azul origin-left transition-transform duration-75 ease-out pointer-events-none"
+  style="transform: scaleX({scrollProgress})"
+></div>
+
+<!-- Noise texture overlay filter -->
+<div class="pointer-events-none fixed inset-0 z-[99] opacity-[0.025] mix-blend-overlay bg-noise"></div>
+
 {#if !isTravelManager}
   <Navbar />
   <ThemeToggle />
 {/if}
 <main class="theme-transition w-full min-w-0 overflow-x-hidden">
-  <slot />
+  {#if children}
+    {@render children()}
+  {/if}
 </main>
 {#if !isTravelManager}
   <Footer />

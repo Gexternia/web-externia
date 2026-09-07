@@ -70,8 +70,8 @@
 
   const lightBg = 'bg-white/65 backdrop-blur-[2px]';
   const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
-  const darkBg = 'bg-[#060d1a]/72 backdrop-blur-[2px]';
-  const darkAltBg = 'bg-[#08111e]/72 backdrop-blur-[2px]';
+  const darkBg = 'bg-[#000000]/80 backdrop-blur-[2px]';
+  const darkAltBg = 'bg-[#08080a]/80 backdrop-blur-[2px]';
   function sectionBg(light: boolean, alt = false) {
     return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
   }
@@ -146,7 +146,7 @@
 
 <div class="relative min-h-screen z-10 transition-colors duration-500">
   {#if error || !noticia}
-    <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+    <section class="section-divider relative flex flex-col items-center justify-center py-28 px-4 text-center overflow-hidden transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
       <FadeIn delay={0.1}>
         <h1 class="text-2xl font-bold transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">Noticia no encontrada</h1>
         <a
@@ -161,7 +161,7 @@
     </section>
   {:else}
     {@const n = noticia}
-    <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+    <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
       <div class="max-w-3xl mx-auto relative z-10">
         <FadeIn delay={0.1}>
           <a
@@ -186,7 +186,7 @@
 
         <FadeIn delay={0.25} className="mt-10">
           <FlipCard
-            icon="💡"
+            icon="lightbulb"
             title="¿Cómo usar esta novedad en tu evento?"
             desc={buildComoUsarDesc(n)}
             gradient="from-[#EE847B] to-[#DE3B84]"

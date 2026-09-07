@@ -16,7 +16,7 @@
       return () => cancelIdleCallback(id);
     }
 
-    const id = window.setTimeout(loadScene, 150);
+    const id = setTimeout(loadScene, 150);
     return () => clearTimeout(id);
   });
 </script>

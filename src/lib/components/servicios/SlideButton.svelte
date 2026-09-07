@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Icon from '$lib/components/shared/Icon.svelte';
+
   let { href, label, isLight, icon }: { href: string; label: string; isLight: boolean; icon: string } = $props();
 
   let hovered = $state(false);
@@ -6,7 +8,7 @@
   let cloneRef: HTMLSpanElement;
   const TR = 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
 
-  const text = $derived(`${icon} ${label}`);
+  const iconName = $derived(icon);
 
   function onEnter() {
     hovered = true;
@@ -55,7 +57,16 @@
     : 'border-azul/30 text-azul bg-azul/5 hover:bg-azul/12 hover:border-azul/60'}"
   style={hovered ? (isLight ? 'box-shadow: 0 0 20px #DE3B8430' : 'box-shadow: 0 0 20px #0070f330') : ''}
 >
-  <span class="invisible whitespace-nowrap">{text}</span>
-  <span bind:this={primaryRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(0%)">{text}</span>
-  <span bind:this={cloneRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(-110%)">{text}</span>
+  <span class="invisible whitespace-nowrap flex items-center gap-2">
+    <Icon name={iconName} class="w-4 h-4" />
+    <span>{label}</span>
+  </span>
+  <span bind:this={primaryRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap gap-2" style="transform: translateX(0%)">
+    <Icon name={iconName} class="w-4 h-4" />
+    <span>{label}</span>
+  </span>
+  <span bind:this={cloneRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap gap-2" style="transform: translateX(-110%)">
+    <Icon name={iconName} class="w-4 h-4" />
+    <span>{label}</span>
+  </span>
 </a>

@@ -6,6 +6,7 @@
   import SectionLabel from '$lib/components/shared/SectionLabel.svelte';
   import TiltCard from '$lib/components/shared/TiltCard.svelte';
   import Counter from '$lib/components/shared/Counter.svelte';
+  import Icon from '$lib/components/shared/Icon.svelte';
 
   let isLight = $state(false);
   let NetworkParticlesBg = $state<typeof import('$lib/components/quienes-somos/NetworkParticlesBg.svelte').default | null>(null);
@@ -22,12 +23,10 @@
     return () => window.removeEventListener('themechange', handler);
   });
 
-
-
   const lightBg = 'bg-white/65 backdrop-blur-[2px]';
   const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
-  const darkBg = 'bg-[#060d1a]/72 backdrop-blur-[2px]';
-  const darkAltBg = 'bg-[#08111e]/72 backdrop-blur-[2px]';
+  const darkBg = 'bg-[#000000]/80 backdrop-blur-[2px]';
+  const darkAltBg = 'bg-[#08080a]/80 backdrop-blur-[2px]';
 
   function sectionBg(light: boolean, alt = false) {
     return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
@@ -39,18 +38,18 @@
   const manifestHighlight = new Set(['especialistas', 'dominan', 'Inteligencia', 'Artificial.']);
 
   const timeline = [
-    { year: '2021', icon: '🔬', text: 'Guillermo lee su tesis doctoral donde aplica todo el potencial de la IA para predecir eficacia en tratamientos oncológicos en el Hospital La Paz.' },
-    { year: '2023', icon: '💡', text: 'Aprende cómo funciona el MICE desde dentro de una agencia en la que se desarrolla como el primer Prompt Engineer del sector.' },
-    { year: '2024', icon: '🚀', text: 'Funda Externia. En menos de 2 meses ya colabora con 5 de las principales agencias de eventos de España y proyectos para clientes del IBEX 35.' },
-    { year: '2025', icon: '🏆', text: 'Ganador del premio Event Industry Entrepreneur y finalista del Innovation Champion en los MPI Iberian Awards — Valencia.' },
+    { year: '2021', icon: 'microscope', text: 'Guillermo lee su tesis doctoral donde aplica todo el potencial de la IA para predecir eficacia en tratamientos oncológicos en el Hospital La Paz.' },
+    { year: '2023', icon: 'lightbulb', text: 'Aprende cómo funciona el MICE desde dentro de una agencia en la que se desarrolla como el primer Prompt Engineer del sector.' },
+    { year: '2024', icon: 'rocket', text: 'Funda Externia. En menos de 2 meses ya colabora con 5 de las principales agencias de eventos de España y proyectos para clientes del IBEX 35.' },
+    { year: '2025', icon: 'trophy', text: 'Ganador del premio Event Industry Entrepreneur y finalista del Innovation Champion en los MPI Iberian Awards — Valencia.' },
   ];
 
   let activeTimelineIdx = $state<number | null>(null);
 
   const services = [
-    { icon: '🧠', title: 'Consultoría de IA para Eventos', desc: 'Acompañamos a agencias y empresas en la integración estratégica de la IA. Identificamos oportunidades, diseñamos hojas de ruta y formamos equipos para que la IA sea una ventaja real.', gradient: 'from-[#DE3B84] to-[#D6007D]' },
-    { icon: '⚡', title: 'Activaciones Hiperpersonalizadas', desc: 'Diseñamos activaciones completamente personalizadas y diseñadas exclusivamente para tu evento. La IA no va de plantillas, sino de generación de experiencias únicas.', gradient: 'from-[#FFC12D] to-[#F7A361]' },
-    { icon: '📚', title: 'Formación Especializada', desc: 'Programas adaptados al sector: desde talleres introductorios hasta certificaciones avanzadas. Preparamos a los profesionales para el presente y el futuro.', gradient: 'from-[#EE847B] to-[#DE3B84]' },
+    { icon: 'brain', title: 'Consultoría de IA para Eventos', desc: 'Acompañamos a agencias y empresas en la integración estratégica de la IA. Identificamos oportunidades, diseñamos hojas de ruta y formamos equipos para que la IA sea una ventaja real.', gradient: 'from-[#DE3B84] to-[#D6007D]' },
+    { icon: 'zap', title: 'Activaciones Hiperpersonalizadas', desc: 'Diseñamos activaciones completamente personalizadas y diseñadas exclusivamente para tu evento. La IA no va de plantillas, sino de generación de experiencias únicas.', gradient: 'from-[#FFC12D] to-[#F7A361]' },
+    { icon: 'book', title: 'Formación Especializada', desc: 'Programas adaptados al sector: desde talleres introductorios hasta certificaciones avanzadas. Preparamos a los profesionales para el presente y el futuro.', gradient: 'from-[#EE847B] to-[#DE3B84]' },
   ];
 
   const stats = [
@@ -68,14 +67,12 @@
   }
 
   const valueCards = [
-    { icon: '🔬', label: 'Rigor analítico' },
-    { icon: '💡', label: 'Creatividad disruptiva' },
-    { icon: '🤝', label: 'Respeto por las personas' },
+    { icon: 'microscope', label: 'Rigor analítico' },
+    { icon: 'lightbulb', label: 'Creatividad disruptiva' },
+    { icon: 'handshake', label: 'Respeto por las personas' },
   ];
 
   const clientLogos = ['opc-catalunya', 'ifaes', 'el-economista', 'ecoener', 'caixabank', 'ing', 'stage-entertainment', 'idipaz', 'amazon', 'eventoplus', 'american-express', 'universidad-cordoba', 'camara-espanola', 'aegve', 'uppereat', 'cett', 'snapsight', 'somos-experiences', 'kpmg'];
-
-
 
   let ctaHovered = $state(false);
   let primaryRef: HTMLSpanElement;
@@ -117,9 +114,9 @@
 
 <div class="relative z-10 transition-colors duration-500">
   <!-- Hero -->
-  <section class="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-4 text-center transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-4 text-center transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
     <div class="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
-    <div class="absolute bottom-1/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
+    <div class="absolute bottom-1/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-fuchsia' : 'bg-blue-900'}"></div>
 
     <FadeIn delay={0.1}>
       <h1 class="relative z-10 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight max-w-5xl transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
@@ -169,7 +166,7 @@
   </section>
 
   <!-- Historia -->
-  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="mb-16">
         <SectionLabel text="Nuestra Historia" {isLight} />
@@ -193,10 +190,10 @@
               >
                 <div class="flex flex-col items-center shrink-0">
                   <div
-                    class="w-11 h-11 rounded-full flex items-center justify-center text-lg font-bold text-white transition-all duration-250 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"
+                    class="w-11 h-11 rounded-full flex items-center justify-center font-bold text-white transition-all duration-250 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"
                     style="transform: scale({activeTimelineIdx === i ? 1.15 : 1}); box-shadow: {activeTimelineIdx === i ? (isLight ? '0 0 18px #DE3B8470' : '0 0 18px #0070f370') : '0 0 0 transparent'}"
                   >
-                    {item.icon}
+                    <Icon name={item.icon} class="w-5 h-5 text-white" />
                   </div>
                   {#if i < timeline.length - 1}
                     <div class="w-px mt-2 {isLight ? 'bg-brand-magenta/25' : 'bg-azul/25'}" style="height: {activeTimelineIdx === i ? 56 : 48}px"></div>
@@ -216,13 +213,19 @@
         <div class="flex flex-col gap-6">
           <FadeIn delay={0.2} from="right">
             <div class="relative">
-              <div class="absolute -inset-3 rounded-3xl blur-2xl opacity-25 pointer-events-none {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-yellow' : 'bg-azul'}"></div>
+              <div class="absolute -inset-3 rounded-3xl blur-2xl opacity-25 pointer-events-none {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"></div>
               <TiltCard className="block">
-                <div class="relative rounded-2xl overflow-hidden border transition-shadow duration-300 {isLight ? 'border-brand-magenta/15 shadow-card-light shadow-card-light-hover' : 'border-white/8'}">
+                <div class="relative rounded-2xl overflow-hidden border transition-shadow duration-300 {isLight ? 'border-brand-magenta/15 shadow-card-light shadow-card-light-hover' : 'border-white/10'}">
                   <img src="/team/guillermo-premio.webp" alt="Guillermo Prado — MPI Iberian Awards 2025" class="w-full h-[240px] sm:h-[320px] md:h-[380px] object-cover object-top block" />
                   <div class="absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border {isLight ? 'bg-white/85 border-brand-magenta/15' : 'bg-black/75 border-white/10'}">
-                    <p class="text-xs font-bold tracking-widest uppercase {isLight ? 'text-brand-magenta' : 'text-azul'}">🏆 MPI Iberian Awards 2025</p>
-                    <p class="text-sm font-semibold mt-0.5 {isLight ? 'text-gray-900' : 'text-white'}">🥇 Ganador · Event Industry Entrepreneur</p>
+                    <p class="text-xs font-bold tracking-widest uppercase flex items-center gap-1.5 {isLight ? 'text-brand-magenta' : 'text-azul'}">
+                      <Icon name="trophy" class="w-4 h-4" />
+                      <span>MPI Iberian Awards 2025</span>
+                    </p>
+                    <p class="text-sm font-semibold mt-0.5 flex items-center gap-1.5 {isLight ? 'text-gray-900' : 'text-white'}">
+                      <Icon name="medal" class="w-4 h-4" />
+                      <span>Ganador · Event Industry Entrepreneur</span>
+                    </p>
                     <p class="text-xs mt-0.5 {isLight ? 'text-gray-500' : 'text-gray-400'}">Guillermo Prado Vázquez · Fundador Externia</p>
                   </div>
                 </div>
@@ -231,7 +234,7 @@
           </FadeIn>
 
           <FadeIn delay={0.35} from="right">
-            <blockquote class="p-6 rounded-2xl border italic {isLight ? 'shadow-card-light bg-gradient-to-br from-[#fff5f9] to-[#fff8ee] border-brand-magenta/10' : 'bg-[#0d1829]/80 border-white/5 backdrop-blur-sm'}">
+            <blockquote class="p-6 rounded-2xl border italic {isLight ? 'shadow-card-light bg-gradient-to-br from-[#fff5f9] to-[#fff8ee] border-brand-magenta/10' : 'bg-[#121214]/90 border-white/10 backdrop-blur-sm'}">
               <p class="text-base leading-relaxed font-medium {isLight ? 'text-gray-800' : 'text-gray-200'}">
                 "La IA nos permite hacer los eventos más humanos, no menos.
                 Cada activación está diseñada para crear conexión real entre la marca y las personas."
@@ -269,12 +272,15 @@
   </section>
 
   <!-- Resultados -->
-  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {isLight ? 'bg-gradient-to-br from-[#f0a0c0] via-[#dc80c8] to-[#f8c090]' : 'bg-[#060d1a]/95 backdrop-blur-sm'}">
+  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
+    <div class="absolute top-1/3 -left-48 w-[450px] h-[450px] rounded-full blur-3xl opacity-15 pointer-events-none {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
+    <div class="absolute bottom-1/3 -right-48 w-[450px] h-[450px] rounded-full blur-3xl opacity-15 pointer-events-none {isLight ? 'bg-brand-fuchsia' : 'bg-blue-800'}"></div>
+
     <div class="max-w-7xl mx-auto relative z-10">
       <FadeIn className="text-center mb-16">
-        <SectionLabel text="Nuestros Resultados" {isLight} white={isLight} />
-        <h2 class="text-4xl sm:text-5xl font-black text-white">Nuestros números hablan</h2>
-        <p class="mt-2 text-sm {isLight ? 'text-white/60' : 'text-gray-500'}">
+        <SectionLabel text="Nuestros Resultados" {isLight} />
+        <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">Nuestros números hablan</h2>
+        <p class="mt-2 text-sm transition-colors duration-500 {isLight ? 'text-gray-600' : 'text-gray-400'}">
           Haz clic en cualquier dato para verlo de nuevo
         </p>
       </FadeIn>
@@ -286,12 +292,13 @@
               role="button"
               tabindex="0"
               onclick={() => handleStatClick(i)}
-              class="p-8 rounded-2xl border text-center transition-all duration-300 hover:-translate-y-1 cursor-pointer select-none active:scale-95 {isLight ? 'bg-white/15 border-white/20 backdrop-blur-sm hover:bg-white/25' : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 hover:bg-[#00c8ff]/5 backdrop-blur-sm'}"
+              onkeydown={(e) => e.key === 'Enter' && handleStatClick(i)}
+              class="p-8 rounded-2xl border text-center transition-all duration-300 cursor-pointer select-none active:scale-95 {isLight ? 'shadow-card-light bg-white/90 border-gray-100 hover:border-brand-magenta/30' : 'bg-[#121214]/90 border-white/10 hover:border-azul/40 backdrop-blur-sm'}"
             >
-              <div class="text-5xl sm:text-6xl font-black mb-2 {isLight ? 'text-white' : ''}" style={!isLight ? `color: ${s.color}` : ''}>
+              <div class="text-5xl sm:text-6xl font-black mb-2" style="color: {s.color}">
                 <Counter value={s.value} suffix={s.suffix} replay={replays[i]} />
               </div>
-              <p class="text-sm leading-snug {isLight ? 'text-white/80' : 'text-gray-400'}">{s.label}</p>
+              <p class="text-sm leading-snug transition-colors duration-500 {isLight ? 'text-gray-600' : 'text-gray-400'}">{s.label}</p>
             </div>
           </FadeIn>
         {/each}
@@ -316,21 +323,28 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8 items-stretch">
         <FadeIn delay={0.1} from="left" className="lg:col-span-2">
-          <TiltCard className="block">
-            <div class="rounded-2xl overflow-hidden border transition-shadow duration-300 {isLight ? 'border-brand-magenta/15 shadow-card-light shadow-card-light-hover bg-white/90 backdrop-blur-sm' : 'border-white/8 bg-[#0d1829]/80 backdrop-blur-sm'}">
+          <TiltCard className="block h-full">
+            <div class="rounded-2xl overflow-hidden border transition-shadow duration-300 h-full flex flex-col {isLight ? 'border-brand-magenta/15 shadow-card-light shadow-card-light-hover bg-white/90 backdrop-blur-sm' : 'border-white/10 bg-[#121214]/90 backdrop-blur-sm'}">
               <div class="relative overflow-hidden h-[200px] sm:h-[240px] md:h-[280px]">
                 <img src="/team/guillermo-ganador.webp" alt="Guillermo Prado — Ganador Event Industry Entrepreneur 2025" class="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-105" />
               </div>
-              <div class="p-6">
-                <div class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-3 {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/10 text-azul'}">Fundador & CEO</div>
-                <h3 class="text-xl font-black {isLight ? 'text-gray-900' : 'text-white'}">Guillermo Prado Vázquez</h3>
-                <p class="mt-2 text-sm leading-relaxed {isLight ? 'text-gray-500' : 'text-gray-400'}">
-                  Doctor en Biociencias Moleculares (UAM) · Exinvestigador Hospital La Paz · Especialista en IA aplicada a eventos MICE
-                </p>
+              <div class="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <div class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-3 {isLight ? 'bg-brand-magenta/10 text-brand-magenta' : 'bg-azul/10 text-azul'}">Fundador & CEO</div>
+                  <h3 class="text-xl font-black {isLight ? 'text-gray-900' : 'text-white'}">Guillermo Prado Vázquez</h3>
+                  <p class="mt-2 text-sm leading-relaxed {isLight ? 'text-gray-500' : 'text-gray-400'}">
+                    Doctor en Biociencias Moleculares (UAM) · Exinvestigador Hospital La Paz · Especialista en IA aplicada a eventos MICE
+                  </p>
+                </div>
                 <div class="mt-4 flex flex-wrap gap-2">
-                  {#each ['🥇 Event Industry Entrepreneur — Ganador', '🏆 Innovation Champion — Finalista'] as b}
-                    <span class="text-xs px-3 py-1 rounded-full font-medium {isLight ? 'bg-brand-magenta/8 text-brand-magenta border border-brand-magenta/20' : 'bg-azul/10 text-azul border border-azul/20'}">{b}</span>
-                  {/each}
+                  <span class="text-xs px-3 py-1 rounded-full font-medium inline-flex items-center gap-1 {isLight ? 'bg-brand-magenta/8 text-brand-magenta border border-brand-magenta/20' : 'bg-azul/10 text-azul border border-azul/20'}">
+                    <Icon name="medal" class="w-3.5 h-3.5" />
+                    <span>Event Industry Entrepreneur — Ganador</span>
+                  </span>
+                  <span class="text-xs px-3 py-1 rounded-full font-medium inline-flex items-center gap-1 {isLight ? 'bg-brand-magenta/8 text-brand-magenta border border-brand-magenta/20' : 'bg-azul/10 text-azul border border-azul/20'}">
+                    <Icon name="trophy" class="w-3.5 h-3.5" />
+                    <span>Innovation Champion — Finalista</span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -339,7 +353,7 @@
 
         <FadeIn delay={0.25} from="right" className="lg:col-span-3 flex flex-col justify-between gap-6">
           <TiltCard className="block">
-            <div class="relative rounded-2xl overflow-hidden border {isLight ? 'border-brand-magenta/15' : 'border-white/8'}">
+            <div class="relative rounded-2xl overflow-hidden border {isLight ? 'border-brand-magenta/15' : 'border-white/10'}">
               <img src="/team/equipo-mpi.webp" alt="Equipo Externia en MPI Iberian Chapter" class="w-full h-[260px] sm:h-[340px] md:h-[420px] object-cover object-center transition-transform duration-700 hover:scale-105" />
               <div class="absolute bottom-4 left-4 right-4 p-4 rounded-xl backdrop-blur-md border {isLight ? 'bg-white/85 border-brand-magenta/15' : 'bg-black/75 border-white/10'}">
                 <p class="text-xs font-bold tracking-widest uppercase {isLight ? 'text-brand-magenta' : 'text-azul'}">MPI Iberian Chapter · Valencia 2025</p>
@@ -350,8 +364,8 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {#each valueCards as v}
-              <div class="p-4 rounded-xl text-center border transition-all duration-300 hover:-translate-y-1 {isLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-100 backdrop-blur-sm' : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 hover:bg-[#00c8ff]/5 backdrop-blur-sm'}">
-                <div class="text-2xl mb-2">{v.icon}</div>
+              <div class="p-4 rounded-xl text-center border transition-all duration-300 {isLight ? 'shadow-card-light bg-white/90 border-gray-100 backdrop-blur-sm' : 'bg-[#121214]/90 border-white/10 backdrop-blur-sm'}">
+                <div class="flex justify-center mb-2 {isLight ? 'text-brand-magenta' : 'text-azul'}"><Icon name={v.icon} class="w-6 h-6" /></div>
                 <p class="text-xs font-semibold {isLight ? 'text-gray-700' : 'text-gray-300'}">{v.label}</p>
               </div>
             {/each}
