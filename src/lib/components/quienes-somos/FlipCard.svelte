@@ -3,6 +3,7 @@
   import { spring, tweened } from 'svelte/motion';
   import PushRobot from './PushRobot.svelte';
   import PullRobot from './PullRobot.svelte';
+  import Icon from '$lib/components/shared/Icon.svelte';
 
   interface Props {
     icon: string;
@@ -76,7 +77,7 @@
 
   const cardFaceCls = $derived(isLight
     ? 'bg-white/90 border-gray-100 shadow-card-light shadow-card-light-hover backdrop-blur-sm'
-    : 'bg-[#0d1829]/90 border-white/8 backdrop-blur-sm');
+    : 'bg-[#121214]/90 border-white/10 backdrop-blur-sm');
 
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -272,7 +273,7 @@
       class="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-6 text-center border transition-colors duration-500 {cardFaceCls}"
       style="transform: translateX({$curtainX}%); will-change: transform; z-index: 10"
     >
-      <span class="{variant === 'large' ? 'text-6xl' : 'text-5xl'}">{icon}</span>
+      <div class="{isLight ? 'text-brand-magenta' : 'text-azul'}"><Icon name={icon} class={variant === 'large' ? 'w-16 h-16' : 'w-12 h-12'} /></div>
       <h3 class="{variant === 'large' ? 'text-xl' : 'text-lg'} font-bold transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
         {title}
       </h3>
@@ -287,7 +288,7 @@
       style="transform: translateX({$leftX}%); opacity: {leftOpacity}; z-index: 20; box-shadow: 3px 0 20px rgba(0,0,0,0.15)"
     >
       <div class="absolute inset-0 w-[200%] flex flex-col items-center justify-center gap-4 p-6 text-center border {cardFaceCls}">
-        <span class="{variant === 'large' ? 'text-6xl' : 'text-5xl'}">{icon}</span>
+        <div class="{isLight ? 'text-brand-magenta' : 'text-azul'}"><Icon name={icon} class={variant === 'large' ? 'w-16 h-16' : 'w-12 h-12'} /></div>
         <h3 class="{variant === 'large' ? 'text-xl' : 'text-lg'} font-bold {isLight ? 'text-gray-900' : 'text-white'}">{title}</h3>
         <span class="{variant === 'large' ? 'text-sm' : 'text-xs'} font-medium {isLight ? 'text-gray-400' : 'text-gray-500'}">Click para revelar</span>
       </div>
@@ -299,7 +300,7 @@
       style="transform: translateX({$rightX}%); opacity: {rightOpacity}; z-index: 20; box-shadow: -3px 0 20px rgba(0,0,0,0.15)"
     >
       <div class="absolute top-0 right-0 h-full w-[200%] flex flex-col items-center justify-center gap-4 p-6 text-center border {cardFaceCls}">
-        <span class="{variant === 'large' ? 'text-6xl' : 'text-5xl'}">{icon}</span>
+        <div class="{isLight ? 'text-brand-magenta' : 'text-azul'}"><Icon name={icon} class={variant === 'large' ? 'w-16 h-16' : 'w-12 h-12'} /></div>
         <h3 class="{variant === 'large' ? 'text-xl' : 'text-lg'} font-bold {isLight ? 'text-gray-900' : 'text-white'}">{title}</h3>
         <span class="{variant === 'large' ? 'text-sm' : 'text-xs'} font-medium {isLight ? 'text-gray-400' : 'text-gray-500'}">Click para revelar</span>
       </div>

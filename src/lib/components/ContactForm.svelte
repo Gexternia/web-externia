@@ -101,7 +101,7 @@
 
 <section
   id="formulario-contacto"
-  class="relative {noBg ? 'pt-6 pb-24 sm:pb-32' : 'py-24 sm:py-32'} px-4 overflow-hidden transition-colors duration-500 {noBg ? '' : (effectiveLight ? 'bg-white/65' : 'bg-[#060d1a]/72')} {noBg ? '' : 'backdrop-blur-[2px]'}"
+  class="relative {noBg ? 'pt-6 pb-24 sm:pb-32' : 'py-24 sm:py-32'} px-4 overflow-hidden transition-colors duration-500 {noBg ? '' : (effectiveLight ? 'bg-white/65' : 'bg-[#000000]/80')} {noBg ? '' : 'backdrop-blur-[2px]'}"
 >
   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-3xl opacity-10 pointer-events-none transition-colors duration-500 {effectiveLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
 
@@ -123,7 +123,7 @@
     <FadeIn delay={0.1}>
       {#if submitted}
         <div
-          class="rounded-2xl border p-8 text-center transition-colors duration-500 {effectiveLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-brand-magenta/20 text-gray-800' : 'bg-[#0d1829]/90 border-azul/30 text-gray-200'}"
+          class="rounded-2xl border p-8 text-center transition-colors duration-500 {effectiveLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-brand-magenta/20 text-gray-800' : 'bg-[#121214]/90 border-azul/30 text-gray-200'}"
         >
           <p class="text-lg font-semibold mb-2">Mensaje enviado</p>
           <p class="text-sm opacity-90">Gracias por contactar. Te responderemos pronto.</p>
@@ -138,7 +138,7 @@
       {:else}
         <form
           onsubmit={handleSubmit}
-          class="rounded-2xl border p-6 sm:p-8 transition-colors duration-500 {effectiveLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-200' : 'bg-[#0d1829]/90 border-white/10'}"
+          class="rounded-2xl border p-6 sm:p-8 transition-colors duration-500 {effectiveLight ? 'shadow-card-light shadow-card-light-hover bg-white/90 border-gray-200' : 'bg-[#121214]/90 border-white/10'}"
         >
           <div class="grid sm:grid-cols-2 gap-5 mb-5">
             <div>

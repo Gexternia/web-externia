@@ -1,9 +1,11 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { scale, fade } from 'svelte/transition';
+  import Icon from '$lib/components/shared/Icon.svelte';
 
   export interface FlickCardData {
     emoji: string;
+    iconName?: string;
     category: string;
     title: string;
     desc: string;
@@ -203,10 +205,11 @@
       <button
         type="button"
         onclick={() => jumpTo(i)}
-        class="min-h-[44px] px-4 py-3 sm:py-2 rounded-full text-sm sm:text-base font-semibold border transition-all duration-200 {i === centeredIdx ? (isLight ? 'bg-brand-magenta text-white border-brand-magenta' : 'bg-azul text-white border-azul') : (isLight ? 'bg-white/60 text-gray-600 border-gray-200 hover:opacity-80' : 'bg-white/5 text-gray-400 border-white/10 hover:opacity-80')}"
+        class="min-h-[44px] px-4 py-3 sm:py-2 rounded-full text-sm sm:text-base font-semibold border transition-all duration-200 inline-flex items-center gap-2 {i === centeredIdx ? (isLight ? 'bg-brand-magenta text-white border-brand-magenta' : 'bg-azul text-white border-azul') : (isLight ? 'bg-white/60 text-gray-600 border-gray-200 hover:opacity-80' : 'bg-white/5 text-gray-400 border-white/10 hover:opacity-80')}"
         style="opacity: {i === centeredIdx ? 1 : 0.4}; transform: scale({i === centeredIdx ? 1 : 0.93})"
       >
-        {card.emoji} {card.title}
+        <Icon name={card.iconName || card.emoji} class="w-4 h-4 shrink-0" />
+        <span>{card.title}</span>
       </button>
     {/each}
   </div>
@@ -296,7 +299,7 @@
                 <span class="inline-block px-2 py-1 sm:px-3 rounded-full text-xs sm:text-sm font-bold tracking-wide uppercase mb-2 sm:mb-5 bg-white/25 text-white">
                   {card.category}
                 </span>
-                <div class="text-5xl sm:text-6xl md:text-7xl mb-3 sm:mb-5">{card.emoji}</div>
+                <div class="mb-3 sm:mb-5 text-white"><Icon name={card.iconName || card.emoji} class="w-12 h-12 sm:w-16 sm:h-16 text-white" /></div>
                 <h3 class="text-xl sm:text-2xl md:text-3xl font-black text-white mb-2 sm:mb-4">{card.title}</h3>
                 <p class="text-white/95 text-sm sm:text-base leading-relaxed line-clamp-2 sm:line-clamp-none">{card.desc}</p>
               </div>
@@ -348,7 +351,7 @@
             <span class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-white/25 text-white w-fit">
               {current.category}
             </span>
-            <div class="text-5xl">{current.emoji}</div>
+            <div class="mb-2 text-white"><Icon name={current.iconName || current.emoji} class="w-10 h-10 text-white" /></div>
             <h3 class="text-2xl font-black text-white">{current.title}</h3>
             <p class="text-white/95 text-sm leading-relaxed">{current.desc}</p>
             <div class="h-px bg-white/30"></div>

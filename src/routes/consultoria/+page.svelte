@@ -4,6 +4,7 @@
   import FadeIn from '$lib/components/shared/FadeIn.svelte';
   import SectionLabel from '$lib/components/shared/SectionLabel.svelte';
   import MagneticRepel from '$lib/components/shared/MagneticRepel.svelte';
+  import Icon from '$lib/components/shared/Icon.svelte';
 
   let isLight = $state(false);
   let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
@@ -22,24 +23,24 @@
 
   const lightBg = 'bg-white/65 backdrop-blur-[2px]';
   const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
-  const darkBg = 'bg-[#060d1a]/72 backdrop-blur-[2px]';
-  const darkAltBg = 'bg-[#08111e]/72 backdrop-blur-[2px]';
+  const darkBg = 'bg-[#000000]/80 backdrop-blur-[2px]';
+  const darkAltBg = 'bg-[#08080a]/80 backdrop-blur-[2px]';
 
   function sectionBg(light: boolean, alt = false) {
     return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
   }
 
   const phases = [
-    { num: '01', title: 'CRE-IA-tividad', icon: '💡', desc: 'Exploración del contexto del evento, los objetivos de la marca y el perfil de los asistentes. Co-creación mediante brainstorming aumentado con IA.', colorLight: '#DE3B84', colorDark: '#0070f3' },
-    { num: '02', title: 'AI-mplementación', icon: '⚙️', desc: 'Desarrollo e integración ágil de la solución elegida. La tecnología se adapta al espacio, el tiempo y el equipo humano del evento.', colorLight: '#FFC12D', colorDark: '#3b82f6' },
-    { num: '03', title: 'Evolución y Optimización', icon: '📊', desc: 'Monitorización en tiempo real, feedback e informes de impacto medibles. Auditorías de IA y asesoramiento en la Ley de IA de la UE.', colorLight: '#F7A361', colorDark: '#60a5fa' },
+    { num: '01', title: 'CRE-IA-tividad', icon: 'lightbulb', desc: 'Exploración del contexto del evento, los objetivos de la marca y el perfil de los asistentes. Co-creación mediante brainstorming aumentado con IA.', colorLight: '#DE3B84', colorDark: '#0070f3' },
+    { num: '02', title: 'AI-mplementación', icon: 'gear', desc: 'Desarrollo e integración ágil de la solución elegida. La tecnología se adapta al espacio, el tiempo y el equipo humano del evento.', colorLight: '#FFC12D', colorDark: '#3b82f6' },
+    { num: '03', title: 'Evolución y Optimización', icon: 'chart', desc: 'Monitorización en tiempo real, feedback e informes de impacto medibles. Auditorías de IA y asesoramiento en la Ley de IA de la UE.', colorLight: '#F7A361', colorDark: '#60a5fa' },
   ];
 
   const extras = [
-    { icon: '🔍', label: 'Auditorías de IA' },
-    { icon: '🗺️', label: 'Hojas de ruta tecnológicas' },
-    { icon: '⚖️', label: 'Cumplimiento Ley IA UE' },
-    { icon: '🌱', label: 'Soluciones neutras en carbono' },
+    { icon: 'search', label: 'Auditorías de IA' },
+    { icon: 'map', label: 'Hojas de ruta tecnológicas' },
+    { icon: 'scale', label: 'Cumplimiento Ley IA UE' },
+    { icon: 'leaf', label: 'Soluciones neutras en carbono' },
   ];
 
   let ctaHovered = $state(false);
@@ -82,9 +83,9 @@
 
 <div class="relative z-10 transition-colors duration-500">
   <!-- Hero -->
-  <section class="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-4 text-center transition-colors duration-500 {sectionBg(isLight)}">
+  <section class="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-4 text-center transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
     <div class="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
-    <div class="absolute bottom-1/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
+    <div class="absolute bottom-1/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-fuchsia' : 'bg-blue-900'}"></div>
 
     <FadeIn delay={0.1} className="relative z-10 mb-6">
       <SectionLabel text="Consultoría Estratégica" {isLight} />
@@ -123,7 +124,7 @@
           {#each phases as phase, i}
             <MagneticRepel strength={12} radius={160}>
               <FadeIn delay={i * 0.15}>
-                <div class="flex flex-col items-center text-center p-8 rounded-2xl border transition-all duration-300 {isLight ? 'bg-white/90 border-gray-100 backdrop-blur-sm' : 'bg-[#0d1829]/80 border-white/5 hover:border-[#00c8ff]/40 backdrop-blur-sm'}">
+                <div class="flex flex-col items-center text-center p-8 rounded-2xl border transition-all duration-300 {isLight ? 'shadow-card-light bg-white/90 border-gray-100 backdrop-blur-sm' : 'bg-[#121214]/90 border-white/10 hover:border-azul/40 backdrop-blur-sm'}">
                   <div
                     class="relative z-10 w-20 h-20 rounded-full flex items-center justify-center text-2xl font-black text-white mb-6 shadow-xl transition-transform duration-300 hover:scale-110"
                     style="background-color: {isLight ? phase.colorLight : phase.colorDark}"
@@ -131,7 +132,7 @@
                     <span>{phase.num}</span>
                     <div class="absolute inset-0 rounded-full opacity-40 blur-md" style="background-color: {isLight ? phase.colorLight : phase.colorDark}"></div>
                   </div>
-                  <div class="text-3xl mb-3 select-none">{phase.icon}</div>
+                  <div class="mb-3 text-brand-magenta dark:text-azul flex justify-center"><Icon name={phase.icon} class="w-8 h-8" /></div>
                   <h3 class="text-xl font-black mb-3 {isLight ? 'text-gray-900' : 'text-white'}">
                     {#each phase.title.split('-') as part, pi}
                       {#if part === 'IA'}
@@ -151,8 +152,8 @@
 
       <FadeIn delay={0.3} className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {#each extras as e}
-          <div class="flex items-center gap-3 p-4 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light bg-white/80 border-gray-100' : 'bg-[#0d1829]/60 border-white/8'}">
-            <span class="text-2xl">{e.icon}</span>
+          <div class="flex items-center gap-3 p-4 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light bg-white/80 border-gray-100' : 'bg-[#121214]/90 border-white/10'}">
+            <span class="text-brand-magenta dark:text-azul flex justify-center"><Icon name={e.icon} class="w-5 h-5" /></span>
             <span class="text-sm font-semibold {isLight ? 'text-gray-700' : 'text-gray-300'}">{e.label}</span>
           </div>
         {/each}
