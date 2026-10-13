@@ -10,7 +10,7 @@
   });
 </script>
 
-<div class="min-h-screen py-24 px-4 {isLight ? 'bg-gray-50 text-gray-900' : 'bg-[#0a0a14] text-gray-100'}">
+<div class="min-h-screen py-24 px-4 {isLight ? 'bg-gray-50 text-gray-900' : 'bg-[#0A0508] text-gray-100'}">
   <div class="max-w-3xl mx-auto space-y-4 text-base leading-relaxed">
     <h1 class="text-3xl font-bold mb-8">POLÍTICA DE PRIVACIDAD Y PROTECCIÓN DE DATOS</h1>
 
@@ -26,7 +26,7 @@
       <li><strong>CIF:</strong> B8669238</li>
       <li><strong>Domicilio social:</strong> C/ San Pedro De Cardeña 8, 9 derecha. 28033. Madrid.</li>
       <li><strong>Correo electrónico:</strong> g.prado@externia.ai</li>
-      <li><strong>Página web:</strong> <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://externia.ai/</a></li>
+      <li><strong>Página web:</strong> <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-[#F06BA8] hover:text-[#F7A8CB]'}">https://externia.ai/</a></li>
     </ul>
 
     <p>
@@ -141,7 +141,7 @@
       Podrás ejercer tales derechos presentando copia de un documento identificativo y exponiendo brevemente su caso mediante carta dirigida a Externia Event Solutions S.L. en la dirección postal C/ San Pedro De Cardeña 8, 9 derecha. 28033. Madrid., o a través del correo electrónico g.prado@externia.ai.
     </p>
     <p>
-      Además, tiene derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (AEPD) en <a href="https://sedeagpd.gob.es/sede-electronica-web/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://sedeagpd.gob.es/sede-electronica-web/</a>.
+      Además, tiene derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (AEPD) en <a href="https://sedeagpd.gob.es/sede-electronica-web/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-[#F06BA8] hover:text-[#F7A8CB]'}">https://sedeagpd.gob.es/sede-electronica-web/</a>.
     </p>
 
     <h2 class="text-xl font-semibold mt-8 mb-4">Modificaciones</h2>

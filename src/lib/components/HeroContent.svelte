@@ -35,7 +35,7 @@
 <div class="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 text-center pointer-events-none">
   <a
     href="/quienes-somos"
-    class="micro-active-press block pointer-events-auto cursor-pointer transition-transform duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 {isDark ? 'focus:ring-azul' : 'focus:ring-brand-magenta'}"
+    class="micro-active-press block pointer-events-auto cursor-pointer transition-transform duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 {isDark ? 'focus:ring-rosa' : 'focus:ring-brand-magenta'}"
     aria-label="Ir a Quiénes Somos"
   >
     {#key isDark}

@@ -54,8 +54,8 @@
   onmouseleave={onLeave}
   class="micro-active-press relative inline-block overflow-hidden px-5 py-3 sm:px-6 sm:py-2.5 rounded-full text-sm font-semibold border transition-all duration-300 min-h-[44px] flex items-center justify-center {isLight
     ? 'border-brand-magenta/30 text-brand-magenta bg-brand-magenta/5 hover:bg-brand-magenta/12 hover:border-brand-magenta/60'
-    : 'border-azul/30 text-azul bg-azul/5 hover:bg-azul/12 hover:border-azul/60'}"
-  style={hovered ? (isLight ? 'box-shadow: 0 0 20px #DE3B8430' : 'box-shadow: 0 0 20px #0070f330') : ''}
+    : 'border-rosa/30 text-rosa bg-rosa/5 hover:bg-rosa/12 hover:border-rosa/60'}"
+  style={hovered ? (isLight ? 'box-shadow: 0 0 20px #DE3B8430' : 'box-shadow: 0 0 20px #DE3B8430') : ''}
 >
   <span class="invisible whitespace-nowrap flex items-center gap-2">
     <Icon name={iconName} class="w-4 h-4" />

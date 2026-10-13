@@ -153,7 +153,7 @@
           href="/blog"
           class="mt-6 inline-block px-6 py-3 rounded-xl font-semibold transition-all duration-300 {isLight
             ? 'bg-brand-magenta text-white hover:bg-brand-fuchsia'
-            : 'bg-azul text-white hover:bg-blue-600'}"
+            : 'bg-rosa text-white hover:bg-[#DE3B84]'}"
         >
           Volver al Blog
         </a>
@@ -166,7 +166,7 @@
         <FadeIn delay={0.1}>
           <a
             href="/blog"
-            class="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-azul hover:text-blue-300'}"
+            class="inline-flex items-center gap-2 text-sm font-medium transition-colors duration-300 {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-rosa hover:text-[#F7A8CB]'}"
           >
             ← Volver al Blog
           </a>
@@ -203,8 +203,8 @@
               rel="noopener noreferrer"
               class="btn-cta-animated micro-active-press relative inline-block overflow-hidden mt-8 px-10 py-4 rounded-full text-base font-bold text-white transition-all duration-300 hover:scale-105 {isLight
                 ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia'
-                : 'bg-azul'}"
-              style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
+                : 'bg-rosa'}"
+              style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #DE3B8440') : ''}
               onmouseenter={onBtnEnter}
               onmouseleave={onBtnLeave}
             >

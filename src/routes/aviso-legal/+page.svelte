@@ -10,7 +10,7 @@
   });
 </script>
 
-<div class="min-h-screen py-24 px-4 {isLight ? 'bg-gray-50 text-gray-900' : 'bg-[#0a0a14] text-gray-100'}">
+<div class="min-h-screen py-24 px-4 {isLight ? 'bg-gray-50 text-gray-900' : 'bg-[#0A0508] text-gray-100'}">
   <div class="max-w-3xl mx-auto space-y-4 text-base leading-relaxed">
     <h1 class="text-3xl font-bold mb-8">AVISO LEGAL</h1>
     <p>
@@ -19,7 +19,7 @@
 
     <h2 class="text-xl font-semibold mt-8 mb-4">Datos identificativos</h2>
     <p>
-      En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico, a continuación, se exponen los datos identificativos de la empresa/propietario del dominio <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://externia.ai</a>:
+      En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico, a continuación, se exponen los datos identificativos de la empresa/propietario del dominio <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-[#F06BA8] hover:text-[#F7A8CB]'}">https://externia.ai</a>:
     </p>
     <ul class="list-none space-y-1 my-6">
       <li><strong>Nombre de dominio:</strong> externia.ai</li>
@@ -37,7 +37,7 @@
       Todos los contenidos del sitio web se encuentran debidamente protegidos por la normativa de propiedad intelectual e industrial, así como inscritos en los registros públicos correspondientes. Independientemente de la finalidad para la que fueran destinados, la reproducción total o parcial, uso, explotación, distribución y comercialización, requiere en todo caso de la autorización escrita previa por parte del responsable. Cualquier uso no autorizado previamente se considera un incumplimiento grave de los derechos de propiedad intelectual o industrial del autor.
     </p>
     <p>
-      Los diseños, logotipos, texto y/o gráficos ajenos al responsable y que pudieran aparecer en el sitio web, pertenecen a sus respectivos propietarios, siendo ellos mismos responsables de cualquier posible controversia que pudiera suscitarse respecto a los mismos. El responsable autoriza expresamente a que terceros puedan redirigir directamente a los contenidos concretos del sitio web, y en todo caso redirigir al sitio web principal de <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">https://externia.ai</a>.
+      Los diseños, logotipos, texto y/o gráficos ajenos al responsable y que pudieran aparecer en el sitio web, pertenecen a sus respectivos propietarios, siendo ellos mismos responsables de cualquier posible controversia que pudiera suscitarse respecto a los mismos. El responsable autoriza expresamente a que terceros puedan redirigir directamente a los contenidos concretos del sitio web, y en todo caso redirigir al sitio web principal de <a href="https://externia.ai/" target="_blank" rel="noopener noreferrer" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-[#F06BA8] hover:text-[#F7A8CB]'}">https://externia.ai</a>.
     </p>
     <p>
       Para realizar cualquier tipo de observación respecto a posibles incumplimientos de los derechos de propiedad intelectual o industrial, así como sobre cualquiera de los contenidos del sitio web, puede hacerlo a través del correo electrónico g.prado@externia.ai o a la siguiente dirección postal: C/ San Pedro De Cardeña 8, 9 derecha. 28033. Madrid.
@@ -109,7 +109,7 @@
           </tr>
           <tr>
             <td class="py-3 px-4 font-medium">Información adicional</td>
-            <td class="py-3 px-4">Puede consultar la información detallada en nuestra <a href="/politica-privacidad" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-cyan-400 hover:text-cyan-300'}">Política de Privacidad</a>.</td>
+            <td class="py-3 px-4">Puede consultar la información detallada en nuestra <a href="/politica-privacidad" class="underline {isLight ? 'text-brand-magenta hover:text-brand-fuchsia' : 'text-[#F06BA8] hover:text-[#F7A8CB]'}">Política de Privacidad</a>.</td>
           </tr>
         </tbody>
       </table>

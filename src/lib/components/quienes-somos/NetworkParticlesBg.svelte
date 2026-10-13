@@ -29,7 +29,7 @@
     };
   });
 
-  const accent = $derived(isLight ? '#DE3B84' : '#0070f3');
+  const accent = $derived(isLight ? '#DE3B84' : '#DE3B84');
 </script>
 
 {#if ready && ParticlesCmp}

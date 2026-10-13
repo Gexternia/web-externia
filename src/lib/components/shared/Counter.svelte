@@ -37,4 +37,4 @@
   });
 </script>
 
-<span bind:this={el}>{n.toLocaleString('es-ES')}{suffix}</span>
+<span bind:this={el}>{String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}{suffix}</span>

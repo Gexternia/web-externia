@@ -93,7 +93,7 @@
 
 <!-- Reading progress bar line fixed at top -->
 <div
-  class="fixed top-0 left-0 right-0 h-[3px] z-[100] bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-azul origin-left transition-transform duration-75 ease-out pointer-events-none"
+  class="fixed top-0 left-0 right-0 h-[3px] z-[100] bg-gradient-to-r from-brand-magenta via-brand-fuchsia to-rosa origin-left transition-transform duration-75 ease-out pointer-events-none"
   style="transform: scaleX({scrollProgress})"
 ></div>
 
@@ -104,7 +104,7 @@
   <Navbar />
   <ThemeToggle />
 {/if}
-<main class="theme-transition w-full min-w-0 overflow-x-hidden">
+<main class="theme-transition w-full min-w-0 overflow-x-clip">
   {#if children}
     {@render children()}
   {/if}

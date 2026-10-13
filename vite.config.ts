@@ -13,7 +13,6 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules/three')) return 'three';
-          if (id.includes('node_modules/@tsparticles')) return 'tsparticles';
         }
       }
     }

@@ -205,7 +205,7 @@
       <button
         type="button"
         onclick={() => jumpTo(i)}
-        class="min-h-[44px] px-4 py-3 sm:py-2 rounded-full text-sm sm:text-base font-semibold border transition-all duration-200 inline-flex items-center gap-2 {i === centeredIdx ? (isLight ? 'bg-brand-magenta text-white border-brand-magenta' : 'bg-azul text-white border-azul') : (isLight ? 'bg-white/60 text-gray-600 border-gray-200 hover:opacity-80' : 'bg-white/5 text-gray-400 border-white/10 hover:opacity-80')}"
+        class="min-h-[44px] px-4 py-3 sm:py-2 rounded-full text-sm sm:text-base font-semibold border transition-all duration-200 inline-flex items-center gap-2 {i === centeredIdx ? (isLight ? 'bg-brand-magenta text-white border-brand-magenta' : 'bg-rosa text-white border-rosa') : (isLight ? 'bg-white/60 text-gray-600 border-gray-200 hover:opacity-80' : 'bg-white/5 text-gray-400 border-white/10 hover:opacity-80')}"
         style="opacity: {i === centeredIdx ? 1 : 0.4}; transform: scale({i === centeredIdx ? 1 : 0.93})"
       >
         <Icon name={card.iconName || card.emoji} class="w-4 h-4 shrink-0" />
@@ -217,7 +217,7 @@
   <!-- Category label + Ver demo link -->
   {#key current.title}
     <div class="flex flex-col items-center gap-2">
-      <p class="text-sm font-bold tracking-widest uppercase {isLight ? 'text-brand-magenta' : 'text-azul'}">
+      <p class="text-sm font-bold tracking-widest uppercase {isLight ? 'text-brand-magenta' : 'text-rosa'}">
         {current.category}
       </p>
       {#if current.link}
@@ -225,8 +225,8 @@
           href={current.link}
           target="_blank"
           rel="noopener noreferrer"
-          class="btn-cta-animated micro-active-press relative inline-block overflow-hidden px-8 py-3.5 rounded-full text-base font-bold text-white transition-all duration-300 hover:scale-105 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
-          style={demoHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
+          class="btn-cta-animated micro-active-press relative inline-block overflow-hidden px-8 py-3.5 rounded-full text-base font-bold text-white transition-all duration-300 hover:scale-105 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-rosa'}"
+          style={demoHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #DE3B8440') : ''}
           onmouseenter={onDemoEnter}
           onmouseleave={onDemoLeave}
         >
