@@ -5,7 +5,7 @@
   --color-negro: #000000;
   --color-gris: #111111;
   --color-blanco: #FFFFFF;
-  --color-azul: #0070f3;
+  --color-rosa: #DE3B84;
 
   /* Light mode brand colors */
   --color-brand-magenta: #DE3B84;
@@ -54,11 +54,11 @@
 /* ── Custom keyframes ── */
 @keyframes glow {
   from {
-    box-shadow: 0 0 10px #0070f3, 0 0 30px #0070f380;
+    box-shadow: 0 0 10px #DE3B84, 0 0 30px #DE3B8480;
   }
 
   to {
-    box-shadow: 0 0 20px #0070f3, 0 0 60px #0070f3aa, 0 0 90px #0070f340;
+    box-shadow: 0 0 20px #DE3B84, 0 0 60px #DE3B84aa, 0 0 90px #DE3B8440;
   }
 }
 

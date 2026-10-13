@@ -273,7 +273,7 @@
       class="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 p-6 text-center border transition-colors duration-500 {cardFaceCls}"
       style="transform: translateX({$curtainX}%); will-change: transform; z-index: 10"
     >
-      <div class="{isLight ? 'text-brand-magenta' : 'text-azul'}"><Icon name={icon} class={variant === 'large' ? 'w-16 h-16' : 'w-12 h-12'} /></div>
+      <div class="{isLight ? 'text-brand-magenta' : 'text-rosa'}"><Icon name={icon} class={variant === 'large' ? 'w-16 h-16' : 'w-12 h-12'} /></div>
       <h3 class="{variant === 'large' ? 'text-xl' : 'text-lg'} font-bold transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
         {title}
       </h3>
@@ -288,7 +288,7 @@
       style="transform: translateX({$leftX}%); opacity: {leftOpacity}; z-index: 20; box-shadow: 3px 0 20px rgba(0,0,0,0.15)"
     >
       <div class="absolute inset-0 w-[200%] flex flex-col items-center justify-center gap-4 p-6 text-center border {cardFaceCls}">
-        <div class="{isLight ? 'text-brand-magenta' : 'text-azul'}"><Icon name={icon} class={variant === 'large' ? 'w-16 h-16' : 'w-12 h-12'} /></div>
+        <div class="{isLight ? 'text-brand-magenta' : 'text-rosa'}"><Icon name={icon} class={variant === 'large' ? 'w-16 h-16' : 'w-12 h-12'} /></div>
         <h3 class="{variant === 'large' ? 'text-xl' : 'text-lg'} font-bold {isLight ? 'text-gray-900' : 'text-white'}">{title}</h3>
         <span class="{variant === 'large' ? 'text-sm' : 'text-xs'} font-medium {isLight ? 'text-gray-400' : 'text-gray-500'}">Click para revelar</span>
       </div>
@@ -300,7 +300,7 @@
       style="transform: translateX({$rightX}%); opacity: {rightOpacity}; z-index: 20; box-shadow: -3px 0 20px rgba(0,0,0,0.15)"
     >
       <div class="absolute top-0 right-0 h-full w-[200%] flex flex-col items-center justify-center gap-4 p-6 text-center border {cardFaceCls}">
-        <div class="{isLight ? 'text-brand-magenta' : 'text-azul'}"><Icon name={icon} class={variant === 'large' ? 'w-16 h-16' : 'w-12 h-12'} /></div>
+        <div class="{isLight ? 'text-brand-magenta' : 'text-rosa'}"><Icon name={icon} class={variant === 'large' ? 'w-16 h-16' : 'w-12 h-12'} /></div>
         <h3 class="{variant === 'large' ? 'text-xl' : 'text-lg'} font-bold {isLight ? 'text-gray-900' : 'text-white'}">{title}</h3>
         <span class="{variant === 'large' ? 'text-sm' : 'text-xs'} font-medium {isLight ? 'text-gray-400' : 'text-gray-500'}">Click para revelar</span>
       </div>
@@ -323,7 +323,7 @@
       left: 50%;
       width: 14px;
       height: {cardHeight - 48}px;
-      background: linear-gradient(to top, #9B5CF8 0%, #38BDF8 100%);
+      background: linear-gradient(to top, #9B5CF8 0%, #FF7AB8 100%);
       z-index: 55;
       transform-origin: 50% 100%;
       {leftArmTransform}
@@ -338,7 +338,7 @@
       left: 50%;
       width: 14px;
       height: {cardHeight - 48}px;
-      background: linear-gradient(to top, #9B5CF8 0%, #38BDF8 100%);
+      background: linear-gradient(to top, #9B5CF8 0%, #FF7AB8 100%);
       z-index: 55;
       transform-origin: 50% 100%;
       {rightArmTransform}

@@ -1,39 +1,25 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import HeroContent from '$lib/components/HeroContent.svelte';
-
-  let Scene3DCmp = $state<typeof import('$lib/components/Scene3D.svelte').default | null>(null);
-
-  onMount(() => {
-    const loadScene = () => {
-      void import('$lib/components/Scene3D.svelte').then((mod) => {
-        Scene3DCmp = mod.default;
-      });
-    };
-
-    if ('requestIdleCallback' in window) {
-      const id = requestIdleCallback(loadScene, { timeout: 600 });
-      return () => cancelIdleCallback(id);
-    }
-
-    const id = setTimeout(loadScene, 150);
-    return () => clearTimeout(id);
-  });
+  import HomeHero from '$lib/components/story/HomeHero.svelte';
+  import LinesList from '$lib/components/story/LinesList.svelte';
+  import ClientsWall from '$lib/components/story/ClientsWall.svelte';
+  import LitStatement from '$lib/components/story/LitStatement.svelte';
+  import CtaClose from '$lib/components/story/CtaClose.svelte';
 </script>
 
-<section
-  id="hero"
-  class="relative w-full h-screen overflow-hidden"
-  style="background-color: var(--bg-base); transition: background-color 0.4s ease;"
->
-  <div class="absolute inset-0">
-    {#if Scene3DCmp}
-      <Scene3DCmp />
-    {/if}
-  </div>
-  <div
-    class="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
-    style="background: linear-gradient(to bottom, transparent, var(--bg-base)); transition: background 0.4s ease;"
-  ></div>
-  <HeroContent />
-</section>
+<HomeHero />
+
+<LitStatement
+  text="La primera consultora de inteligencia artificial especializada al 100% en el sector MICE."
+  strong="inteligencia artificial MICE."
+  note="Especialistas en eventos que dominan la IA, desde 2024."
+/>
+
+<LinesList />
+
+<ClientsWall />
+
+<CtaClose
+  title="CambIA tu próximo evento."
+  accent="evento."
+  text="Cuéntanos tu evento y te proponemos la solución MAPI perfecta: Medible, Asequible, Personalizada e Innovadora."
+/>

@@ -80,7 +80,7 @@
         {#each navLinks as link}
           <a
             href={link.href}
-            class="micro-link-underline text-sm font-medium tracking-wide transition-colors duration-300 {isDark ? 'text-gray-300 hover:text-azul' : 'text-gray-600 hover:text-brand-magenta'}"
+            class="micro-link-underline text-sm font-medium tracking-wide transition-colors duration-300 {isDark ? 'text-gray-300 hover:text-rosa' : 'text-gray-600 hover:text-brand-magenta'}"
           >
             {link.label}
           </a>
@@ -110,7 +110,7 @@
           <a
             href={link.href}
             onclick={() => (menuOpen = false)}
-            class="micro-link-underline block py-4 px-4 text-base font-medium transition-colors duration-300 micro-active-press min-h-[48px] flex items-center {isDark ? 'text-gray-300 hover:text-azul' : 'text-gray-600 hover:text-brand-magenta'}"
+            class="micro-link-underline block py-4 px-4 text-base font-medium transition-colors duration-300 micro-active-press min-h-[48px] flex items-center {isDark ? 'text-gray-300 hover:text-rosa' : 'text-gray-600 hover:text-brand-magenta'}"
           >
             {link.label}
           </a>
@@ -118,7 +118,7 @@
         <button
           type="button"
           onclick={toggleTheme}
-          class="micro-link-underline w-full text-left py-4 px-4 text-base font-medium transition-colors duration-300 micro-active-press min-h-[48px] flex items-center border-t {isDark ? 'text-gray-300 hover:text-azul border-white/10' : 'text-gray-600 hover:text-brand-magenta border-gray-200'}"
+          class="micro-link-underline w-full text-left py-4 px-4 text-base font-medium transition-colors duration-300 micro-active-press min-h-[48px] flex items-center border-t {isDark ? 'text-gray-300 hover:text-rosa border-white/10' : 'text-gray-600 hover:text-brand-magenta border-gray-200'}"
         >
           {isDark ? 'Modo claro' : 'Modo oscuro'}
         </button>

@@ -5,7 +5,7 @@
   --color-negro: #000000;
   --color-gris: #111111;
   --color-blanco: #FFFFFF;
-  --color-azul: #0070f3;
+  --color-rosa: #DE3B84;
 
   /* Light mode brand colors */
   --color-brand-magenta: #DE3B84;
@@ -73,11 +73,11 @@
 /* Custom keyframes */
 @keyframes glow {
   from {
-    box-shadow: 0 0 10px #0070f3, 0 0 30px #0070f380;
+    box-shadow: 0 0 10px #DE3B84, 0 0 30px #DE3B8480;
   }
 
   to {
-    box-shadow: 0 0 20px #0070f3, 0 0 60px #0070f3aa, 0 0 90px #0070f340;
+    box-shadow: 0 0 20px #DE3B84, 0 0 60px #DE3B84aa, 0 0 90px #DE3B8440;
   }
 }
 
@@ -112,12 +112,12 @@
 :root:not(.light) .gradient-text-animate {
   background: linear-gradient(
     90deg,
-    #3b82f6,
-    #60a5fa,
-    #93c5fd,
-    #bfdbfe,
-    #60a5fa,
-    #3b82f6
+    #FF5FA8,
+    #FFC12D,
+    #F7A361,
+    #EE847B,
+    #DE3B84,
+    #FF5FA8
   );
   background-size: 300% 100%;
   -webkit-background-clip: text;
@@ -126,7 +126,7 @@
   animation: gradient-shift 6s ease infinite;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-shadow: 0 0 0.5px rgba(59,130,246,0.35), 0 0 1px rgba(59,130,246,0.25);
+  text-shadow: 0 0 0.5px rgba(224,85,154,0.35), 0 0 1px rgba(224,85,154,0.25);
 }
 
 /* Borde animado en botones CTA (resplandor suave) */
@@ -140,8 +140,8 @@
 }
 
 @keyframes btn-border-glow-dark {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(0,112,243,0.4), 0 0 20px rgba(0,112,243,0.2); }
-  50% { box-shadow: 0 0 0 2px rgba(96,165,250,0.5), 0 0 30px rgba(0,112,243,0.3); }
+  0%, 100% { box-shadow: 0 0 0 1px rgba(222,59,132,0.4), 0 0 20px rgba(222,59,132,0.2); }
+  50% { box-shadow: 0 0 0 2px rgba(240,107,168,0.5), 0 0 30px rgba(222,59,132,0.3); }
 }
 
 .light .btn-cta-animated {
@@ -155,7 +155,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-smooth: always;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100%;
 }
 
@@ -169,7 +169,7 @@ body {
   background-color: var(--bg-base);
   color: var(--text-primary);
   font-family: "Montserrat", ui-sans-serif, system-ui, sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -273,7 +273,7 @@ html {
 }
 
 :root:not(.light) .section-divider::before {
-  background: linear-gradient(90deg, transparent 0%, rgba(0, 112, 243, 0.5) 30%, rgba(96, 165, 250, 0.5) 70%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(222, 59, 132, 0.5) 30%, rgba(240, 107, 168, 0.5) 70%, transparent 100%);
   background-size: 200% 100%;
 }
 
@@ -318,7 +318,7 @@ html {
   width: 100%;
 }
 .light .micro-link-underline::after { background: #DE3B84; }
-:root:not(.light) .micro-link-underline::after { background: #60a5fa; }
+:root:not(.light) .micro-link-underline::after { background: #F06BA8; }
 
 /* GPU-accelerated marquee animation */
 @keyframes marquee-scroll {

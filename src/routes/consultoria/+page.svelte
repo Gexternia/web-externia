@@ -1,192 +1,134 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import NetworkParticlesBg from '$lib/components/quienes-somos/NetworkParticlesBg.svelte';
-  import FadeIn from '$lib/components/shared/FadeIn.svelte';
-  import SectionLabel from '$lib/components/shared/SectionLabel.svelte';
-  import MagneticRepel from '$lib/components/shared/MagneticRepel.svelte';
-  import Icon from '$lib/components/shared/Icon.svelte';
-
-  let isLight = $state(false);
-  let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
-
-  onMount(() => {
-    isLight = document.documentElement.classList.contains('light');
-    const handler = () => {
-      isLight = document.documentElement.classList.contains('light');
-    };
-    window.addEventListener('themechange', handler);
-    import('$lib/components/quienes-somos/NetworkParticlesBg.svelte').then((mod) => {
-      NetworkParticlesCmp = mod.default;
-    });
-    return () => window.removeEventListener('themechange', handler);
-  });
-
-  const lightBg = 'bg-white/65 backdrop-blur-[2px]';
-  const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
-  const darkBg = 'bg-[#000000]/80 backdrop-blur-[2px]';
-  const darkAltBg = 'bg-[#08080a]/80 backdrop-blur-[2px]';
-
-  function sectionBg(light: boolean, alt = false) {
-    return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
-  }
+  import PageHero from '$lib/components/story/PageHero.svelte';
+  import Roadmap from '$lib/components/story/Roadmap.svelte';
+  import CtaClose from '$lib/components/story/CtaClose.svelte';
+  import { reveal, viewProgress } from '$lib/components/story/reveal';
+  import '$lib/components/story/story.css';
 
   const phases = [
-    { num: '01', title: 'CRE-IA-tividad', icon: 'lightbulb', desc: 'Exploración del contexto del evento, los objetivos de la marca y el perfil de los asistentes. Co-creación mediante brainstorming aumentado con IA.', colorLight: '#DE3B84', colorDark: '#0070f3' },
-    { num: '02', title: 'AI-mplementación', icon: 'gear', desc: 'Desarrollo e integración ágil de la solución elegida. La tecnología se adapta al espacio, el tiempo y el equipo humano del evento.', colorLight: '#FFC12D', colorDark: '#3b82f6' },
-    { num: '03', title: 'Evolución y Optimización', icon: 'chart', desc: 'Monitorización en tiempo real, feedback e informes de impacto medibles. Auditorías de IA y asesoramiento en la Ley de IA de la UE.', colorLight: '#F7A361', colorDark: '#60a5fa' },
+    { num: '01', title: 'CRE-IA-tividad', desc: 'Exploración del contexto del evento, los objetivos de la marca y el perfil de los asistentes. Co-creación mediante brainstorming aumentado con IA.' },
+    { num: '02', title: 'AI-mplementación', desc: 'Desarrollo e integración ágil de la solución elegida. La tecnología se adapta al espacio, el tiempo y el equipo humano del evento.' },
+    { num: '03', title: 'Evolución y Optimización', desc: 'Monitorización en tiempo real, feedback e informes de impacto medibles. Auditorías de IA y asesoramiento en la Ley de IA de la UE.' }
   ];
+  const extras = ['Auditorías de IA', 'Hojas de ruta tecnológicas', 'Cumplimiento Ley IA UE', 'Soluciones neutras en carbono'];
 
-  const extras = [
-    { icon: 'search', label: 'Auditorías de IA' },
-    { icon: 'map', label: 'Hojas de ruta tecnológicas' },
-    { icon: 'scale', label: 'Cumplimiento Ley IA UE' },
-    { icon: 'leaf', label: 'Soluciones neutras en carbono' },
+  const notes = [
+    { t: 'Contexto del evento', x: 4, y: 8, r: -6, c: 'w' },
+    { t: 'Objetivos de marca', x: 46, y: 0, r: 4, c: 'p' },
+    { t: 'Perfil de asistentes', x: 30, y: 34, r: -2, c: 'y' },
+    { t: 'Brainstorming', x: 0, y: 60, r: 5, c: 'w' },
+    { t: '+ IA', x: 64, y: 40, r: -8, c: 'p' },
+    { t: 'Co-creación', x: 44, y: 72, r: 3, c: 'w' }
   ];
-
-  let ctaHovered = $state(false);
-  let primaryRef: HTMLSpanElement;
-  let cloneRef: HTMLSpanElement;
-  const TR = 'transform 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
-
-  function onBtnEnter() {
-    ctaHovered = true;
-    if (!primaryRef || !cloneRef) return;
-    primaryRef.style.transition = 'none';
-    primaryRef.style.transform = 'translateX(0%)';
-    cloneRef.style.transition = 'none';
-    cloneRef.style.transform = 'translateX(-110%)';
-    primaryRef.getBoundingClientRect();
-    primaryRef.style.transition = TR;
-    primaryRef.style.transform = 'translateX(110%)';
-    cloneRef.style.transition = TR;
-    cloneRef.style.transform = 'translateX(0%)';
-  }
-
-  function onBtnLeave() {
-    ctaHovered = false;
-    if (!primaryRef || !cloneRef) return;
-    primaryRef.style.transition = 'none';
-    primaryRef.style.transform = 'translateX(-110%)';
-    cloneRef.style.transition = 'none';
-    cloneRef.style.transform = 'translateX(0%)';
-    cloneRef.getBoundingClientRect();
-    cloneRef.style.transition = TR;
-    cloneRef.style.transform = 'translateX(110%)';
-    primaryRef.style.transition = TR;
-    primaryRef.style.transform = 'translateX(0%)';
-  }
+  const chart = 'M0,86 C20,84 30,70 45,72 C60,74 70,52 85,54 C100,56 110,36 125,34 C140,32 150,22 165,14 C175,9 185,8 200,4';
 </script>
 
-{#if NetworkParticlesCmp}
-  <NetworkParticlesCmp {isLight} />
-{/if}
+<PageHero
+  title={'Consultoría\nestratégica de IA'}
+  accent="IA"
+  lead="Para agencias y empresas que quieren que la IA sea una ventaja de verdad en sus eventos."
+  ctas={[{ href: '/contacto', label: 'Hablemos' }, { href: '#ruta', label: 'Ver la hoja de ruta', ghost: true }]}
+/>
 
-<div class="relative z-10 transition-colors duration-500">
-  <!-- Hero -->
-  <section class="relative flex flex-col items-center justify-center min-h-screen overflow-hidden px-4 text-center transition-colors duration-500 {sectionBg(isLight)} bg-cyber-grid">
-    <div class="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
-    <div class="absolute bottom-1/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none {isLight ? 'bg-brand-fuchsia' : 'bg-blue-900'}"></div>
+<!-- "Integración real, no genérica" — the word gets struck through as you scroll -->
+<section class="xs strike" use:viewProgress>
+  <div class="xs-wrap">
+    <h2 class="big">Integración real, <span class="no">no <span class="gen">genérica<i aria-hidden="true"></i></span>.</span></h2>
+    <p class="sub" data-rv use:reveal>Diseñada específicamente para el sector de los eventos, con el conocimiento de quienes lo conocen desde dentro.</p>
+  </div>
+</section>
 
-    <FadeIn delay={0.1} className="relative z-10 mb-6">
-      <SectionLabel text="Consultoría Estratégica" {isLight} />
-    </FadeIn>
-
-    <FadeIn delay={0.2}>
-      <h1 class="relative z-10 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight max-w-5xl transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-        Consultoría Estratégica de <span class="gradient-text-animate">IA</span>
-      </h1>
-    </FadeIn>
-
-    <FadeIn delay={0.4}>
-      <p class="relative z-10 mt-6 text-lg sm:text-xl max-w-2xl leading-relaxed transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-300'}">
-        Integración real, no genérica. Diseñada específicamente para el sector de los eventos,
-        con el conocimiento de quienes lo conocen desde dentro.
-      </p>
-    </FadeIn>
-  </section>
-
-  <!-- Contenido principal -->
-  <section class="section-divider relative py-28 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight, true)}">
-    <div class="max-w-7xl mx-auto relative z-10">
-      <FadeIn className="text-center mb-20">
-        <SectionLabel text="Consultoría Estratégica de IA" {isLight} />
-        <h2 class="text-4xl sm:text-5xl font-black transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Integración real, <span class="gradient-text-animate">no genérica</span>
-        </h2>
-        <p class="mt-4 text-base max-w-xl mx-auto transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
-          Diseñada específicamente para el sector de los eventos, con el conocimiento de quienes lo conocen desde dentro.
-        </p>
-      </FadeIn>
-
-      <div class="relative">
-        <div class="hidden lg:block absolute top-10 left-[16.66%] right-[16.66%] h-px {isLight ? 'bg-gradient-to-r from-brand-magenta via-brand-yellow to-brand-orange' : 'bg-gradient-to-r from-azul/40 to-blue-400/40'}"></div>
-        <div class="grid lg:grid-cols-3 gap-10">
-          {#each phases as phase, i}
-            <MagneticRepel strength={12} radius={160}>
-              <FadeIn delay={i * 0.15}>
-                <div class="flex flex-col items-center text-center p-8 rounded-2xl border transition-all duration-300 {isLight ? 'shadow-card-light bg-white/90 border-gray-100 backdrop-blur-sm' : 'bg-[#121214]/90 border-white/10 hover:border-azul/40 backdrop-blur-sm'}">
-                  <div
-                    class="relative z-10 w-20 h-20 rounded-full flex items-center justify-center text-2xl font-black text-white mb-6 shadow-xl transition-transform duration-300 hover:scale-110"
-                    style="background-color: {isLight ? phase.colorLight : phase.colorDark}"
-                  >
-                    <span>{phase.num}</span>
-                    <div class="absolute inset-0 rounded-full opacity-40 blur-md" style="background-color: {isLight ? phase.colorLight : phase.colorDark}"></div>
-                  </div>
-                  <div class="mb-3 text-brand-magenta dark:text-azul flex justify-center"><Icon name={phase.icon} class="w-8 h-8" /></div>
-                  <h3 class="text-xl font-black mb-3 {isLight ? 'text-gray-900' : 'text-white'}">
-                    {#each phase.title.split('-') as part, pi}
-                      {#if part === 'IA'}
-                        <span style="color: {isLight ? phase.colorLight : phase.colorDark}">IA</span>
-                      {:else}
-                        {part}{pi < phase.title.split('-').length - 1 ? '-' : ''}
-                      {/if}
-                    {/each}
-                  </h3>
-                  <p class="text-sm leading-relaxed {isLight ? 'text-gray-500' : 'text-gray-400'}">{phase.desc}</p>
-                </div>
-              </FadeIn>
-            </MagneticRepel>
+<div id="ruta">
+  <Roadmap stops={phases} {extras} heading="Tu hoja de ruta con IA, paso a paso.">
+    {#snippet visual(i)}
+      {#if i === 0}
+        <div class="notes">
+          {#each notes as n, k}
+            <span class="note {n.c}" style="left: {n.x}%; top: {n.y}%; --r: {n.r}deg; --k: {k}; --fx: {(k % 2 ? 1 : -1) * (40 + k * 12)}px; --fy: {60 + k * 10}px">{n.t}</span>
           {/each}
         </div>
-      </div>
-
-      <FadeIn delay={0.3} className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {#each extras as e}
-          <div class="flex items-center gap-3 p-4 rounded-2xl border transition-colors duration-500 {isLight ? 'shadow-card-light bg-white/80 border-gray-100' : 'bg-[#121214]/90 border-white/10'}">
-            <span class="text-brand-magenta dark:text-azul flex justify-center"><Icon name={e.icon} class="w-5 h-5" /></span>
-            <span class="text-sm font-semibold {isLight ? 'text-gray-700' : 'text-gray-300'}">{e.label}</span>
+      {:else if i === 1}
+        <div class="build">
+          <div class="E">
+            <span class="bar b1"></span><span class="bar b2"></span><span class="bar b3"></span><span class="dot"></span>
           </div>
-        {/each}
-      </FadeIn>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="section-divider relative py-32 px-4 overflow-hidden transition-colors duration-500 {sectionBg(isLight)}">
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-12 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
-
-    <div class="max-w-3xl mx-auto text-center relative z-10">
-      <FadeIn>
-        <SectionLabel text="¿Hablamos?" {isLight} />
-        <h2 class="text-4xl sm:text-5xl md:text-6xl font-black leading-tight mb-6 transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-          Integremos la <span class="gradient-text-animate">IA</span> en tu estrategia
-        </h2>
-        <p class="text-lg mb-10 transition-colors duration-500 {isLight ? 'text-gray-500' : 'text-gray-400'}">
-          Cuéntanos tu proyecto y te acompañamos en la integración estratégica de la IA.
-        </p>
-
-        <a
-          href="/contacto"
-          class="btn-cta-animated micro-active-press relative inline-block overflow-hidden px-12 py-5 rounded-full text-lg font-bold text-white transition-all duration-300 hover:scale-105 {isLight ? 'bg-gradient-to-r from-brand-magenta to-brand-fuchsia' : 'bg-azul'}"
-          style={ctaHovered ? (isLight ? 'box-shadow: 0 0 50px #DE3B8490, 0 0 100px #D6007D40' : 'box-shadow: 0 0 50px #0070f390, 0 0 100px #0070f340') : ''}
-          onmouseenter={onBtnEnter}
-          onmouseleave={onBtnLeave}
-        >
-          <span class="invisible whitespace-nowrap">Contactar ahora →</span>
-          <span bind:this={primaryRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(0%)">Contactar ahora →</span>
-          <span bind:this={cloneRef} aria-hidden="true" class="absolute inset-0 flex items-center justify-center whitespace-nowrap" style="transform: translateX(-110%)">Contactar ahora →</span>
-        </a>
-      </FadeIn>
-    </div>
-  </section>
+          <ul class="tags">
+            <li style="--k: 0">Espacio</li><li style="--k: 1">Tiempo</li><li style="--k: 2">Equipo humano</li>
+          </ul>
+        </div>
+      {:else}
+        <div class="dash">
+          <div class="dash-top"><span class="live"></span> Monitorización en tiempo real</div>
+          <svg viewBox="0 0 200 90" class="chart" preserveAspectRatio="none">
+            <path d="{chart} L200,90 L0,90 Z" class="area" />
+            <path d={chart} class="ln" />
+          </svg>
+          <div class="chips"><span style="--k: 0">Feedback</span><span style="--k: 1">Informe de impacto</span><span style="--k: 2">Auditoría de IA</span><span style="--k: 3">Ley de IA UE</span></div>
+        </div>
+      {/if}
+    {/snippet}
+  </Roadmap>
 </div>
+
+<CtaClose
+  title="Integremos la IA en tu estrategia."
+  accent="IA"
+  text="Cuéntanos tu proyecto y te acompañamos en la integración estratégica de la IA."
+/>
+
+<style>
+  .strike { padding: clamp(110px, 20vh, 220px) 0; overflow: hidden; }
+  .big { margin: 0; font-size: clamp(44px, 8vw, 132px); font-weight: 800; line-height: 0.95; letter-spacing: -0.045em; max-width: 14ch; }
+  .no { color: var(--xs-muted); }
+  .gen { position: relative; display: inline-block; }
+  .gen i {
+    position: absolute; left: -2%; right: -2%; top: 52%; height: 0.16em; border-radius: 4px; background: var(--xs-brand);
+    transform-origin: left; transform: scaleX(clamp(0, calc((var(--vp, 0) - 0.3) * 4), 1)) rotate(-3deg);
+  }
+  .sub { margin: clamp(28px, 5vh, 48px) 0 0; max-width: 48ch; font-size: clamp(18px, 1.6vw, 24px); line-height: 1.55; color: var(--xs-muted); }
+
+  /* 01 · brainstorm notes */
+  .notes { position: absolute; inset: 0; }
+  .note { position: absolute; padding: 14px 18px; border-radius: 12px; font-size: clamp(14px, 1.15vw, 17px); font-weight: 800; white-space: nowrap; box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.55); opacity: 0; transform: translate(var(--fx), var(--fy)) rotate(calc(var(--r) * 3)) scale(0.7); transition: opacity 0.6s ease, transform 1.1s cubic-bezier(0.34, 1.56, 0.64, 1); transition-delay: calc(var(--k) * 90ms); }
+  .note.w { background: var(--xs-card); color: var(--xs-ink); box-shadow: inset 0 0 0 1px var(--xs-line), 0 20px 40px -24px rgba(0, 0, 0, 0.5); }
+  .note.p { background: #d6007d; color: #fff; }
+  .note.y { background: #ffc12d; color: #2a1406; }
+  :global(.on) .note { opacity: 1; transform: rotate(var(--r)); animation: float 6s ease-in-out calc(1.2s + var(--k) * 0.4s) infinite; }
+  @keyframes float { 50% { transform: rotate(var(--r)) translateY(-8px); } }
+
+  /* 02 · the E snaps together */
+  .build { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 28px; }
+  .E { position: relative; width: 100%; aspect-ratio: 32 / 25; }
+  .bar { position: absolute; left: 0; height: 20%; border-radius: 6px; background: var(--xs-brand); opacity: 0; transition: transform 1s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.5s ease; }
+  .b1 { top: 0; width: 100%; transform: translate(-60%, -40%) rotate(-12deg); }
+  .b2 { top: 40%; width: 68.75%; transform: translate(80%, 10%) rotate(10deg); transition-delay: 0.15s; }
+  .b3 { top: 80%; width: 100%; transform: translate(-40%, 60%) rotate(8deg); transition-delay: 0.3s; }
+  .E .dot { position: absolute; right: 0; top: 40%; width: 15.6%; aspect-ratio: 1; border-radius: 50%; background: #d6007d; transform: translate(6%, -260%) scale(0.4); opacity: 0; transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s, opacity 0.3s ease 0.6s; }
+  :global(.on) .bar { opacity: 1; transform: none; }
+  :global(.on) .E .dot { opacity: 1; transform: translate(6%, 0) scale(1); }
+  .tags { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .tags li { padding: 10px 16px; border-radius: 99px; font-size: 15px; font-weight: 800; box-shadow: inset 0 0 0 1.5px var(--xs-pink); color: var(--xs-pink-2); opacity: 0; transform: translateX(20px); transition: opacity 0.5s ease, transform 0.7s var(--xs-ease); transition-delay: calc(0.9s + var(--k) * 0.12s); white-space: nowrap; }
+  :global(.on) .tags li { opacity: 1; transform: none; }
+
+  /* 03 · live monitoring */
+  .dash { position: absolute; inset: 6% 0; border-radius: 24px; padding: clamp(18px, 2vw, 28px); background: var(--xs-card); box-shadow: inset 0 0 0 1px var(--xs-line), 0 40px 80px -40px rgba(0, 0, 0, 0.6); display: flex; flex-direction: column; }
+  :global(.light) .dash { box-shadow: inset 0 0 0 1px var(--xs-line), 0 40px 80px -50px rgba(20, 16, 20, 0.35); }
+  .dash-top { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--xs-muted); }
+  .live { width: 10px; height: 10px; border-radius: 50%; background: #d6007d; animation: live 1.4s ease-in-out infinite; }
+  @keyframes live { 50% { box-shadow: 0 0 0 6px rgba(214, 0, 125, 0.2); } }
+  .chart { flex: 1; width: 100%; margin: 14px 0; }
+  .chart .ln { fill: none; stroke: url(#road-grad); stroke-width: 3; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 400; stroke-dashoffset: 400; transition: stroke-dashoffset 2s var(--xs-ease); }
+  .chart .area { fill: rgba(222, 59, 132, 0.12); opacity: 0; transition: opacity 1s ease 0.8s; }
+  :global(.on) .chart .ln { stroke-dashoffset: 0; }
+  :global(.on) .chart .area { opacity: 1; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips span { padding: 7px 12px; border-radius: 99px; font-size: 13px; font-weight: 700; background: var(--xs-bg-2); box-shadow: inset 0 0 0 1px var(--xs-line); opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease, transform 0.6s var(--xs-ease); transition-delay: calc(1s + var(--k) * 0.12s); }
+  :global(.on) .chips span { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    .note { padding: 10px 12px; font-size: 13px; }
+    .build { grid-template-columns: 1fr; gap: 16px; }
+    .E { width: 70%; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  }
+</style>

@@ -1,62 +1,72 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import ContactForm from '$lib/components/ContactForm.svelte';
-  import FadeIn from '$lib/components/shared/FadeIn.svelte';
-  import NetworkParticlesBg from '$lib/components/quienes-somos/NetworkParticlesBg.svelte';
+  import '$lib/components/story/story.css';
 
-  let isLight = $state(false);
-  let NetworkParticlesCmp = $state<typeof NetworkParticlesBg | null>(null);
+  let ready = $state(false);
+  onMount(() => requestAnimationFrame(() => (ready = true)));
 
-  // Mismos fondos que Servicios (claro y oscuro)
-  const lightBg = 'bg-white/65 backdrop-blur-[2px]';
-  const lightAltBg = 'bg-gray-50/65 backdrop-blur-[2px]';
-  const darkBg = 'bg-[#000000]/80 backdrop-blur-[2px]';
-  const darkAltBg = 'bg-[#08080a]/80 backdrop-blur-[2px]';
-  function sectionBg(light: boolean, alt = false) {
-    return light ? (alt ? lightAltBg : lightBg) : alt ? darkAltBg : darkBg;
-  }
-
-  let pillClass = $derived(
-    isLight ? 'bg-brand-magenta/15 text-[#a82a5f]' : 'bg-white/15 text-blue-200'
-  );
-
-  onMount(() => {
-    isLight = document.documentElement.classList.contains('light');
-    const handler = () => {
-      isLight = document.documentElement.classList.contains('light');
-    };
-    window.addEventListener('themechange', handler);
-    import('$lib/components/quienes-somos/NetworkParticlesBg.svelte').then((mod) => {
-      NetworkParticlesCmp = mod.default;
-    });
-    return () => window.removeEventListener('themechange', handler);
-  });
+  const title = ['Hablemos', 'de', 'tu', 'próximo', 'evento.'];
 </script>
 
-{#if NetworkParticlesCmp}
-  <NetworkParticlesCmp {isLight} />
-{/if}
-
-<div class="relative min-h-screen z-10 overflow-hidden transition-colors duration-500 {isLight ? 'bg-white/65' : 'bg-[#000000]/80'} bg-cyber-grid">
-  <!-- Glows compartidos que se extienden por toda la página -->
-  <div class="absolute top-1/4 -left-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-magenta' : 'bg-azul'}"></div>
-  <div class="absolute top-3/4 -right-48 w-[500px] h-[500px] rounded-full blur-3xl opacity-15 pointer-events-none transition-colors duration-500 {isLight ? 'bg-brand-yellow' : 'bg-blue-900'}"></div>
-
-  <!-- Hero -->
-  <section class="section-divider relative flex flex-col items-center justify-center pt-24 pb-10 px-4 text-center">
-    <FadeIn className="relative z-10">
-      <span class="inline-block px-5 py-2 rounded-full text-sm font-bold tracking-widest uppercase mb-4 transition-colors duration-500 {pillClass}">
-        Contáctanos
-      </span>
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight max-w-3xl transition-colors duration-500 {isLight ? 'text-gray-900' : 'text-white'}">
-        Hablemos de tu <span class="gradient-text-animate">próximo evento</span>
+<section class="xs contact" class:ready>
+  <div class="xs-ambient" aria-hidden="true"><i class="a1"></i><i class="a2"></i><span class="grid"></span></div>
+  <div class="xs-wrap grid2">
+    <div class="left">
+      <h1 class="t">
+        {#each title as w, i}<span class="w"><span class:hot={i >= 3} style="--i: {i}">{w}</span></span>{' '}{/each}
       </h1>
-      <p class="mt-6 text-lg sm:text-xl max-w-xl mx-auto transition-colors duration-500 {isLight ? 'text-gray-600' : 'text-gray-200'}">
-        Rellena el formulario y te respondemos sin compromiso.
-      </p>
-    </FadeIn>
-  </section>
+      <p class="lead">Cuéntanos qué tienes en mente y te proponemos la solución MAPI perfecta para tu evento. Te respondemos sin compromiso.</p>
 
-  <!-- Formulario sin fondo propio (lo hereda del contenedor) -->
-  <ContactForm noBg />
-</div>
+      <dl class="direct">
+        <div>
+          <dt>Email</dt>
+          <dd><a href="mailto:g.prado@externia.ai">g.prado@externia.ai</a></dd>
+        </div>
+        <div>
+          <dt>Teléfono</dt>
+          <dd><a href="tel:+34648264949">+34 648 264 949</a></dd>
+        </div>
+        <div>
+          <dt>Síguenos</dt>
+          <dd class="soc">
+            <a href="https://www.instagram.com/externia.ai/" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://www.youtube.com/watch?v=fyhhzgNvunw&t=1s" target="_blank" rel="noopener noreferrer">YouTube</a>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="right">
+      <ContactForm />
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact { min-height: 100vh; min-height: 100svh; padding: calc(96px + 6vh) 0 clamp(80px, 12vh, 140px); overflow: hidden; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 7vw, 120px); align-items: start; }
+
+  .t { margin: 0; font-size: clamp(48px, 6.6vw, 108px); font-weight: 800; line-height: 0.95; letter-spacing: -0.045em; }
+  .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+  .w > span { display: inline-block; transform: translateY(105%); transition: transform 1.1s var(--xs-ease); transition-delay: calc(var(--i) * 70ms + 100ms); }
+  .ready .w > span { transform: none; }
+  .hot { color: var(--xs-pink-2); }
+
+  .lead, .direct, .right { transform: translateY(20px); transition: transform 1s var(--xs-ease); }
+  .ready .lead, .ready .direct, .ready .right { transform: none; }
+  .lead { margin: 28px 0 0; max-width: 44ch; font-size: clamp(17px, 1.4vw, 21px); line-height: 1.6; color: var(--xs-muted); transition-delay: 0.15s; }
+  .direct { margin: clamp(40px, 7vh, 72px) 0 0; display: grid; gap: 0; border-top: 1px solid var(--xs-line); transition-delay: 0.2s; }
+  .direct div { display: grid; grid-template-columns: 120px 1fr; align-items: baseline; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--xs-line); }
+  .direct dt { font-size: 12px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--xs-muted); }
+  .direct dd { margin: 0; font-size: clamp(18px, 1.5vw, 22px); font-weight: 700; }
+  .direct a { color: var(--xs-ink); text-decoration: none; background: linear-gradient(var(--xs-pink), var(--xs-pink)) 0 100% / 0 2px no-repeat; transition: background-size 0.5s var(--xs-ease), color 0.3s; }
+  .direct a:hover { background-size: 100% 2px; color: var(--xs-pink-2); }
+  .soc { display: flex; gap: 20px; flex-wrap: wrap; }
+  .right { padding-top: 8px; transition-delay: 0.1s; }
+
+  @media (max-width: 900px) {
+    .grid2 { grid-template-columns: 1fr; gap: 56px; }
+    .direct div { grid-template-columns: 96px 1fr; }
+  }
+</style>
