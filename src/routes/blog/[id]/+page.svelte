@@ -173,9 +173,9 @@
   .banner { margin-top: 28px; border-radius: 24px; overflow: hidden; }
   .banner :global(.cover) { aspect-ratio: 21 / 8; }
   .lead { margin: 26px 0 0; font-size: clamp(19px, 1.7vw, 24px); line-height: 1.55; color: var(--xs-ink); }
-  .top > * { opacity: 0; transform: translateY(18px); transition: opacity 0.8s ease, transform 0.9s var(--xs-ease); }
-  .top > .rule { opacity: 1; transform: none; }
-  .ready .top > * { opacity: 1; transform: none; }
+  .top > * { transform: translateY(18px); transition: transform 0.9s var(--xs-ease); }
+  .top > .rule { transform: none; }
+  .ready .top > * { transform: none; }
   .ready .top > :nth-child(2) { transition-delay: 0.05s; }
   .ready .top > :nth-child(3) { transition-delay: 0.1s; }
   .ready .top > :nth-child(5) { transition-delay: 0.15s; }
