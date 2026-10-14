@@ -75,6 +75,7 @@
   @keyframes hint { to { top: 110%; } }
 
   @media (max-width: 900px) {
+    .manifest { height: 200vh; }
     .grid2 { grid-template-columns: 1fr; gap: 36px; }
     .mark { max-width: 220px; justify-self: start; }
   }

@@ -124,7 +124,7 @@
 
   .stop { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; min-height: 72vh; padding-top: 4vh; padding-bottom: 4vh; }
   .stop.flip .text { order: 2; }
-  .text { max-width: 30rem; }
+  .text { position: relative; z-index: 4; max-width: 30rem; }
   .flip .text { justify-self: end; }
   .num { display: inline-grid; place-items: center; width: clamp(96px, 9vw, 132px); aspect-ratio: 1; border-radius: 50%; font-size: clamp(36px, 3.4vw, 52px); font-weight: 800; letter-spacing: -0.04em; color: var(--xs-muted); background: var(--xs-bg); box-shadow: inset 0 0 0 2px var(--xs-line); transition: color 0.5s, box-shadow 0.5s, background 0.5s, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); }
   .num.wide { width: auto; aspect-ratio: auto; padding: 0.32em 0.62em; border-radius: 999px; }
@@ -132,7 +132,11 @@
   .flag { font-size: clamp(44px, 4vw, 64px); }
   h3 { margin: 26px 0 0; font-size: clamp(34px, 3.6vw, 60px); font-weight: 800; line-height: 1; letter-spacing: -0.035em; }
   h3 em { font-style: normal; color: var(--xs-pink-2); }
-  .text p { margin: 18px 0 0; font-size: clamp(16px, 1.25vw, 19px); line-height: 1.6; color: var(--xs-muted); }
+  .text p { margin: 18px 0 0; font-size: clamp(16px, 1.25vw, 19px); line-height: 1.6; color: #d8d0d5; }
+  :global(.light) .text p { color: #2b2229; }
+  /* halo in the background colour: the route line never crosses the letters */
+  .text h3, .text p { paint-order: stroke fill; -webkit-text-stroke: 7px var(--xs-bg); }
+  .text h3 { -webkit-text-stroke-width: 10px; }
   .text h3, .text p { opacity: 0.35; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.9s var(--xs-ease); }
   .on .text h3, .on .text p { opacity: 1; transform: none; }
   .on .text p { transition-delay: 0.1s; }
