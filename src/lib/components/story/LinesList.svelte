@@ -4,7 +4,7 @@
 
   const lines = [
     { href: '/consultoria', title: 'Consultoría', desc: 'Integramos la IA en tu agencia o empresa con una hoja de ruta clara.', img: '/team/guillermo-premio-sm.webp', pos: 'center 18%' },
-    { href: '/servicios', title: 'Activaciones', desc: 'Experiencias de IA hiperpersonalizadas, diseñadas para tu evento.', img: '/activaciones/fxstylized.webp', pos: 'center' },
+    { href: '/servicios', title: 'Activaciones', desc: 'Experiencias de IA hiperpersonalizadas, diseñadas para tu evento.', img: '/activaciones/comicgen.webp', pos: 'center' },
     { href: '/formacion', title: 'Formación', desc: 'Programas para que tu equipo domine la IA aplicada a eventos.', img: '/team/guillermo-ganador-sm.webp', pos: 'center 20%' },
     { href: '/quienes-somos', title: 'Quiénes somos', desc: 'De la ciencia oncológica a revolucionar los eventos: nuestra historia.', img: '/team/equipo-mpi-sm.webp', pos: 'center 35%' }
   ];
